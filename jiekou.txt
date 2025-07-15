@@ -15,6 +15,7 @@
 {"key":"csp_SuBaiBai","name":"🏳️┃素白┃影视","type":3,"api":"csp_SuBaiBai","ext":"http://subaibai.com"},
 {"key":"csp_Jpyy","name":"🥇️┃金牌┃影视","type":3,"api":"csp_Jpyy"},
 {"key":"csp_Nongm","name":"🌾️┃农民┃影视","type":3,"api":"csp_Nongm","ext":"https://wwgz.cn"},
+{"key":"lnntv","name":"lnntv","type":3,"api":"csp_Nongm","ext":"https://tv.lnn.ink"},
 {"key":"csp_AppRZ","name":"🕵️┃忍者┃影视","type":3,"api":"csp_AppRZ","ext":"http://rzys.xyz/"},
 {"key":"csp_XMUC","name":"🍚┃小米┃UC","type":3,"api":"csp_Duopan","filterable":1,"ext":{"site_urls":["http://www.mucpan.cc","http://ucmi.fun","http://www.ucmi.fun"],"url_key":"XMUC"}},
 {"key":"csp_Netfixtv","name":"💌┃️至臻┃影视","type":3,"api":"csp_Duopan","filterable":1,"ext":{"site_urls":["http://www.xhww.net","http://xhww.net","https://xiaomiai.site"],"url_key":"Netfixtv2","token":"","ucCookie":"","quarkCookie":"","threadinfo":{"chunksize":450,"threads":10}}},
