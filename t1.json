@@ -1,39 +1,23 @@
 {
   "sites": [
     {
-      "key": "db",
-      "name": "db",
-      "type": 1,
-      "api": "https://www.mdzyapi.com/api.php/provide/vod/?ac=list",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "categories": [
-        "电影",
-        "电视剧",
-        "动漫",
-        "综艺",
-        "短剧",
-        "纪录片"
-      ]
-    },
-    {
-      "key": "yutu",
-      "name": "yutu",
-      "type": 1,
-      "api": "https://apiyutu.com/api.php/providedao/vod/?ac=list",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1
-    },
-    {
       "key": "maotai",
       "name": "maotai",
       "type": 1,
       "api": "https://caiji.maotaizy.cc/api.php/provide/vod/at/josn/",
       "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1
+      "filterable": 1,
+      "categories": [
+        "电影",
+        "连续剧",
+        "综艺片",
+        "动漫",
+        "伦理片",
+        "短剧大全",
+        "体育赛事",
+        "新闻资讯"
+      ]
     },
     {
       "key": "baidu",
@@ -54,6 +38,15 @@
       "filterable": 1
     },
     {
+      "key": "yutu",
+      "name": "yutu",
+      "type": 1,
+      "api": "https://apiyutu.com/api.php/providedao/vod/?ac=list",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
       "key": "feifan",
       "name": "feifan",
       "type": 1,
@@ -65,7 +58,7 @@
     {
       "key": "ikun",
       "name": "ikun",
-      "type": 1,
+      "type": 0,
       "api": "https://ikunzyapi.com/api.php/provide/vod/at/xml",
       "searchable": 1,
       "quickSearch": 1,
@@ -133,6 +126,23 @@
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1
+    },
+    {
+      "key": "db",
+      "name": "db",
+      "type": 1,
+      "api": "https://www.mdzyapi.com/api.php/provide/vod/?ac=list",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "categories": [
+        "电影",
+        "电视剧",
+        "动漫",
+        "综艺",
+        "短剧",
+        "纪录片"
+      ]
     }
   ],
   "lives": [
@@ -142,7 +152,7 @@
         {
           "name": "直播源",
           "urls": [
-            "about:blank"
+            "https://raw.githubusercontent.com/fanmingming/live/refs/heads/main/tv/m3u/ipv6.m3u"
           ]
         }
       ]
