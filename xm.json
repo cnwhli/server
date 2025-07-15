@@ -95,27 +95,27 @@
             "ext": "https://www.wogg.one/"
         },
           {
-      "key": "maotai",
-      "name": "maotai",
-      "type": 1,
-      "api": "https://caiji.maotaizy.cc/api.php/provide/vod/at/josn/",
-      "searchable": 1,
-      "quickSearch": 1,
-      "filterable": 1,
-      "categories": [
-        "电影",
-        "电视剧",
-        "动漫",
-        "综艺片",
-        "伦理片",
-        "短剧大全",
-        "体育赛事",
-        "新闻资讯",
-        "麻豆传媒"
-      ]
-    },
-    {
-      "key": "baidu",
+            "key": "maotai",
+            "name": "maotai",
+            "type": 1,
+            "api": "https://caiji.maotaizy.cc/api.php/provide/vod/at/josn/",
+            "searchable": 1,
+            "quickSearch": 1,
+            "filterable": 1,
+            "categories": [
+            "电影",
+            "电视剧",
+            "动漫",
+            "综艺片",
+            "伦理片",
+            "短剧大全",
+            "体育赛事",
+            "新闻资讯",
+            "麻豆传媒"
+            ]
+        },
+          {
+            "key": "baidu",
       "name": "baidu",
       "type": 1,
       "api": "https://api.apibdzy.com/api.php/provide/vod/?ac=list",
