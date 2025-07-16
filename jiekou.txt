@@ -8,17 +8,22 @@
 {"key":"drpy_js_豆瓣","name":"🐼┃备用公众号┃我不是肥猫","type":3,"api":"csp_Douban","searchable":0},
 {"key":"豆瓣","name":"🐼┃豆瓣┃预告","type":3,"api":"csp_YGP","playerType":2,"searchable":0},
 {"key":"config","name":"🐼┃配置┃中心","type":3,"api":"csp_Config","playerType":2},
- {
-      "key": "csp_Wogg",
-      "name": "🧸玩偶┃4K网盘",
+{
+      "key": "玩偶",
+      "name": "👽玩偶哥哥┃4K弹幕",
       "type": 3,
-      "api": "csp_Wogg",
-      "changeable": "0",
+      "api": "csp_WoGGGuard",
+      "timeout": 30,
+      "searchable": 1,
       "quickSearch": 1,
-      "filterable": 1,
-      "ext": "Yu2Y3Q8tqDTqZ+GCqfQZz8i/vsP/tl9O+/0ZjpgnBg8rYFx7ctv7/EwYIQ8UriiQKDIJuqIvlQQje6dXLxWHRiSlxkxqMyYKI0d1JGw46AuOAoB1VAvOCaqYqiTezjHHt8wMymbT/vDdiFXkMbc44kNGdjpzSyL2/kBZIAQaYMPgSkEYlv4faMeCi3MaCLYaT3C7qaUzLc56RYGLF2rmtIoYgMFOG9eSpyjO66jU/3v2f1yXnqTEEKd1/+/m8DBi8KudUm92Pa/NN8zRcY5nClAo1Eqn9bGzuO/+M4V5KG/RhdFdHyzxIpxfgoBRhn4j7GEzWBxrg4JiW2kP8Vo0iQm0S8aJUTOf1ROVp2sKW36D2Q/IgMvEqazefGXZSyNSTsjbNbVc2cHMxKrbUQIPqhD5y93kdVqr5glHjuqjrDC8Pa54/l2nFeWMZIRN7ZxMpY9O1WSazlqA1GI2A6UtmKIx6r2dX7seMOOENI+Tjl2ojAYQscbGgYpzVNL9VNf/w7xQaHqjtWLUcAOmJYweA0mZb6cGoAd8Gjcwz7iper0s53AViof2QbBffDKJxF820BsiCZAMp+Nq1Y7wrFqnnEN7HiE+YHPDxNfvBXnEgubPXu6DeZGa6edzqVbRwO52"
+      "changeable": 0,
+      "ext": {
+        "Cloud-drive": "tvfan/Cloud-drive.txt",
+        "from": "4k|auto",
+        "siteUrl": "https://www.wogg.com/",
+        "danMu": "弹"
+      }
     },
-
 {"key":"csp_FeiMaoUC","name":"⚡┃闪电┃优汐","type":3,"api":"csp_Duopan","filterable":1,"ext":{"site_urls":["http://1.95.79.193/"],"url_key":"FeiMaoUC"}},
 {"key":"csp_Duopan","name":"🖍︎┃蜡笔┃影视","type":3,"api":"csp_Duopan","filterable":1,"ext":{"site_urls":["https://duopan.fun","http://labipan.com","http://feimaoai.site","https://mihdr.top"],"url_key":"Duopan2"}},
 {"key":"csp_Bili","name":"🅱┃️哔哩┃合集","type":3,"api":"csp_Bili","playerType":2,"ext":{"json":"http://uz.xn--z7x900a.com/bili.json","cookie":""},
