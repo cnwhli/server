@@ -1,24 +1,6 @@
 {
-  "spider": "https://fs-im-kefu.7moor-fs2.com/im/2768a390-5474-11ea-afc9-7b323e3e16c0/w8T3qSb5.png;md5;f7de4a6a445354df4a588f4468e32e73",
-  "wallpaper": "http://127.0.0.1:9978/proxy?do=wall",
-  "logo": "https://cdn.wmpvp.com/steamWeb/B96F868DE45B45D690B5F9F490D0BC60-1745866248445.gif",
-  "tvbox": {
-    "protocol": "tvbox",
-    "version": "1.0",
-    "settings": {
-      "max_connections": 5,
-      "buffer_size": 1024,
-      "timeout": 30,
-      "debug_mode": false
-    },
-    "supported_features": [
-      "4k_streaming",
-      "adaptive_bitrate",
-      "drm_protection",
-      "subtitle_support",
-      "multi_device_sync"
-    ]
-  },
+"spider":"https://fs-im-kefu.7moor-fs1.com/ly/4d2c3f00-7d4c-11e5-af15-41bf63ae4ea0/336c8cfd8f9a73ac/f0729.jpg;md5;2452e3a72453e1e2305e9b66eae38fe5", 
+"wallpaper":"https://深色壁纸.xxooo.cf/", 
   "sites": [
     {"key":"豆","name":"修复更新所有【神秘的哥哥们】","type":3,"api":"csp_DouDouGuard","indexs":1,"searchable":0,"quickSearch":0,"changeable":0},
     {"key":"玩偶","name":"👽玩偶哥哥┃4K弹幕","type":3,"api":"csp_WoGGGuard","timeout":30,"searchable":1,"quickSearch":1,"changeable":0,"ext":{"Cloud-drive":"tvfan/Cloud-drive.txt","from":"4k|auto","siteUrl":"https://www.wogg.com/","danMu":"弹"}},
