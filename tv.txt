@@ -86,3 +86,8 @@
     {"key":"高中教育","name":"📚高中┃课堂","type":3,"api":"csp_BiliGuard","style":{"type":"rect","ratio":1.597},"searchable":0,"quickSearch":0,"changeable":0,"ext":{"json":"https://im.feelec.com.cn/res/file.html?id=2c9a91099293dce401946513bd90128b}},
     {"key":"fan","name":"导航www.饭太硬.com","type":3,"api":"csp_XPathGuard","searchable":1,"quickSearch":0,"changeable":0},
     {"key":"cc","name":"请勿相信视频中广告","type":3,"api":"csp_XPathGuard","searchable":1,"quickSearch":0,"changeable":0}
+"lives":[ 
+{"name":"V6范明明（需开启V6网络）","type":0,"url":"https://scrm-community.oss-cn-shenzhen.aliyuncs.com/miniso-vendor/20250425-868403-298462cec53c48439a5765ceaca3c67f.m3u","playerType":2}, 
+{"name":"V4聚合（卡顿请按左┃右键换线）","type":0,"url":"https://gh-proxy.net/https://raw.githubusercontent.com/wwb521/live/main/tv.m3u","playerType":2,"epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}"}, 
+{"name":"牛播一","type":0,"url":"http://127.0.0.1:9978/proxy?do=饭太硬&type=liveList","playerType":2,"epg":"http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}"}, 
+{"name":"平台直播","type":0,"url":"http://tv.iill.top/m3u/Live","ua":"okhttp/3.15","playerType":2}]}
