@@ -115,6 +115,7 @@
         }
     </style>
     <style>
+    <style>
         body {
             background: linear-gradient(135deg, #FFE5EC 0%, #FFC8DD 25%, #CDB4DB 50%, #A2D2FF 75%, #BDE0FE 100%);
             min-height: 100vh;
@@ -548,7 +549,7 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-center">
                             <i class="fa fa-star text-yellow-400 text-xs"></i>
-                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <i class="fa fa-star text-yellow-400 text-xs-400 text-xs"></i>
                             <span class="text-xs ml-1">中等</span>
                         </div>
                         <button class="start-game-btn bg-yellow-500 text-white px-4 py-1 rounded-full text-sm font-bold btn-shadow" data-game="memory">
@@ -573,7 +574,7 @@
                             <h4 class="font-bold">基础运算游戏</h4>
                             <p class="text-xs text-gray-600">根据你的学习情况，建议加强加减法练习</p>
                         </div>
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow start-game-btn" data-game="math">
                             开始
                         </button>
                     </div>
@@ -924,7 +925,7 @@
                 
                 <div class="text-center mb-5">
                     <h3 class="text-xl font-bold text-primary mb-2">礼物商店</h3>
-                    <p class="text-sm text-gray-600">用你的积分兑换喜欢的礼物吧！</p>
+                    <p class="text-sm text-gray-600">用你的积分你的积分兑换喜欢的礼物吧！</p>
                 </div>
                 
                 <!-- 礼物分类 -->
@@ -1238,9 +1239,13 @@
         };
 
         // 初始化游戏
-        document.addEventListener('DOMContentLoaded', init);
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('游戏初始化中...');
+            init();
+        });
 
         function init() {
+            console.log('开始初始化游戏');
             // 绑定事件
             bindEvents();
             
@@ -1249,93 +1254,202 @@
             
             // 显示欢迎页面
             showScreen('welcomeScreen');
+            
+            console.log('游戏初始化完成');
         }
 
         // 绑定所有事件
         function bindEvents() {
+            console.log('开始绑定事件');
+            
             // 欢迎页面按钮
-            document.getElementById('startAdventureBtn').addEventListener('click', () => showScreen('gameSelectionScreen'));
-            document.getElementById('visitCastleBtn').addEventListener('click', () => showScreen('castleScreen'));
-            document.getElementById('visitShopBtn').addEventListener('click', () => showScreen('shopScreen'));
+            const startAdventureBtn = document.getElementById('startAdventureBtn');
+            if (startAdventureBtn) {
+                startAdventureBtn.addEventListener('click', function() {
+                    console.log('点击了开始冒险按钮');
+                    showScreen('gameSelectionScreen');
+                });
+            }
+            
+            const visitCastleBtn = document.getElementById('visitCastleBtn');
+            if (visitCastleBtn) {
+                visitCastleBtn.addEventListener('click', function() {
+                    console.log('点击了我的城堡按钮');
+                    showScreen('castleScreen');
+                });
+            }
+            
+            const visitShopBtn = document.getElementById('visitShopBtn');
+            if (visitShopBtn) {
+                visitShopBtn.addEventListener('click', function() {
+                    console.log('点击了礼物商店按钮');
+                    showScreen('shopScreen');
+                });
+            }
             
             // 帮助按钮
-            document.getElementById('helpBtn').addEventListener('click', () => {
-                document.getElementById('helpModal').classList.remove('hidden');
-            });
+            const helpBtn = document.getElementById('helpBtn');
+            if (helpBtn) {
+                helpBtn.addEventListener('click', function() {
+                    console.log('点击了帮助按钮');
+                    const helpModal = document.getElementById('helpModal');
+                    if (helpModal) {
+                        helpModal.classList.remove('hidden');
+                    }
+                });
+            }
             
-            document.getElementById('closeHelpBtn').addEventListener('click', () => {
-                document.getElementById('helpModal').classList.add('hidden');
-            });
+            const closeHelpBtn = document.getElementById('closeHelpBtn');
+            if (closeHelpBtn) {
+                closeHelpBtn.addEventListener('click', function() {
+                    console.log('点击了关闭帮助按钮');
+                    const helpModal = document.getElementById('helpModal');
+                    if (helpModal) {
+                        helpModal.classList.add('hidden');
+                    }
+                });
+            }
             
             // 游戏选择按钮
-            document.querySelectorAll('.start-game-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const game = btn.dataset.game;
-                    startGame(game);
+            const startGameBtns = document.querySelectorAll('.start-game-btn');
+            console.log('找到游戏开始按钮数量:', startGameBtns.length);
+            startGameBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const game = this.dataset.game;
+                    console.log('点击了游戏开始按钮，游戏类型:', game);
+                    if (game) {
+                        startGame(game);
+                    }
                 });
             });
             
             // 返回按钮
-            document.querySelectorAll('.back-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
+            const backBtns = document.querySelectorAll('.back-btn');
+            console.log('找到返回按钮数量:', backBtns.length);
+            backBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('点击了返回按钮');
                     stopGame();
                     showScreen('gameSelectionScreen');
                 });
             });
             
             // 游戏结束页面按钮
-            document.getElementById('playAgainBtn').addEventListener('click', () => {
-                if (currentGameState.game) {
-                    startGame(currentGameState.game);
-                }
-            });
+            const playAgainBtn = document.getElementById('playAgainBtn');
+            if (playAgainBtn) {
+                playAgainBtn.addEventListener('click', function() {
+                    console.log('点击了再玩一次按钮');
+                    if (currentGameState.game) {
+                        startGame(currentGameState.game);
+                    }
+                });
+            }
             
-            document.getElementById('backToGamesBtn').addEventListener('click', () => {
-                showScreen('gameSelectionScreen');
-            });
+            const backToGamesBtn = document.getElementById('backToGamesBtn');
+            if (backToGamesBtn) {
+                backToGamesBtn.addEventListener('click', function() {
+                    console.log('点击.log('点击了选择游戏按钮');
+                    showScreen('gameSelectionScreen');
+                });
+            }
             
             // 游戏内按钮
-            document.getElementById('numberGameHintBtn')?.addEventListener('click', showNumberGameHint);
-            document.getElementById('mathGameHintBtn')?.addEventListener('click', showMathGameHint);
-            document.getElementById('mathGameSkipBtn')?.addEventListener('click', skipMathRound);
-            document.getElementById('memoryGameHintBtn')?.addEventListener('click', showMemoryGameHint);
+            const numberGameHintBtn = document.getElementById('numberGameHintBtn');
+            if (numberGameHintBtn) {
+                numberGameHintBtn.addEventListener('click', showNumberGameHint);
+            }
+            
+            const mathGameHintBtn = document.getElementById('mathGameHintBtn');
+            if (mathGameHintBtn) {
+                mathGameHintBtn.addEventListener('click', showMathGameHint);
+            }
+            
+            const mathGameSkipBtn = document.getElementById('mathGameSkipBtn');
+            if (mathGameSkipBtn) {
+                mathGameSkipBtn.addEventListener('click', skipMathRound);
+            }
+            
+            const memoryGameHintBtn = document.getElementById('memoryGameHintBtn');
+            if (memoryGameHintBtn) {
+                memoryGameHintBtn.addEventListener('click', showMemoryGameHint);
+            }
             
             // 商店分类按钮
-            document.querySelectorAll('.shop-category-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.shop-category-btn').forEach(b => {
+            const shopCategoryBtns = document.querySelectorAll('.shop-category-btn');
+            console.log('找到商店分类按钮数量:', shopCategoryBtns.length);
+            shopCategoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('点击了商店分类按钮');
+                    shopCategoryBtns.forEach(b => {
                         b.classList.remove('bg-primary', 'text-white');
                         b.classList.add('bg-gray-200', 'text-gray-700');
                     });
-                    btn.classList.remove('bg-gray-200', 'text-gray-700');
-                    btn.classList.add('bg-primary', 'text-white');
+                    this.classList.remove('bg-gray-200', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
                 });
             });
             
             // 购买礼物按钮
-            document.querySelectorAll('.buy-gift-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const price = parseInt(btn.parentElement.querySelector('span').textContent);
+            const buyGiftBtns = document.querySelectorAll('.buy-gift-btn');
+            console.log('找到购买礼物按钮数量:', buyGiftBtns.length);
+            buyGiftBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    console.log('点击了购买礼物按钮');
+                    const priceText = this.parentElement.querySelector('span').textContent;
+                    const price = parseInt(priceText);
+                    console.log('礼物价格:', price);
                     buyGift(price);
                 });
             });
+            
+            console.log('事件绑定完成');
         }
 
         // 更新UI
         function updateUI() {
+            console.log('更新UI');
             // 更新总分和碎片数
-            document.getElementById('totalScore').textContent = gameData.player.score;
-            document.getElementById('totalPieces').textContent = gameData.player.pieces;
+            const totalScoreEl = document.getElementById('totalScore');
+            if (totalScoreEl) {
+                totalScoreEl.textContent = gameData.player.score;
+            }
+            
+            const totalPiecesEl = document.getElementById('totalPieces');
+            if (totalPiecesEl) {
+                totalPiecesEl.textContent = gameData.player.pieces;
+            }
             
             // 更新城堡页面
-            document.getElementById('castlePieces')?.textContent = `${gameData.castle.pieces.collected}/${gameData.castle.pieces.total}`;
-            document.getElementById('castleCompletion')?.textContent = `${gameData.castle.completion}%`;
-            document.getElementById('castleCompletionBar')?.style.setProperty('width', `${gameData.castle.completion}%`);
-            document.getElementById('collectedPieces')?.textContent = gameData.castle.pieces.collected;
-            document.getElementById('unlockedAreas')?.textContent = gameData.castle.unlockedAreas;
+            const castlePiecesEl = document.getElementById('castlePieces');
+            if (castlePiecesEl) {
+                castlePiecesEl.textContent = `${gameData.castle.pieces.collected}/${gameData.castle.pieces.total}`;
+            }
+            
+            const castleCompletionEl = document.getElementById('castleCompletion');
+            if (castleCompletionEl) {
+                castleCompletionEl.textContent = `${gameData.castle.completion}%`;
+            }
+            
+            const castleCompletionBarEl = document.getElementById('castleCompletionBar');
+            if (castleCompletionBarEl) {
+                castleCompletionBarEl.style.setProperty('width', `${gameData.castle.completion}%`);
+            }
+            
+            const collectedPiecesEl = document.getElementById('collectedPieces');
+            if (collectedPiecesEl) {
+                collectedPiecesEl.textContent = gameData.castle.pieces.collected;
+            }
+            
+            const unlockedAreasEl = document.getElementById('unlockedAreas');
+            if (unlockedAreasEl) {
+                unlockedAreasEl.textContent = gameData.castle.unlockedAreas;
+            }
             
             // 更新商店页面
-            document.getElementById('shopScore')?.textContent = gameData.player.score;
+            const shopScoreEl = document.getElementById('shopScore');
+            if (shopScoreEl) {
+                shopScoreEl.textContent = gameData.player.score;
+            }
             
             // 更新游戏页面的分数显示
             Object.keys(gameData.games).forEach(game => {
@@ -1348,23 +1462,30 @@
 
         // 显示指定页面
         function showScreen(screenId) {
+            console.log('显示页面:', screenId);
             // 隐藏所有页面
             document.querySelectorAll('.screen').forEach(screen => {
                 screen.classList.add('hidden');
             });
             
             // 显示指定页面
-            document.getElementById(screenId).classList.remove('hidden');
-            gameData.currentScreen = screenId;
-            
-            // 如果是城堡页面，初始化城堡碎片
-            if (screenId === 'castleScreen') {
-                initCastlePieces();
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.remove('hidden');
+                gameData.currentScreen = screenId;
+                
+                // 如果是城堡页面，初始化城堡碎片
+                if (screenId === 'castleScreen') {
+                    initCastlePieces();
+                }
+            } else {
+                console.error('找不到页面:', screenId);
             }
         }
 
         // 开始游戏
         function startGame(game) {
+            console.log('开始游戏:', game);
             // 停止当前游戏
             stopGame();
             
@@ -1396,6 +1517,8 @@
                 case 'memory':
                     initMemoryGame();
                     break;
+                default:
+                    console.error('未知游戏类型:', game);
             }
             
             // 开始计时（如果有时间限制）
@@ -1435,6 +1558,7 @@
 
         // 初始化数字认知游戏
         function initNumberGame() {
+            console.log('初始化数字认知游戏');
             // 生成数字和数量卡片
             generateNumberCards();
             
@@ -1462,54 +1586,58 @@
             
             // 生成数字卡片
             const numberCardsContainer = document.getElementById('numberCards');
-            numberCardsContainer.innerHTML = '';
-            
-            numbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'number-card bg-white rounded-lg p-3 flex items-center justify-center cursor-move draggable';
-                card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-                card.dataset.number = num;
-                card.innerHTML = `<span class="text-2xl font-bold text-primary">${num}</span>`;
+            if (numberCardsContainer) {
+                numberCardsContainer.innerHTML = '';
                 
-                // 添加拖拽事件
-                card.addEventListener('dragstart', handleDragStart);
-                card.addEventListener('dragend', handleDragEnd);
-                card.setAttribute('draggable', true);
-                
-                numberCardsContainer.appendChild(card);
-            });
+                numbers.forEach(num => {
+                    const card = document.createElement('div');
+                    card.className = 'number-card bg-white rounded-lg p-3 flex items-center justify-center cursor-move draggable';
+                    card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                    card.dataset.number = num;
+                    card.innerHTML = `<span class="text-2xl font-bold text-primary">${num}</span>`;
+                    
+                    // 添加拖拽事件
+                    card.addEventListener('dragstart', handleDragStart);
+                    card.addEventListener('dragend', handleDragEnd);
+                    card.setAttribute('draggable', true);
+                    
+                    numberCardsContainer.appendChild(card);
+                });
+            }
             
             // 生成数量卡片
             const quantityCardsContainer = document.getElementById('quantityCards');
-            quantityCardsContainer.innerHTML = '';
-            
-            shuffledNumbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'quantity-card bg-white rounded-lg p-3 flex items-center justify-center drop-target';
-                card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
-                card.dataset.number = num;
+            if (quantityCardsContainer) {
+                quantityCardsContainer.innerHTML = '';
                 
-                // 生成数量表示（星星）
-                let stars = '';
-                for (let i = 0; i < num; i++) {
-                    stars += '<i class="fa fa-star text-yellow-400 mx-0.5"></i>';
-                }
-                
-                card.innerHTML = `
-                    <div class="text-center">
-                        <div class="flex justify-center mb-1">${stars}</div>
-                        <div class="number-display hidden text-xl font-bold text-primary">?</div>
-                    </div>
-                `;
-                
-                // 添加放置事件
-                card.addEventListener('dragover', handleDragOver);
-                card.addEventListener('dragenter', handleDragEnter);
-                card.addEventListener('dragleave', handleDragLeave);
-                card.addEventListener('drop', handleNumberDrop);
-                
-                quantityCardsContainer.appendChild(card);
-            });
+                shuffledNumbers.forEach(num => {
+                    const card = document.createElement('div');
+                    card.className = 'quantity-card bg-white rounded-lg p-3 flex items-center justify-center drop-target';
+                    card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                    card.dataset.number = num;
+                    
+                    // 生成数量表示（星星）
+                    let stars = '';
+                    for (let i = 0; i < num; i++) {
+                        stars += '<i class="fa fa-star text-yellow-400 mx-0.5"></i>';
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="text-center">
+                            <div class="flex justify-center mb-1">${stars}</div>
+                            <div class="number-display hidden text-xl font-bold text-primary">?</div>
+                        </div>
+                    `;
+                    
+                    // 添加放置事件
+                    card.addEventListener('dragover', handleDragOver);
+                    card.addEventListener('dragenter', handleDragEnter);
+                    card.addEventListener('dragleave', handleDragLeave);
+                    card.addEventListener('drop', handleNumberDrop);
+                    
+                    quantityCardsContainer.appendChild(card);
+                });
+            }
             
             // 保存游戏数据
             currentGameState.data = {
@@ -1553,6 +1681,8 @@
             const draggedNumber = e.dataTransfer.getData('text/plain');
             const targetNumber = this.dataset.number;
             
+            console.log('拖拽放置:', draggedNumber, '到', targetNumber);
+            
             // 检查是否匹配
             if (draggedNumber === targetNumber) {
                 // 匹配成功
@@ -1567,8 +1697,10 @@
                 
                 // 显示数字
                 const numberDisplay = this.querySelector('.number-display');
-                numberDisplay.textContent = targetNumber;
-                numberDisplay.classList.remove('hidden');
+                if (numberDisplay) {
+                    numberDisplay.textContent = targetNumber;
+                    numberDisplay.classList.remove('hidden');
+                }
                 
                 // 更新游戏状态
                 currentGameState.score += gameConfig.number.baseScore;
@@ -1576,7 +1708,10 @@
                 currentGameState.data.matched.add(targetNumber);
                 
                 // 更新UI
-                document.getElementById('numberGameScore').textContent = currentGameState.score;
+                const numberGameScoreEl = document.getElementById('numberGameScore');
+                if (numberGameScoreEl) {
+                    numberGameScoreEl.textContent = currentGameState.score;
+                }
                 updateNumberGameProgress();
                 
                 // 播放成功音效
@@ -1613,6 +1748,7 @@
 
         // 显示数字游戏提示
         function showNumberGameHint() {
+            console.log('显示数字游戏提示');
             // 找到一个未匹配的数字
             const unmatchedNumbers = currentGameState.data.numbers.filter(num => 
                 !currentGameState.data.matched.has(num.toString())
@@ -1631,7 +1767,10 @@
                     // 扣除一些分数作为提示代价
                     if (currentGameState.score >= 5) {
                         currentGameState.score -= 5;
-                        document.getElementById('numberGameScore').textContent = currentGameState.score;
+                        const numberGameScoreEl = document.getElementById('numberGameScore');
+                        if (numberGameScoreEl) {
+                            numberGameScoreEl.textContent = currentGameState.score;
+                        }
                     }
                     
                     // 3秒后移除高亮
@@ -1645,6 +1784,7 @@
 
         // 初始化基础运算游戏
         function initMathGame() {
+            console.log('初始化基础运算游戏');
             // 生成第一个题目
             generateMathQuestion();
             
@@ -1676,7 +1816,9 @@
             
             // 更新等式显示
             const equationElement = document.getElementById('mathEquation');
-            equationElement.textContent = `${num1} ${operation} ${num2} = ?`;
+            if (equationElement) {
+                equationElement.textContent = `${num1} ${operation} ${num2} = ?`;
+            }
             
             // 生成答案选项
             const answers = [correctAnswer];
@@ -1698,16 +1840,20 @@
             
             // 更新答案按钮
             const answersContainer = document.getElementById('mathAnswers');
-            answersContainer.innerHTML = '';
-            
-            answers.forEach(answer => {
-                const btn = document.createElement('button');
-                btn.className = 'number-btn w-full h-14 rounded-xl text-xl font-bold btn-shadow';
-                btn.textContent = answer;
-                btn.style.backgroundColor = getRandomColor();
-                btn.addEventListener('click', () => checkMathAnswer(answer, correctAnswer));
-                answersContainer.appendChild(btn);
-            });
+            if (answersContainer) {
+                answersContainer.innerHTML = '';
+                
+                answers.forEach(answer => {
+                    const btn = document.createElement('button');
+                    btn.className = 'number-btn w-full h-14 rounded h-14 rounded-xl text-xl font-bold btn-shadow';
+                    btn.textContent = answer;
+                    btn.style.backgroundColor = getRandomColor();
+                    btn.addEventListener('click', function() {
+                        checkMathAnswer(answer, correctAnswer);
+                    });
+                    answersContainer.appendChild(btn);
+                });
+            }
             
             // 保存当前题目数据
             currentGameState.data.currentQuestion = {
@@ -1720,17 +1866,23 @@
 
         // 检查数学答案
         function checkMathAnswer(selected, correct) {
+            console.log('检查数学答案:', selected, 'vs', correct);
             const equation = document.getElementById('mathEquation');
             
             if (selected === correct) {
                 // 答对了
-                equation.classList.add('correct');
+                if (equation) {
+                    equation.classList.add('correct');
+                }
                 currentGameState.score += gameConfig.math.baseScore;
                 currentGameState.correct++;
                 currentGameState.round++;
                 
                 // 更新UI
-                document.getElementById('mathGameScore').textContent = currentGameState.score;
+                const mathGameScoreEl = document.getElementById('mathGameScore');
+                if (mathGameScoreEl) {
+                    mathGameScoreEl.textContent = currentGameState.score;
+                }
                 updateMathGameProgress();
                 
                 // 播放成功音效
@@ -1745,23 +1897,32 @@
                 } else {
                     // 生成新题目
                     setTimeout(() => {
-                        equation.classList.remove('correct');
+                        if (equation) {
+                            equation.classList.remove('correct');
+                        }
                         generateMathQuestion();
                     }, 1000);
                 }
             } else {
                 // 答错了
-                equation.classList.add('wrong');
+                if (equation) {
+                    equation.classList.add('wrong');
+                }
                 playVoice('wrong');
                 
                 // 扣除少量分数
                 if (currentGameState.score >= 2) {
                     currentGameState.score -= 2;
-                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                    const mathGameScoreEl = document.getElementById('mathGameScore');
+                    if (mathGameScoreEl) {
+                        mathGameScoreEl.textContent = currentGameState.score;
+                    }
                 }
                 
                 setTimeout(() => {
-                    equation.classList.remove('wrong');
+                    if (equation) {
+                        equation.classList.remove('wrong');
+                    }
                 }, 1000);
             }
         }
@@ -1779,8 +1940,9 @@
 
         // 显示数学游戏提示
         function showMathGameHint() {
+            console.log('显示数学游戏提示');
             if (currentGameState.data.currentQuestion) {
-                const { num1, num2, operation, correctAnswer } = currentGameState.data.currentQuestion;
+                const { correctAnswer } = currentGameState.data.currentQuestion;
                 
                 // 显示提示（例如，显示正确答案的位置）
                 const answerButtons = document.querySelectorAll('#mathAnswers button');
@@ -1793,7 +1955,10 @@
                 // 扣除一些分数作为提示代价
                 if (currentGameState.score >= 10) {
                     currentGameState.score -= 10;
-                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                    const mathGameScoreEl = document.getElementById('mathGameScore');
+                    if (mathGameScoreEl) {
+                        mathGameScoreEl.textContent = currentGameState.score;
+                    }
                 }
                 
                 // 3秒后移除高亮
@@ -1807,24 +1972,32 @@
 
         // 跳过数学题目
         function skipMathRound() {
+            console.log('跳过数学题目');
             if (currentGameState.round < gameConfig.math.rounds) {
                 // 扣除分数作为跳过代价
                 if (currentGameState.score >= 15) {
                     currentGameState.score -= 15;
-                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                    const mathGameScoreEl = document.getElementById('mathGameScore');
+                    if (mathGameScoreEl) {
+                        mathGameScoreEl.textContent = currentGameState.score;
+                    }
                 }
                 
                 currentGameState.round++;
                 updateMathGameProgress();
                 
                 // 生成新题目
-                document.getElementById('mathEquation').classList.remove('correct', 'wrong');
+                const equation = document.getElementById('mathEquation');
+                if (equation) {
+                    equation.classList.remove('correct', 'wrong');
+                }
                 generateMathQuestion();
             }
         }
 
         // 初始化图形识别游戏
         function initShapeGame() {
+            console.log('初始化图形识别游戏');
             // 生成第一个题目
             generateShapeQuestion();
             
@@ -1839,8 +2012,15 @@
             const currentShape = shapesData[shapeIndex];
             
             // 更新问题显示
-            document.getElementById('shapeQuestion').textContent = `请选择：${currentShape.name}`;
-            document.getElementById('shapeHint').textContent = currentShape.hint;
+            const shapeQuestionEl = document.getElementById('shapeQuestion');
+            if (shapeQuestionEl) {
+                shapeQuestionEl.textContent = `请选择：${currentShape.name}`;
+            }
+            
+            const shapeHintEl = document.getElementById('shapeHint');
+            if (shapeHintEl) {
+                shapeHintEl.textContent = currentShape.hint;
+            }
             
             // 生成选项（包含正确答案和3个错误答案）
             const options = [shapeIndex];
@@ -1856,22 +2036,24 @@
             
             // 更新选项显示
             const optionsContainer = document.getElementById('shapeOptions');
-            optionsContainer.innerHTML = '';
-            
-            options.forEach(optionIndex => {
-                const shape = shapesData[optionIndex];
-                const shapeDiv = document.createElement('div');
-                shapeDiv.className = `shape-card w-full aspect-square rounded-xl flex items-center justify-center text-4xl font-bold btn-shadow`;
-                shapeDiv.textContent = shape.symbol;
-                shapeDiv.classList.add(shape.color);
-                shapeDiv.dataset.shapeIndex = optionIndex;
-                shapeDiv.dataset.isCorrect = optionIndex === shapeIndex ? 'true' : 'false';
+            if (optionsContainer) {
+                optionsContainer.innerHTML = '';
                 
-                // 添加点击事件
-                shapeDiv.addEventListener('click', handleShapeSelect);
-                
-                optionsContainer.appendChild(shapeDiv);
-            });
+                options.forEach(optionIndex => {
+                    const shape = shapesData[optionIndex];
+                    const shapeDiv = document.createElement('div');
+                    shapeDiv.className = `shape-card w-full aspect-square rounded-xl flex items-center justify-center text-4xl font-bold btn-shadow`;
+                    shapeDiv.textContent = shape.symbol;
+                    shapeDiv.classList.add(shape.color);
+                    shapeDiv.dataset.shapeIndex = optionIndex;
+                    shapeDiv.dataset.isCorrect = optionIndex === shapeIndex ? 'true' : 'false';
+                    
+                    // 添加点击事件
+                    shapeDiv.addEventListener('click', handleShapeSelect);
+                    
+                    optionsContainer.appendChild(shapeDiv);
+                });
+            }
             
             // 保存当前题目数据
             currentGameState.data.currentQuestion = {
@@ -1883,6 +2065,7 @@
         // 处理图形选择
         function handleShapeSelect() {
             const isCorrect = this.dataset.isCorrect === 'true';
+            console.log('选择图形:', this.textContent, '是否正确:', isCorrect);
             
             if (isCorrect) {
                 // 选择正确
@@ -1892,7 +2075,10 @@
                 currentGameState.round++;
                 
                 // 更新UI
-                document.getElementById('shapeGameScore').textContent = currentGameState.score;
+                const shapeGameScoreEl = document.getElementById('shapeGameScore');
+                if (shapeGameScoreEl) {
+                    shapeGameScoreEl.textContent = currentGameState.score;
+                }
                 updateShapeGameProgress();
                 
                 // 播放成功音效
@@ -1939,6 +2125,7 @@
 
         // 初始化记忆力游戏
         function initMemoryGame() {
+            console.log('初始化记忆力游戏');
             // 生成记忆卡片
             generateMemoryCards();
             
@@ -1961,29 +2148,31 @@
             
             // 生成卡片
             const cardsContainer = document.getElementById('memoryCards');
-            cardsContainer.innerHTML = '';
-            
-            numbers.forEach((num, index) => {
-                const card = document.createElement('div');
-                card.className = 'memory-card w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer btn-shadow';
-                card.style.backgroundColor = getRandomColor();
-                card.dataset.number = num;
-                card.dataset.index = index;
-                card.dataset.flipped = 'false';
+            if (cardsContainer) {
+                cardsContainer.innerHTML = '';
                 
-                // 卡片内容（背面）
-                card.innerHTML = `
-                    <div class="memory-card-inner w-full h-full flex items-center justify-center">
-                        <div class="memory-card-front hidden w-full h-full flex items-center justify-center text-3xl font-bold text-white">${num}</div>
-                        <div class="memory-card-back w-full h-full flex items-center justify-center text-3xl font-bold text-white">?</div>
-                    </div>
-                `;
-                
-                // 添加点击事件
-                card.addEventListener('click', handleMemoryCardClick);
-                
-                cardsContainer.appendChild(card);
-            });
+                numbers.forEach((num, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'memory-card w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer btn-shadow';
+                    card.style.backgroundColor = getRandomColor();
+                    card.dataset.number = num;
+                    card.dataset.index = index;
+                    card.dataset.flipped = 'false';
+                    
+                    // 卡片内容（背面）
+                    card.innerHTML = `
+                        <div class="memory-card-inner w-full h-full flex items-center justify-center">
+                            <div class="memory-card-front hidden w-full h-full flex items-center justify-center text-3xl font-bold text-white">${num}</div>
+                            <div class="memory-card-back w-full h-full flex items-center justify-center text-3xl font-bold text-white">?</div>
+                        </div>
+                    `;
+                    
+                    // 添加点击事件
+                    card.addEventListener('click', handleMemoryCardClick);
+                    
+                    cardsContainer.appendChild(card);
+                });
+            }
             
             // 保存游戏数据
             currentGameState.data = {
@@ -2001,13 +2190,16 @@
                 return;
             }
             
+            const cardNumber = parseInt(this.dataset.number);
+            console.log('点击记忆卡片:', cardNumber);
+            
             // 翻开卡片
             flipMemoryCard(this);
             
             // 添加到已翻开卡片列表
             currentGameState.data.flippedCards.push({
                 element: this,
-                number: parseInt(this.dataset.number),
+                number: cardNumber,
                 index: parseInt(this.dataset.index)
             });
             
@@ -2030,7 +2222,10 @@
                         currentGameState.data.matchedPairs++;
                         
                         // 更新UI
-                        document.getElementById('memoryGameScore').textContent = currentGameState.score;
+                        const memoryGameScoreEl = document.getElementById('memoryGameScore');
+                        if (memoryGameScoreEl) {
+                            memoryGameScoreEl.textContent = currentGameState.score;
+                        }
                         updateMemoryGameProgress();
                         
                         // 播放成功音效
@@ -2096,6 +2291,7 @@
 
         // 显示记忆游戏提示
         function showMemoryGameHint() {
+            console.log('显示记忆游戏提示');
             // 找到一对未匹配的卡片
             const allCards = Array.from(document.querySelectorAll('.memory-card'));
             const unflippedCards = allCards.filter(card => card.dataset.flipped === 'false' && card.style.pointerEvents !== 'none');
@@ -2116,7 +2312,10 @@
                     // 扣除一些分数作为提示代价
                     if (currentGameState.score >= 15) {
                         currentGameState.score -= 15;
-                        document.getElementById('memoryGameScore').textContent = currentGameState.score;
+                        const memoryGameScoreEl = document.getElementById('memoryGameScore');
+                        if (memoryGameScoreEl) {
+                            memoryGameScoreEl.textContent = currentGameState.score;
+                        }
                     }
                     
                     // 3秒后移除高亮
@@ -2130,6 +2329,7 @@
 
         // 初始化城堡碎片
         function initCastlePieces() {
+            console.log('初始化城堡碎片');
             const piecesGrid = document.getElementById('castlePiecesGrid');
             if (!piecesGrid) return;
             
@@ -2140,184 +2340,4 @@
                 const isUnlocked = gameData.castle.pieces.unlocked.includes(i);
                 
                 const piece = document.createElement('div');
-                piece.className = `castle-piece w-12 h-12 rounded-lg flex items-center justify-center ${isUnlocked ? '' : 'locked'}`;
-                piece.style.backgroundColor = isUnlocked ? getRandomColor() : '#e5e7eb';
-                piece.dataset.pieceId = i;
-                
-                piece.innerHTML = `
-                    <div class="text-center">
-                        <i class="fa ${isUnlocked ? 'fa-puzzle-piece' : 'fa-lock'} text-white"></i>
-                        <div class="text-xs mt-1 text-white">${i}</div>
-                    </div>
-                `;
-                
-                if (isUnlocked) {
-                    piece.addEventListener('click', () => selectCastlePiece(i));
-                }
-                
-                piecesGrid.appendChild(piece);
-            }
-        }
-
-        // 选择城堡碎片
-        function selectCastlePiece(pieceId) {
-            // 这里可以实现碎片放置逻辑
-            console.log(`Selected piece ${pieceId}`);
-        }
-
-        // 购买礼物
-        function buyGift(price) {
-            if (gameData.player.score >= price) {
-                // 扣除积分
-                gameData.player.score -= price;
-                
-                // 更新UI
-                updateUI();
-                
-                // 显示购买成功消息
-                showMessage('购买成功！', 'success');
-            } else {
-                // 显示积分不足消息
-                showMessage('积分不足！', 'error');
-            }
-        }
-
-        // 结束游戏
-        function endGame() {
-            // 停止计时器
-            stopGame();
-            
-            // 计算获得的碎片数
-            const pieceChance = gameConfig[currentGameState.game].pieceChance;
-            const piecesEarned = Math.random() < pieceChance ? 1 : 0;
-            
-            // 更新游戏数据
-            gameData.player.score += currentGameState.score;
-            gameData.games[currentGameState.game].completed++;
-            
-            if (piecesEarned > 0) {
-                gameData.player.pieces += piecesEarned;
-                gameData.castle.pieces.collected += piecesEarned;
-                
-                // 更新城堡完成度
-                gameData.castle.completion = Math.min(100, Math.round((gameData.castle.pieces.collected / gameData.castle.pieces.total) * 100));
-            }
-            
-            // 更新UI
-            updateUI();
-            
-            // 显示游戏结束页面
-            showGameOverScreen(currentGameState.score, piecesEarned);
-        }
-
-        // 显示游戏结束页面
-        function showGameOverScreen(score, pieces) {
-            // 更新游戏结束页面内容
-            document.getElementById('gameOverScore').textContent = score;
-            document.getElementById('gameOverPieces').textContent = pieces;
-            
-            // 根据游戏类型设置消息
-            let message;
-            switch (currentGameState.game) {
-                case 'number':
-                    message = '你成功完成了数字配对挑战！';
-                    break;
-                case 'math':
-                    message = '你是加减法小能手！';
-                    break;
-                case 'shape':
-                    message = '你认识了所有的图形！';
-                    break;
-                case 'memory':
-                    message = '你的记忆力真棒！';
-                    break;
-                default:
-                    message = '你完成了游戏挑战！';
-            }
-            
-            document.getElementById('gameOverMessage').textContent = message;
-            
-            // 显示游戏结束页面
-            showScreen('gameOverScreen');
-        }
-
-        // 显示消息
-        function showMessage(message, type = 'info') {
-            // 创建消息元素
-            const messageEl = document.createElement('div');
-            messageEl.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in`;
-            
-            // 根据类型设置样式
-            switch (type) {
-                case 'success':
-                    messageEl.classList.add('bg-green-500', 'text-white');
-                    break;
-                case 'error':
-                    messageEl.classList.add('bg-red-500', 'text-white');
-                    break;
-                case 'warning':
-                    messageEl.classList.add('bg-yellow-500', 'text-white');
-                    break;
-                default:
-                    messageEl.classList.add('bg-blue-500', 'text-white');
-            }
-            
-            messageEl.textContent = message;
-            document.body.appendChild(messageEl);
-            
-            // 3秒后自动移除
-            setTimeout(() => {
-                messageEl.classList.add('opacity-0', 'transition-opacity', 'duration-500');
-                setTimeout(() => {
-                    messageEl.remove();
-                }, 500);
-            }, 3000);
-        }
-
-        // 创建五彩纸屑
-        function createConfetti() {
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = `${Math.random() * window.innerWidth}px`;
-                confetti.style.backgroundColor = getRandomColor();
-                confetti.style.animationDelay = `${Math.random() * 2}s`;
-                
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => confetti.remove(), 3000);
-            }
-        }
-
-        // 获取随机颜色
-        function getRandomColor() {
-            const colors = ['#FF6B9D', '#A2D2FF', '#CDB4DB', '#FFAFCC', '#BDE0FE', '#FFC8DD', '#06D6A0', '#FFD166', '#EF476F', '#118AB2'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // 数组洗牌
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // 播放语音
-        function playVoice(type) {
-            // 这里可以添加实际的语音播放逻辑
-            console.log(`Playing voice: ${type}`);
-            
-            // 添加语音按钮动画
-            const voiceBtn = event.target.closest('.voice-btn');
-            if (voiceBtn) {
-                voiceBtn.classList.add('speaking');
-                setTimeout(() => {
-                    voiceBtn.classList.remove('speaking');
-                }, 1000);
-            }
-        }
-    </script>
-</body>
-</html>
+                piece.className = `castle-piece w-12 h-12 rounded-lg flex items-center justify-center ${
