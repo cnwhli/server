@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>诺诺的数学城堡 - 小学一二年级数学游戏</title>
-    <!-- Tailwind CSS v3 -->
+    <title>诺诺的数学城堡 - 修复版</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             theme: {
@@ -19,11 +16,7 @@
                         accent: '#FFD166',
                         ocean: '#4ECDC4',
                         castle: '#8A7090',
-                        background: '#FFF9F5',
-                        success: '#4CAF50',
-                        warning: '#FF9800',
-                        danger: '#F44336',
-                        info: '#2196F3'
+                        background: '#FFF9F5'
                     },
                     fontFamily: {
                         sans: ['Comic Sans MS', 'Arial', 'sans-serif'],
@@ -31,8 +24,6 @@
                     animation: {
                         'float': 'float 3s ease-in-out infinite',
                         'bounce-slow': 'bounce 2s infinite',
-                        'spin-slow': 'spin 3s linear infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         float: {
@@ -49,88 +40,6 @@
             .text-shadow {
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             }
-            .text-shadow-lg {
-                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
-            }
-            .castle-tower {
-                clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            }
-            .castle-wall {
-                border-radius: 10px 10px 0 0;
-            }
-            .water-ripple {
-                position: relative;
-                overflow: hidden;
-            }
-            .water-ripple::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
-                transform: scale(0);
-                animation: ripple 2s infinite;
-            }
-            @keyframes ripple {
-                0% {
-                    transform: scale(0);
-                    opacity: 1;
-                }
-                100% {
-                    transform: scale(4);
-                    opacity: 0;
-                }
-            }
-            .cloud {
-                position: relative;
-                z-index: 1;
-            }
-            .cloud::before {
-                content: '';
-                position: absolute;
-                top: -50%;
-                left: 10%;
-                width: 80%;
-                height: 150%;
-                background: inherit;
-                border-radius: 50%;
-                z-index: -1;
-            }
-            .cloud::after {
-                content: '';
-                position: absolute;
-                top: -30%;
-                right: 20%;
-                width: 60%;
-                height: 120%;
-                background: inherit;
-                border-radius: 50%;
-                z-index: -1;
-            }
-            .fairy-dust {
-                position: relative;
-            }
-            .fairy-dust::before {
-                content: '✨';
-                position: absolute;
-                top: -10px;
-                left: -10px;
-                font-size: 12px;
-                animation: twinkle 2s infinite;
-            }
-            @keyframes twinkle {
-                0%, 100% { opacity: 0; transform: scale(0.5); }
-                50% { opacity: 1; transform: scale(1); }
-            }
-            .game-card {
-                transition: all 0.3s ease;
-            }
-            .game-card:hover {
-                transform: translateY(-10px);
-                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            }
             .btn-primary {
                 @apply bg-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
             }
@@ -143,6 +52,9 @@
             .btn-ocean {
                 @apply bg-ocean text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
             }
+            .game-card {
+                @apply bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:translate-y-[-10px] hover:shadow-xl;
+            }
             .progress-bar {
                 @apply h-4 bg-gray-200 rounded-full overflow-hidden;
             }
@@ -153,18 +65,8 @@
     </style>
 </head>
 <body class="bg-background font-sans min-h-screen">
-    <!-- 加载屏幕 -->
-    <div id="loading-screen" class="fixed inset-0 bg-background z-50 flex flex-col items-center justify-center">
-        <img src="https://p3-doubao-search-sign.byteimg.com/labis/c0623af31231800e088e0c8fa3151137~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=Qhx%2FY4%2BEk1wfyHVg46MF9bA3GfM%3D" alt="公主诺诺" class="w-32 h-32 object-contain animate-float mb-4">
-        <h2 class="text-2xl font-bold text-primary mb-2">诺诺的数学城堡</h2>
-        <p class="text-secondary mb-6">正在加载魔法世界...</p>
-        <div class="w-64 progress-bar">
-            <div id="loading-progress" class="progress-value" style="width: 0%"></div>
-        </div>
-    </div>
-
     <!-- 主容器 -->
-    <div id="app" class="container mx-auto px-4 py-8 hidden">
+    <div id="app" class="container mx-auto px-4 py-8">
         <!-- 顶部导航栏 -->
         <header class="flex justify-between items-center mb-8">
             <div class="flex items-center">
@@ -180,9 +82,6 @@
                     <i class="fa fa-puzzle-piece text-secondary mr-2"></i>
                     <span id="user-pieces" class="font-bold">0</span>
                 </div>
-                <button id="settings-btn" class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md">
-                    <i class="fa fa-cog text-gray-600"></i>
-                </button>
             </div>
         </header>
 
@@ -198,7 +97,7 @@
                 </div>
                 
                 <div class="flex flex-wrap justify-center gap-6 mb-12">
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-72 text-center game-card">
+                    <div class="game-card w-72">
                         <img src="https://p11-doubao-search-sign.byteimg.com/labis/c622ddd52c6befb982cc23c51d6f5842~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=XzeHf7j9RDVL8rPu%2BTY4FpxWJkM%3D" alt="数学城堡" class="w-full h-40 object-cover rounded-lg mb-4">
                         <h3 class="text-xl font-bold text-primary mb-2">开始冒险</h3>
                         <p class="text-gray-600 mb-4">探索数学城堡，挑战各种数学游戏</p>
@@ -207,21 +106,12 @@
                         </button>
                     </div>
                     
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-72 text-center game-card">
-                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/image/1abe9097263448ce6b280ef2e45f5a15~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=573PT1p2uB8emGaXxC68mD86KtU%3D" alt="我的城堡" class="w-full h-40 object-cover rounded-lg mb-4">
+                    <div class="game-card w-72">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/image/1abe9097263448ce6b280ef2e45f5a15~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature&x-signature=573PT1p2uB8emGaXxC68mD86KtU%3D" alt="我的城堡" class="w-full h-40 object-cover rounded-lg mb-4">
                         <h3 class="text-xl font-bold text-secondary mb-2">我的城堡</h3>
                         <p class="text-gray-600 mb-4">查看你收集的碎片和建造的城堡</p>
                         <button id="my-castle-btn" class="btn-secondary w-full">
                             <i class="fa fa-castle mr-2"></i>我的城堡
-                        </button>
-                    </div>
-                    
-                    <div class="bg-white rounded-xl shadow-lg p-6 w-72 text-center game-card">
-                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/650b4d3de4255088bf6c3ea4e68fcd86~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=sRhIl5sRul%2FMDTfBquGmbOEazf8%3D" alt="礼物商店" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="text-xl font-bold text-ocean mb-2">礼物商店</h3>
-                        <p class="text-gray-600 mb-4">用积分兑换各种可爱的礼物</p>
-                        <button id="gift-shop-btn" class="btn-ocean w-full">
-                            <i class="fa fa-gift mr-2"></i>礼物商店
                         </button>
                     </div>
                 </div>
@@ -232,10 +122,10 @@
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="text-sm font-medium">一年级数学</span>
-                                <span class="text-sm font-medium">0%</span>
+                                <span class="text-sm font-medium" id="grade1-progress">0%</span>
                             </div>
                             <div class="progress-bar">
-                                <div class="progress-value" style="width: 0%"></div>
+                                <div id="grade1-bar" class="progress-value" style="width: 0%"></div>
                             </div>
                         </div>
                         <div>
@@ -258,16 +148,10 @@
                         <i class="fa fa-arrow-left mr-2"></i>返回
                     </button>
                     <h2 class="text-2xl font-bold text-primary">数学城堡地图</h2>
-                    <div class="w-12"></div> <!-- 占位，保持标题居中 -->
+                    <div class="w-12"></div>
                 </div>
                 
                 <div class="relative bg-blue-100 rounded-2xl overflow-hidden p-4 mb-8">
-                    <!-- 背景装饰 -->
-                    <div class="absolute top-4 left-10 w-16 h-8 bg-white rounded-full opacity-70 cloud"></div>
-                    <div class="absolute top-8 right-20 w-20 h-10 bg-white rounded-full opacity-70 cloud"></div>
-                    <div class="absolute bottom-4 left-1/4 w-24 h-12 bg-white rounded-full opacity-70 cloud"></div>
-                    
-                    <!-- 城堡区域 -->
                     <div class="relative z-10 flex flex-wrap justify-center gap-6 py-8">
                         <!-- 数字王国 -->
                         <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="number-kingdom">
@@ -320,32 +204,6 @@
                                 <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
                             </div>
                         </div>
-                        
-                        <!-- 乘法花园 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="multiplication-garden">
-                            <div class="w-24 h-24 mx-auto bg-purple-300 bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-purple-500">×</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-purple-500 mb-2">乘法花园</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习乘法口诀</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">二年级</span>
-                                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">即将解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 除法湖泊 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="division-lake">
-                            <div class="w-24 h-24 mx-auto bg-teal-300 bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-teal-500">÷</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-teal-500 mb-2">除法湖泊</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习除法运算</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">二年级</span>
-                                <span class="bg-yellow-100 text-yellow-800 text-xs font-medium px-2.5 py-0.5 rounded-full">即将解锁</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -357,7 +215,7 @@
                         <i class="fa fa-arrow-left mr-2"></i>返回地图
                     </button>
                     <h2 id="game-area-title" class="text-2xl font-bold text-primary">数字王国</h2>
-                    <div class="w-12"></div> <!-- 占位，保持标题居中 -->
+                    <div class="w-12"></div>
                 </div>
                 
                 <div id="game-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -402,7 +260,7 @@
                                 <i class="fa fa-refresh mr-2"></i>再玩一次
                             </button>
                             <button id="next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>下一关
+                                <i class="fa fa-arrow-right mr-2"></i>返回区域
                             </button>
                         </div>
                     </div>
@@ -457,7 +315,7 @@
                                 <i class="fa fa-refresh mr-2"></i>再玩一次
                             </button>
                             <button id="addition-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>下一关
+                                <i class="fa fa-arrow-right mr-2"></i>返回区域
                             </button>
                         </div>
                     </div>
@@ -480,7 +338,7 @@
                 <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
                     <div class="text-center mb-6">
                         <p class="text-gray-600 mb-2">请选择正确的图形：</p>
-                        <h3 id="shape-question" class="text-2xl font-bold text-accent mb-6">正方形</h3>
+                        <h3 id="shape-question" class="text-2xl font-bold text-accent mb-6">正方形-6">正方形</h3>
                         
                         <div id="shape-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                             <!-- 图形选项将通过JavaScript动态生成 -->
@@ -504,7 +362,7 @@
                                 <i class="fa fa-refresh mr-2"></i>再玩一次
                             </button>
                             <button id="shape-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>下一关
+                                <i class="fa fa-arrow-right mr-2"></i>返回区域
                             </button>
                         </div>
                     </div>
@@ -530,22 +388,14 @@
                         
                         <div id="clock-container" class="w-48 h-48 mx-auto relative mb-6">
                             <div class="w-full h-full rounded-full border-8 border-ocean bg-white"></div>
-                            <!-- 时钟刻度 -->
                             <div class="absolute inset-0">
                                 <div class="h-1 w-1 bg-gray-400 absolute top-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute top-0 right-1/2 transform translate-x-1/2"></div>
                                 <div class="h-1 w-1 bg-gray-400 absolute bottom-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute bottom-0 right-1/2 transform translate-x-1/2"></div>
                                 <div class="h-1 w-1 bg-gray-400 absolute left-0 top-1/2 transform -translate-y-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute left-0 bottom-1/2 transform translate-y-1/2"></div>
                                 <div class="h-1 w-1 bg-gray-400 absolute right-0 top-1/2 transform -translate-y-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute right-0 bottom-1/2 transform translate-y-1/2"></div>
                             </div>
-                            <!-- 时针 -->
                             <div id="hour-hand" class="absolute top-1/2 left-1/2 w-1 h-1/3 bg-gray-800 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <!-- 分针 -->
                             <div id="minute-hand" class="absolute top-1/2 left-1/2 w-1 h-2/5 bg-gray-600 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <!-- 中心点 -->
                             <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-ocean rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
                         </div>
                         
@@ -571,7 +421,7 @@
                                 <i class="fa fa-refresh mr-2"></i>再玩一次
                             </button>
                             <button id="time-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>下一关
+                                <i class="fa fa-arrow-right mr-2"></i>返回区域
                             </button>
                         </div>
                     </div>
@@ -585,7 +435,7 @@
                         <i class="fa fa-arrow-left mr-2"></i>返回
                     </button>
                     <h2 class="text-2xl font-bold text-primary">我的城堡</h2>
-                    <div class="w-12"></div> <!-- 占位，保持标题居中 -->
+                    <div class="w-12"></div>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -594,8 +444,7 @@
                             <h3 class="text-xl font-bold text-primary mb-4">已建造的城堡</h3>
                             
                             <div id="castle-display" class="relative h-64 md:h-80 bg-blue-50 rounded-lg overflow-hidden mb-4">
-                                <!-- 城堡将通过JavaScript动态生成 -->
-                                <div class="absolute inset-0 flex items-center justify-center">
+                                <div id="castle-image" class="absolute inset-0 flex items-center justify-center">
                                     <p class="text-gray-500">收集足够的碎片来建造你的第一座城堡吧！</p>
                                 </div>
                             </div>
@@ -606,21 +455,21 @@
                                         <i class="fa fa-home text-2xl text-primary"></i>
                                     </div>
                                     <p class="text-sm text-gray-600">城堡数量</p>
-                                    <p class="font-bold text-primary">0</p>
+                                    <p class="font-bold text-primary" id="castle-count">0</p>
                                 </div>
                                 <div class="text-center">
                                     <div class="w-16 h-16 mx-auto bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-2">
                                         <i class="fa fa-puzzle-piece text-2xl text-secondary"></i>
                                     </div>
                                     <p class="text-sm text-gray-600">已收集碎片</p>
-                                    <p class="font-bold text-secondary">0/10</p>
+                                    <p class="font-bold text-secondary" id="pieces-count">0/10</p>
                                 </div>
                                 <div class="text-center">
                                     <div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-2">
                                         <i class="fa fa-star text-2xl text-accent"></i>
                                     </div>
                                     <p class="text-sm text-gray-600">完成游戏</p>
-                                    <p class="font-bold text-accent">0</p>
+                                    <p class="font-bold text-accent" id="games-count">0</p>
                                 </div>
                             </div>
                         </div>
@@ -632,24 +481,6 @@
                             
                             <div id="collected-pieces" class="grid grid-cols-3 gap-4 mb-6">
                                 <!-- 碎片将通过JavaScript动态生成 -->
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
-                                <div class="w-full aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
-                                    <i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>
-                                </div>
                             </div>
                             
                             <div class="flex justify-center">
@@ -660,244 +491,37 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-primary mb-4">城堡收藏</h3>
-                    
-                    <div id="castle-collection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- 城堡收藏将通过JavaScript动态生成 -->
-                        <div class="bg-gray-50 rounded-lg p-4 text-center opacity-50">
-                            <div class="w-full aspect-video bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                                <i class="fa fa-lock text-gray-400 text-4xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-600 mb-2">粉色梦幻城堡</h4>
-                            <p class="text-sm text-gray-500">收集10个碎片解锁</p>
-                        </div>
-                        <div class="bg-gray-50 rounded-lg p-4 text-center opacity-50">
-                            <div class="w-full aspect-video bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                                <i class="fa fa-lock text-gray-400 text-4xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-600 mb-2">海洋水晶城堡</h4>
-                            <p class="text-sm text-gray-500">收集20个碎片解锁</p>
-                        </div>
-                        <div class="bg-gray-50 rounded-lg p-4 text-center opacity-50">
-                            <div class="w-full aspect-video bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                                <i class="fa fa-lock text-gray-400 text-4xl"></i>
-                            </div>
-                            <h4 class="font-bold text-gray-600 mb-2">彩虹魔法城堡</h4>
-                            <p class="text-sm text-gray-500">收集30个碎片解锁</p>
-                        </div>
-                    </div>
-                </div>
             </section>
-
-            <!-- 礼物商店页面 -->
-            <section id="gift-shop-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-welcome-from-shop-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">礼物商店</h2>
-                    <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-                        <i class="fa fa-star text-accent mr-2"></i>
-                        <span id="shop-score" class="font-bold">0</span>
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <!-- 礼物将通过JavaScript动态生成 -->
-                    <div class="gift-item bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="w-full h-40 bg-primary bg-opacity-10 flex items-center justify-center">
-                            <i class="fa fa-heart text-5xl text-primary"></i>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-primary mb-2">爱心魔法棒</h3>
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <i class="fa fa-star text-accent mr-1"></i>
-                                    <span>50</span>
-                                </div>
-                                <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-sm" data-gift="magic-wand" data-price="50">
-                                    购买
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="gift-item bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="w-full h-40 bg-secondary bg-opacity-10 flex items-center justify-center">
-                            <i class="fa fa-diamond text-5xl text-secondary"></i>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-secondary mb-2">闪亮钻石王冠</h3>
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <i class="fa fa-star text-accent mr-1"></i>
-                                    <span>100</span>
-                                </div>
-                                <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-sm" data-gift="crown" data-price="100">
-                                    购买
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="gift-item bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="w-full h-40 bg-ocean bg-opacity-10 flex items-center justify-center">
-                            <i class="fa fa-fish text-5xl text-ocean"></i>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-ocean mb-2">美人鱼尾巴</h3>
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <i class="fa fa-star text-accent mr-1"></i>
-                                    <span>150</span>
-                                </div>
-                                <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-sm" data-gift="mermaid-tail" data-price="150">
-                                    购买
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="gift-item bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="w-full h-40 bg-accent bg-opacity-10 flex items-center justify-center">
-                            <i class="fa fa-paint-brush text-5xl text-accent"></i>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-bold text-accent mb-2">彩虹画笔</h3>
-                            <div class="flex justify-between items-center">
-                                <div class="flex items-center">
-                                    <i class="fa fa-star text-accent mr-1"></i>
-                                    <span>200</span>
-                                </div>
-                                <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-sm" data-gift="rainbow-brush" data-price="200">
-                                    购买
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h3 class="text-xl font-bold text-primary mb-4">我的收藏</h3>
-                    
-                    <div id="my-gifts" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        <div class="text-center">
-                            <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-2">
-                                <i class="fa fa-gift text-gray-300"></i>
-                            </div>
-                            <p class="text-xs text-gray-500">还没有购买任何礼物</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 设置页面 -->
-            <section id="settings-screen" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
-                <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-primary">设置</h2>
-                        <button id="close-settings-btn" class="text-gray-500 hover:text-gray-700">
-                            <i class="fa fa-times text-xl"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">角色名称</label>
-                        <input type="text" id="player-name" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary" value="诺诺">
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">背景音乐</label>
-                        <div class="flex items-center">
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="bgm-toggle" class="sr-only peer" checked>
-                                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary peer-focus:ring-opacity-50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                <span class="ml-3 text-gray-700">开启</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">音效</label>
-                        <div class="flex items-center">
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="sound-toggle" class="sr-only peer" checked>
-                                <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary peer-focus:ring-opacity-50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
-                                <span class="ml-3 text-gray-700">开启</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">难度</label>
-                        <select id="difficulty-select" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="easy">简单</option>
-                            <option value="normal">普通</option>
-                            <option value="hard">困难</option>
-                        </select>
-                    </div>
-                    
-                    <div class="flex justify-end space-x-4">
-                        <button id="reset-progress-btn" class="px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:bg-red-50">
-                            重置进度
-                        </button>
-                        <button id="save-settings-btn" class="btn-primary">
-                            保存设置
-                        </button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏完成弹窗 -->
-            <div id="game-complete-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center">
-                <div class="bg-white rounded-xl shadow-xl p-6 max-w-md w-full mx-4 text-center">
-                    <div class="w-24 h-24 mx-auto bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                        <i class="fa fa-trophy text-4xl text-primary"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold text-primary mb-2">恭喜你！</h2>
-                    <p class="text-gray-600 mb-4">你成功完成了游戏！</p>
-                    <div class="flex justify-center items-center space-x-4 mb-6">
-                        <div class="text-center">
-                            <i class="fa fa-star text-accent text-2xl mb-1"></i>
-                            <p class="font-bold text-accent">+10</p>
-                            <p class="text-xs text-gray-500">积分</p>
-                        </div>
-                        <div class="text-center">
-                            <i class="fa fa-puzzle-piece text-secondary text-2xl mb-1"></i>
-                            <p class="font-bold text-secondary">+1</p>
-                            <p class="text-xs text-gray-500">碎片</p>
-                        </div>
-                    </div>
-                    <button id="close-game-complete-modal" class="btn-primary">
-                        太棒了！
-                    </button>
-                </div>
-            </div>
         </main>
 
         <!-- 底部导航栏 -->
-        <footer class="mt-8 py-4 border-t border-gray-200">
-            <div class="flex justify-center space-x-8">
+        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-3xl py-3 px-6">
+            <div class="flex justify-around">
                 <button id="nav-home-btn" class="flex flex-col items-center text-primary">
-                    <i class="fa fa-home text-2xl mb-1"></i>
-                    <span class="text-xs">首页</span>
+                    <i class="fa fa-home text-2xl"></i>
+                    <span class="text-xs mt-1">首页</span>
                 </button>
-                <button id="nav-map-btn" class="flex flex-col items-center text-gray-400 hover:text-primary">
-                    <i class="fa fa-map text-2xl mb-1"></i>
-                    <span class="text-xs">地图</span>
+                <button id="nav-map-btn" class="flex flex-col items-center text-gray-400">
+                    <i class="fa fa-map text-2xl"></i>
+                    <span class="text-xs mt-1">地图</span>
                 </button>
-                <button id="nav-castle-btn" class="flex flex-col items-center text-gray-400 hover:text-primary">
-                    <i class="fa fa-castle text-2xl mb-1"></i>
-                    <span class="text-xs">城堡</span>
-                </button>
-                <button id="nav-shop-btn" class="flex flex-col items-center text-gray-400 hover:text-primary">
-                    <i class="fa fa-gift text-2xl mb-1"></i>
-                    <span class="text-xs">商店</span>
+                <button id="nav-castle-btn" class="flex flex-col items-center text-gray-400">
+                    <i class="fa fa-castle text-2xl"></i>
+                    <span class="text-xs mt-1">城堡</span>
                 </button>
             </div>
-        </footer>
+        </nav>
+    </div>
+
+    <!-- 消息提示 -->
+    <div id="message-toast" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 z-50 max-w-xs">
+        <div class="flex items-center">
+            <div id="message-icon" class="w-8 h-8 rounded-full flex items-center justify-center mr-3"></div>
+            <div>
+                <h4 id="message-title" class="font-bold text-sm"></h4>
+                <p id="message-text" class="text-xs text-gray-600"></p>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -908,45 +532,17 @@
                 score: 0,
                 pieces: 0,
                 completedGames: 0,
-                builtCastles: 0,
-                collectedGifts: []
-            },
-            settings: {
-                bgm: true,
-                sound: true,
-                difficulty: "easy"
+                builtCastles: 0
             },
             gameProgress: {
-                numberKingdom: {
-                    completed: false,
-                    level: 1
-                },
-                calculationForest: {
-                    completed: false,
-                    level: 1
-                },
-                geometryCastle: {
-                    completed: false,
-                    level: 1
-                },
-                timeTower: {
-                    completed: false,
-                    level: 1
-                },
-                multiplicationGarden: {
-                    completed: false,
-                    level: 0,
-                    locked: true
-                },
-                divisionLake: {
-                    completed: false,
-                    level: 0,
-                    locked: true
-                }
+                numberKingdom: { level: 1, completed: 0 },
+                calculationForest: { level: 1, completed: 0 },
+                geometryCastle: { level: 1, completed: 1, completed: 0 },
+                timeTower: { level: 1, completed: 0 }
             }
         };
 
-        // 游戏内容数据
+        // 游戏内容配置
         const gameContent = {
             areas: {
                 "number-kingdom": {
@@ -958,19 +554,10 @@
                         {
                             id: "number-matching",
                             name: "数字配对",
-                            description: "将数字与对应的数量匹配起来",
-                            icon: "123",
+                            description: "将数字与数量匹配起来",
+                            icon: "🔢",
                             gameScreen: "number-matching-game",
                             difficulty: 1
-                        },
-                        {
-                            id: "number-sequence",
-                            name: "数字顺序",
-                            description: "按照正确的顺序排列数字",
-                            icon: "↕️",
-                            gameScreen: "number-sequence-game",
-                            difficulty: 2,
-                            locked: true
                         }
                     ]
                 },
@@ -983,19 +570,10 @@
                         {
                             id: "addition-game",
                             name: "加法冒险",
-                            description: "帮助小动物们找到正确的答案",
-                            icon: "+",
+                            description: "学习10以内的加法",
+                            icon: "➕",
                             gameScreen: "addition-game",
                             difficulty: 1
-                        },
-                        {
-                            id: "subtraction-game",
-                            name: "减法挑战",
-                            description: "解决减法问题，获得奖励",
-                            icon: "−",
-                            gameScreen: "subtraction-game",
-                            difficulty: 2,
-                            locked: true
                         }
                     ]
                 },
@@ -1012,15 +590,6 @@
                             icon: "◻️",
                             gameScreen: "shape-recognition-game",
                             difficulty: 1
-                        },
-                        {
-                            id: "shape-matching",
-                            name: "图形配对",
-                            description: "将图形与名称匹配起来",
-                            icon: "🔍",
-                            gameScreen: "shape-matching-game",
-                            difficulty: 2,
-                            locked: true
                         }
                     ]
                 },
@@ -1037,165 +606,30 @@
                             icon: "🕐",
                             gameScreen: "time-recognition-game",
                             difficulty: 1
-                        },
-                        {
-                            id: "time-matching",
-                            name: "时间配对",
-                            description: "将时间与活动匹配起来",
-                            icon: "⏰",
-                            gameScreen: "time-matching-game",
-                            difficulty: 2,
-                            locked: true
-                        }
-                    ]
-                },
-                "multiplication-garden": {
-                    title: "乘法花园",
-                    color: "purple-500",
-                    description: "学习乘法口诀",
-                    grade: "二年级",
-                    games: [
-                        {
-                            id: "multiplication-game",
-                            name: "乘法口诀",
-                            description: "学习乘法口诀表",
-                            icon: "×",
-                            gameScreen: "multiplication-game",
-                            difficulty: 1,
-                            locked: true
-                        }
-                    ]
-                },
-                "division-lake": {
-                    title: "除法湖泊",
-                    color: "teal-500",
-                    description: "学习除法运算",
-                    grade: "二年级",
-                    games: [
-                        {
-                            id: "division-game",
-                            name: "除法运算",
-                            description: "学习除法的基本概念",
-                            icon: "÷",
-                            gameScreen: "division-game",
-                            difficulty: 1,
-                            locked: true
                         }
                     ]
                 }
             },
-            gifts: [
-                {
-                    id: "magic-wand",
-                    name: "爱心魔法棒",
-                    icon: "heart",
-                    color: "primary",
-                    price: 50
-                },
-                {
-                    id: "crown",
-                    name: "闪亮钻石王冠",
-                    icon: "diamond",
-                    color: "secondary",
-                    price: 100
-                },
-                {
-                    id: "mermaid-tail",
-                    name: "美人鱼尾巴",
-                    icon: "fish",
-                    color: "ocean",
-                    price: 150
-                },
-                {
-                    id: "rainbow-brush",
-                    name: "彩虹画笔",
-                    icon: "paint-brush",
-                    color: "accent",
-                    price: 200
-                }
-            ],
-            castles: [
-                {
-                    id: "pink-castle",
-                    name: "粉色梦幻城堡",
-                    piecesRequired: 10,
-                    unlocked: false
-                },
-                {
-                    id: "ocean-castle",
-                    name: "海洋水晶城堡",
-                    piecesRequired: 20,
-                    unlocked: false
-                },
-                {
-                    id: "rainbow-castle",
-                    name: "彩虹魔法城堡",
-                    piecesRequired: 30,
-                    unlocked: false
-                }
-            ],
-            // 数字配对游戏数据
+            // 游戏数据配置
             numberMatching: {
-                level1: {
-                    numbers: [1, 2, 3, 4, 5, 6],
-                    timeLimit: 30
-                },
-                level2: {
-                    numbers: [7, 8, 9, 10, 11, 12],
-                    timeLimit: 40
-                }
+                level1: { numbers: [1, 2, 3, 4, 5, 6], timeLimit: 30 },
+                level2: { numbers: [7, 8, 9, 10, 11, 12], timeLimit: 40 }
             },
-            // 加法游戏数据
             addition: {
-                level1: {
-                    minNum: 1,
-                    maxNum: 5,
-                    questions: 5,
-                    timeLimit: 30
-                },
-                level2: {
-                    minNum: 1,
-                    maxNum: 10,
-                    questions: 5,
-                    timeLimit: 40
-                }
+                level1: { minNum: 1, maxNum: 5, questions: 5, timeLimit: 30 },
+                level2: { minNum: 1, maxNum: 10, questions: 5, timeLimit: 40 }
             },
-            // 图形认知游戏数据
             shapeRecognition: {
-                level1: {
-                    shapes: ["正方形", "圆形", "三角形", "长方形"],
-                    timeLimit: 30
-                },
-                level2: {
-                    shapes: ["正方形", "圆形", "三角形", "长方形", "平行四边形", "梯形"],
-                    timeLimit: 40
-                }
+                level1: { shapes: ["正方形", "圆形", "三角形", "长方形"], timeLimit: 30 },
+                level2: { shapes: ["正方形", "圆形", "三角形", "长方形", "平行四边形", "梯形"], timeLimit: 40 }
             },
-            // 时间认识游戏数据
             timeRecognition: {
-                level1: {
+                level1: { 
                     times: [
-                        { hour: 1, minute: 0 },
-                        { hour: 3, minute: 0 },
-                        { hour: 6, minute: 0 },
-                        { hour: 9, minute: 0 },
-                        { hour: 12, minute: 0 }
-                    ],
-                    timeLimit: 30
-                },
-                level2: {
-                    times: [
-                        { hour: 1, minute: 0 },
-                        { hour: 3, minute: 0 },
-                        { hour: 6, minute: 0 },
-                        { hour: 9, minute: 0 },
-                        { hour: 12, minute: 0 },
-                        { hour: 1, minute: 30 },
-                        { hour: 3, minute: 30 },
-                        { hour: 6, minute: 30 },
-                        { hour: 9, minute: 30 }
-                    ],
-                    timeLimit: 40
+                        { hour: 1, minute: 0 }, { hour: 3, minute: 0 }, 
+                        { hour: 6, minute: 0 }, { hour: 9, minute: 0 }, { hour: 12, minute: 0 }
+                    ], 
+                    timeLimit: 30 
                 }
             }
         };
@@ -1207,13 +641,12 @@
             currentGame: null,
             currentLevel: 1,
             gameTimer: null,
-            remainingTime: 0
+            remainingTime: 0,
+            selectedCards: [],
+            matchedPairs: 0
         };
 
-        // DOM 元素
-        const app = document.getElementById('app');
-        const loadingScreen = document.getElementById('loading-screen');
-        const loadingProgress = document.getElementById('loading-progress');
+        // DOM 元素引用
         const screens = {
             welcome: document.getElementById('welcome-screen'),
             map: document.getElementById('map-screen'),
@@ -1222,55 +655,49 @@
             addition: document.getElementById('addition-game'),
             shapeRecognition: document.getElementById('shape-recognition-game'),
             timeRecognition: document.getElementById('time-recognition-game'),
-            myCastle: document.getElementById('my-castle-screen'),
-            giftShop: document.getElementById('gift-shop-screen'),
-            settings: document.getElementById('settings-screen')
+            myCastle: document.getElementById('my-castle-screen')
         };
 
         // 初始化游戏
         function initGame() {
-            // 模拟加载进度
-            let progress = 0;
-            const loadingInterval = setInterval(() => {
-                progress += 5;
-                loadingProgress.style.width = `${progress}%`;
-                
-                if (progress >= 100) {
-                    clearInterval(loadingInterval);
-                    setTimeout(() => {
-                        loadingScreen.classList.add('hidden');
-                        app.classList.remove('hidden');
-                        updateUI();
-                    }, 500);
-                }
-            }, 100);
-
+            console.log('🎮 诺诺的数学城堡 - 开始初始化...');
+            
             // 加载保存的游戏数据
             loadGameData();
             
             // 绑定事件监听器
             bindEventListeners();
+            
+            // 更新UI显示
+            updateUI();
+            
+            console.log('✅ 游戏初始化完成！');
         }
 
         // 加载保存的游戏数据
         function loadGameData() {
             const savedData = localStorage.getItem('mathCastleData');
             if (savedData) {
-                const parsedData = JSON.parse(savedData);
-                gameData.player = parsedData.player || gameData.player;
-                gameData.settings = parsedData.settings || gameData.settings;
-                gameData.gameProgress = parsedData.gameProgress || gameData.gameProgress;
+                try {
+                    const parsedData = JSON.parse(savedData);
+                    gameData.player = parsedData.player || gameData.player;
+                    gameData.gameProgress = parsedData.gameProgress || gameData.gameProgress;
+                    console.log('📥 已加载保存的游戏数据');
+                } catch (error) {
+                    console.error('❌ 加载游戏数据失败:', error);
+                }
             }
         }
 
         // 保存游戏数据
         function saveGameData() {
-            const dataToSave = {
-                player: gameData.player,
-                settings: gameData.settings,
-                gameProgress: gameData.gameProgress
-            };
-            localStorage.setItem('mathCastleData', JSON.stringify(dataToSave));
+            try {
+                const dataToSave = { player: gameData.player, gameProgress: gameData.gameProgress };
+                localStorage.setItem('mathCastleData', JSON.stringify(dataToSave));
+                console.log('💾 游戏数据已保存');
+            } catch (error) {
+                console.error('❌ 保存游戏数据失败:', error);
+            }
         }
 
         // 更新UI
@@ -1278,27 +705,34 @@
             // 更新玩家信息
             document.getElementById('user-score').textContent = gameData.player.score;
             document.getElementById('user-pieces').textContent = gameData.player.pieces;
-            document.getElementById('shop-score').textContent = gameData.player.score;
             
-            // 更新设置
-            document.getElementById('player-name').value = gameData.player.name;
-            document.getElementById('bgm-toggle').checked = gameData.settings.bgm;
-            document.getElementById('sound-toggle').checked = gameData.settings.sound;
-            document.getElementById('difficulty-select').value = gameData.settings.difficulty;
+            // 更新进度显示
+            updateProgressDisplay();
             
-            // 更新我的城堡页面
+            // 更新城堡页面
             updateCastlePage();
             
-            // 更新礼物商店页面
-            updateGiftShopPage();
+            // 更新底部导航
+            updateNavigation(currentState.screen);
+        }
+
+        // 更新进度显示
+        function updateProgressDisplay() {
+            const totalGames = 4; // 四个主要游戏
+            const completedGames = gameData.player.completedGames;
+            const progress = Math.min(Math.round((completedGames / totalGames) * 100), 100);
+            
+            document.getElementById('grade1-progress').textContent = `${progress}%`;
+            document.getElementById('grade1-bar').style.width = `${progress}%`;
         }
 
         // 绑定事件监听器
         function bindEventListeners() {
+            console.log('🔗 开始绑定事件监听器...');
+            
             // 欢迎页面按钮
             document.getElementById('start-adventure-btn').addEventListener('click', () => showScreen('map'));
             document.getElementById('my-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            document.getElementById('gift-shop-btn').addEventListener('click', () => showScreen('giftShop'));
             
             // 地图页面按钮
             document.getElementById('back-to-welcome-btn').addEventListener('click', () => showScreen('welcome'));
@@ -1307,10 +741,7 @@
             document.querySelectorAll('.castle-area').forEach(area => {
                 area.addEventListener('click', () => {
                     const areaId = area.dataset.area;
-                    if (gameContent.areas[areaId].games[0].locked) {
-                        showMessage('该区域尚未解锁', 'warning');
-                        return;
-                    }
+                    console.log('🗺️ 点击区域:', areaId);
                     showGameArea(areaId);
                 });
             });
@@ -1330,59 +761,44 @@
             document.getElementById('back-to-welcome-from-castle-btn').addEventListener('click', () => showScreen('welcome'));
             document.getElementById('build-castle-btn').addEventListener('click', buildCastle);
             
-            // 礼物商店页面按钮
-            document.getElementById('back-to-welcome-from-shop-btn').addEventListener('click', () => showScreen('welcome'));
-            
-            // 购买礼物按钮
-            document.querySelectorAll('.buy-gift-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const giftId = btn.dataset.gift;
-                    const price = parseInt(btn.dataset.price);
-                    buyGift(giftId, price);
-                });
-            });
-            
-            // 设置按钮
-            document.getElementById('settings-btn').addEventListener('click', () => showScreen('settings'));
-            document.getElementById('close-settings-btn').addEventListener('click', () => showScreen(currentState.screen));
-            document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
-            document.getElementById('reset-progress-btn').addEventListener('click', resetProgress);
-            
             // 底部导航按钮
             document.getElementById('nav-home-btn').addEventListener('click', () => showScreen('welcome'));
             document.getElementById('nav-map-btn').addEventListener('click', () => showScreen('map'));
             document.getElementById('nav-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            document.getElementById('nav-shop-btn').addEventListener('click', () => showScreen('giftShop'));
             
+            // 游戏相关按钮
+            bindGameEventListeners();
+            
+            console.log('✅ 事件监听器绑定完成！');
+        }
+
+        // 绑定游戏相关事件监听器
+        function bindGameEventListeners() {
             // 数字配对游戏按钮
-            document.getElementById('check-matching-btn').addEventListener('click', checkNumberMatching);
-            document.getElementById('play-again-btn').addEventListener('click', playNumberMatchingAgain);
-            document.getElementById('next-level-btn').addEventListener('click', nextNumberMatchingLevel);
+            document.getElementById('check-matching-btn')?.addEventListener('click', checkNumberMatching);
+            document.getElementById('play-again-btn')?.addEventListener('click', playNumberMatchingAgain);
+            document.getElementById('next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
             
             // 加法游戏按钮
-            document.getElementById('check-addition-btn').addEventListener('click', checkAddition);
-            document.getElementById('addition-play-again-btn').addEventListener('click', playAdditionAgain);
-            document.getElementById('addition-next-level-btn').addEventListener('click', nextAdditionLevel);
+            document.getElementById('check-addition-btn')?.addEventListener('click', checkAddition);
+            document.getElementById('addition-play-again-btn')?.addEventListener('click', playAdditionAgain);
+            document.getElementById('addition-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
             
             // 图形认知游戏按钮
-            document.getElementById('check-shape-btn').addEventListener('click', checkShapeRecognition);
-            document.getElementById('shape-play-again-btn').addEventListener('click', playShapeRecognitionAgain);
-            document.getElementById('shape-next-level-btn').addEventListener('click', nextShapeRecognitionLevel);
+            document.getElementById('check-shape-btn')?.addEventListener('click', checkShapeRecognition);
+            document.getElementById('shape-play-again-btn')?.addEventListener('click', playShapeRecognitionAgain);
+            document.getElementById('shape-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
             
             // 时间认识游戏按钮
-            document.getElementById('check-time-btn').addEventListener('click', checkTimeRecognition);
-            document.getElementById('time-play-again-btn').addEventListener('click', playTimeRecognitionAgain);
-            document.getElementById('time-next-level-btn').addEventListener('click', nextTimeRecognitionLevel);
-            
-            // 游戏完成弹窗按钮
-            document.getElementById('close-game-complete-modal').addEventListener('click', () => {
-                document.getElementById('game-complete-modal').classList.add('hidden');
-                showScreen('gameArea');
-            });
+            document.getElementById('check-time-btn')?.addEventListener('click', checkTimeRecognition);
+            document.getElementById('time-play-again-btn')?.addEventListener('click', playTimeRecognitionAgain);
+            document.getElementById('time-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
         }
 
         // 显示指定屏幕
         function showScreen(screenName) {
+            console.log('📺 切换到屏幕:', screenName);
+            
             // 隐藏所有屏幕
             Object.values(screens).forEach(screen => {
                 if (screen) screen.classList.add('hidden');
@@ -1395,6 +811,8 @@
                 
                 // 更新底部导航栏
                 updateNavigation(screenName);
+            } else {
+                console.error('❌ 屏幕不存在:', screenName);
             }
         }
 
@@ -1403,8 +821,7 @@
             const navButtons = {
                 home: document.getElementById('nav-home-btn'),
                 map: document.getElementById('nav-map-btn'),
-                castle: document.getElementById('nav-castle-btn'),
-                shop: document.getElementById('nav-shop-btn')
+                castle: document.getElementById('nav-castle-btn')
             };
             
             // 重置所有按钮样式
@@ -1432,47 +849,50 @@
                     navButtons.castle.classList.remove('text-gray-400');
                     navButtons.castle.classList.add('text-primary');
                     break;
-                case 'giftShop':
-                    navButtons.shop.classList.remove('text-gray-400');
-                    navButtons.shop.classList.add('text-primary');
-                    break;
             }
         }
 
         // 显示游戏区域
         function showGameArea(areaId) {
+            console.log('🎮 显示游戏区域:', areaId);
+            
             const area = gameContent.areas[areaId];
-            if (!area) return;
+            if (!area) {
+                console.error('❌ 区域数据不存在:', areaId);
+                showMessage('区域加载失败', 'error');
+                return;
+            }
             
             currentState.currentArea = areaId;
             document.getElementById('game-area-title').textContent = area.title;
             
             // 生成游戏列表
             const gameList = document.getElementById('game-list');
+            if (!gameList) {
+                console.error('❌ 游戏列表元素不存在');
+                return;
+            }
+            
             gameList.innerHTML = '';
             
-            area.games.forEach(game => {
-                const gameCard = document.createElement('div');
-                gameCard.className = `bg-white rounded-xl shadow-lg p-6 text-center game-card ${game.locked ? 'opacity-50' : ''}`;
+            area.games.forEach((game, index) => {
+                console.log('🎲 生成游戏:', game.name, '索引:', index);
                 
-                let lockIcon = '';
-                if (game.locked) {
-                    lockIcon = '<i class="fa fa-lock absolute top-2 right-2 text-gray-400"></i>';
-                }
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                
+                const colorClass = area.color || 'primary';
                 
                 gameCard.innerHTML = `
-                    <div class="relative">
-                        <div class="w-24 h-24 mx-auto bg-${area.color} bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                            <span class="text-4xl font-bold text-${area.color}">${game.icon}</span>
-                        </div>
-                        ${lockIcon}
+                    <div class="w-24 h-24 mx-auto bg-${colorClass} bg-opacity-20 rounded-full flex items-center justify-center mb-4">
+                        <span class="text-4xl font-bold text-${colorClass}">${game.icon || '?'}</span>
                     </div>
-                    <h3 class="text-xl font-bold text-${area.color} mb-2">${game.name}</h3>
-                    <p class="text-gray-600 text-sm mb-4">${game.description}</p>
+                    <h3 class="text-xl font-bold text-${colorClass} mb-2">${game.name || '未知游戏'}</h3>
+                    <p class="text-gray-600 text-sm mb-4">${game.description || '暂无描述'}</p>
                     <div class="flex justify-between items-center">
-                        <span class="text-xs text-gray-500">难度: ${'★'.repeat(game.difficulty)}</span>
-                        <button class="play-game-btn btn-${area.color} w-full" data-game="${game.id}" ${game.locked ? 'disabled' : ''}>
-                            ${game.locked ? '未解锁' : '开始游戏'}
+                        <span class="text-xs text-gray-500">难度: ${'★'.repeat(game.difficulty || 1)}</span>
+                        <button class="play-game-btn btn-${colorClass} w-full" data-game="${game.id}">
+                            开始游戏
                         </button>
                     </div>
                 `;
@@ -1480,9 +900,12 @@
                 gameList.appendChild(gameCard);
                 
                 // 绑定游戏按钮点击事件
-                if (!game.locked) {
-                    const playBtn = gameCard.querySelector('.play-game-btn');
-                    playBtn.addEventListener('click', () => startGame(game.id, game.gameScreen));
+                const playBtn = gameCard.querySelector('.play-game-btn');
+                if (playBtn) {
+                    playBtn.addEventListener('click', () => {
+                        console.log('🚀 开始游戏:', game.id, '目标屏幕:', game.gameScreen);
+                        startGame(game.id, game.gameScreen);
+                    });
                 }
             });
             
@@ -1491,30 +914,42 @@
 
         // 开始游戏
         function startGame(gameId, gameScreen) {
+            console.log('🎯 启动游戏:', gameId);
+            
             currentState.currentGame = gameId;
             
-            switch (gameId) {
-                case 'number-matching':
-                    initNumberMatchingGame();
-                    break;
-                case 'addition-game':
-                    initAdditionGame();
-                    break;
-                case 'shape-recognition':
-                    initShapeRecognitionGame();
-                    break;
-                case 'time-recognition':
-                    initTimeRecognitionGame();
-                    break;
+            try {
+                switch (gameId) {
+                    case 'number-matching':
+                        initNumberMatchingGame();
+                        break;
+                    case 'addition-game':
+                        initAdditionGame();
+                        break;
+                    case 'shape-recognition':
+                        initShapeRecognitionGame();
+                        break;
+                    case 'time-recognition':
+                        initTimeRecognitionGame();
+                        break;
+                    default:
+                        console.error('❌ 未知游戏ID:', gameId);
+                        showMessage('游戏加载失败', 'error');
+                        return;
+                }
+                
+                showScreen(gameScreen);
+            } catch (error) {
+                console.error('❌ 游戏启动失败:', error);
+                showMessage('游戏启动失败', 'error');
             }
-            
-            showScreen(gameScreen);
         }
 
-        // 初始化数字配对游戏
+        // ==================== 数字配对游戏 ====================
         function initNumberMatchingGame() {
-            const level = gameData.gameProgress.numberKingdom.level;
-            const gameLevel = gameContent.numberMatching[`level${level}`] || gameContent.numberMatching.level1;
+            console.log('🔢 初始化数字配对游戏');
+            
+            const gameLevel = gameContent.numberMatching.level1;
             
             // 设置时间限制
             document.getElementById('game-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
@@ -1564,14 +999,18 @@
             // 隐藏结果区域
             document.getElementById('matching-result').classList.add('hidden');
             
+            // 重置游戏状态
+            currentState.selectedCards = [];
+            currentState.matchedPairs = 0;
+            
+            //
+            
             // 开始计时器
             startGameTimer('game-timer', () => {
-                // 时间到，自动检查答案
                 checkNumberMatching();
             });
         }
 
-        // 选择配对卡片
         function selectMatchingCard(card) {
             // 如果卡片已经匹配，不做任何操作
             if (card.classList.contains('matched')) return;
@@ -1600,14 +1039,16 @@
                         card1.classList.add('matched', 'bg-green-100');
                         card2.classList.add('matched', 'bg-green-100');
                         
+                        currentState.matchedPairs++;
+                        
                         // 恢复点击事件
                         document.querySelectorAll('.matching-card').forEach(c => {
                             c.style.pointerEvents = 'auto';
                         });
                         
                         // 检查是否所有卡片都匹配
-                        const allMatched = document.querySelectorAll('.matching-card.matched').length === document.querySelectorAll('.matching-card').length;
-                        if (allMatched) {
+                        const totalPairs = gameContent.numberMatching.level1.numbers.length;
+                        if (currentState.matchedPairs === totalPairs) {
                             setTimeout(() => {
                                 checkNumberMatching(true);
                             }, 500);
@@ -1628,12 +1069,12 @@
             }
         }
 
-        // 检查数字配对答案
-        function checkNumberMatching(allMatched = false) {
+        function checkNumberMatching(allMatching(allMatched = false) {
             stopGameTimer();
             
             const matchedCards = document.querySelectorAll('.matching-card.matched');
             const totalCards = document.querySelectorAll('.matching-card').length;
+            const totalPairs = totalCards / 2;
             
             const resultArea = document.getElementById('matching-result');
             const resultIcon = document.getElementById('result-icon');
@@ -1652,20 +1093,10 @@
                 gameData.player.score += 10;
                 gameData.player.pieces += 1;
                 gameData.player.completedGames += 1;
+                gameData.gameProgress.numberKingdom.completed = 1;
                 
-                // 解锁下一关
-                if (gameData.gameProgress.numberKingdom.level < 2) {
-                    gameData.gameProgress.numberKingdom.level = 2;
-                    if (gameContent.areas["number-kingdom"].games[1]) {
-                        gameContent.areas["number-kingdom"].games[1].locked = false;
-                    }
-                }
+                showMessage('🎉 恭喜获得城堡碎片！', 'success');
                 
-                // 显示游戏完成弹窗
-                setTimeout(() => {
-                    resultArea.classList.remove('hidden');
-                    showGameCompleteModal();
-                }, 500);
             } else {
                 // 游戏失败
                 resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
@@ -1673,36 +1104,22 @@
                 resultTitle.textContent = '不要灰心！';
                 resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
                 resultMessage.textContent = '再试一次，你一定可以的！';
-                
-                resultArea.classList.remove('hidden');
             }
             
+            resultArea.classList.remove('hidden');
             saveGameData();
             updateUI();
         }
 
-        // 重新玩数字配对游戏
         function playNumberMatchingAgain() {
             initNumberMatchingGame();
         }
 
-        // 下一关数字配对游戏
-        function nextNumberMatchingLevel() {
-            if (gameData.gameProgress.numberKingdom.level < 2) {
-                gameData.gameProgress.numberKingdom.level = 2;
-                if (gameContent.areas["number-kingdom"].games[1]) {
-                    gameContent.areas["number-kingdom"].games[1].locked = false;
-                }
-                saveGameData();
-            }
-            
-            showScreen('gameArea');
-        }
-
-        // 初始化加法游戏
+        // ==================== 加法游戏 ====================
         function initAdditionGame() {
-            const level = gameData.gameProgress.calculationForest.level;
-            const gameLevel = gameContent.addition[`level${level}`] || gameContent.addition.level1;
+            console.log('➕ 初始化加法游戏');
+            
+            const gameLevel = gameContent.addition.level1;
             
             // 设置时间限制
             document.getElementById('addition-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
@@ -1716,12 +1133,10 @@
             
             // 开始计时器
             startGameTimer('addition-timer', () => {
-                // 时间到，自动检查答案
                 checkAddition();
             });
         }
 
-        // 生成加法题目
         function generateAdditionQuestion(gameLevel) {
             const num1 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
             const num2 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
@@ -1735,7 +1150,6 @@
             document.getElementById('addition-question').dataset.answer = num1 + num2;
         }
 
-        // 检查加法答案
         function checkAddition() {
             stopGameTimer();
             
@@ -1759,20 +1173,10 @@
                 gameData.player.score += 10;
                 gameData.player.pieces += 1;
                 gameData.player.completedGames += 1;
+                gameData.gameProgress.calculationForest.completed = 1;
                 
-                // 解锁下一关
-                if (gameData.gameProgress.calculationForest.level < 2) {
-                    gameData.gameProgress.calculationForest.level = 2;
-                    if (gameContent.areas["calculation-forest"].games[1]) {
-                        gameContent.areas["calculation-forest"].games[1].locked = false;
-                    }
-                }
+                showMessage('🎉 恭喜获得城堡碎片！', 'success');
                 
-                // 显示游戏完成弹窗
-                setTimeout(() => {
-                    resultArea.classList.remove('hidden');
-                    showGameCompleteModal();
-                }, 500);
             } else {
                 // 游戏失败
                 resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
@@ -1780,36 +1184,22 @@
                 resultTitle.textContent = '不要灰心！';
                 resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
                 resultMessage.textContent = `正确答案是 ${correctAnswer}，再试一次吧！`;
-                
-                resultArea.classList.remove('hidden');
             }
             
+            resultArea.classList.remove('hidden');
             saveGameData();
             updateUI();
         }
 
-        // 重新玩加法游戏
         function playAdditionAgain() {
             initAdditionGame();
         }
 
-        // 下一关加法游戏
-        function nextAdditionLevel() {
-            if (gameData.gameProgress.calculationForest.level < 2) {
-                gameData.gameProgress.calculationForest.level = 2;
-                if (gameContent.areas["calculation-forest"].games[1]) {
-                    gameContent.areas["calculation-forest"].games[1].locked = false;
-                }
-                saveGameData();
-            }
-            
-            showScreen('gameArea');
-        }
-
-        // 初始化图形认知游戏
+        // ==================== 图形认知游戏 ====================
         function initShapeRecognitionGame() {
-            const level = gameData.gameProgress.geometryCastle.level;
-            const gameLevel = gameContent.shapeRecognition[`level${level}`] || gameContent.shapeRecognition.level1;
+            console.log('🔶 初始化图形认知游戏');
+            
+            const gameLevel = gameContent.shapeRecognition.level1;
             
             // 设置时间限制
             document.getElementById('shape-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
@@ -1823,12 +1213,10 @@
             
             // 开始计时器
             startGameTimer('shape-timer', () => {
-                // 时间到，自动检查答案
                 checkShapeRecognition();
             });
         }
 
-        // 生成图形题目
         function generateShapeQuestion(gameLevel) {
             // 随机选择一个图形
             const shapes = gameLevel.shapes;
@@ -1859,7 +1247,6 @@
             shuffleChildren(options);
         }
 
-        // 创建图形选项
         function createShapeOption(shapeName, isCorrect) {
             const option = document.createElement('div');
             option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-accent transition-colors';
@@ -1880,12 +1267,8 @@
                 case '长方形':
                     shapeIcon = '<div class="w-20 h-12 mx-auto bg-accent bg-opacity-20"></div>';
                     break;
-                case '平行四边形':
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 transform skew-x-[-20deg]"></div>';
-                    break;
-                case '梯形':
-                    shapeIcon = '<div class="w-0 h-0 border-l-[20px] border-l-transparent border-b-[40px] border-b-accent border-r-[20px] border-r-transparent relative mx-auto"><div class="w-40 h-40 bg-accent bg-opacity-20 absolute top-[40px] left-[-20px]"></div></div>';
-                    break;
+                default:
+                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-gray-200 rounded-lg"></div>';
             }
             
             option.innerHTML = shapeIcon;
@@ -1903,7 +1286,6 @@
             return option;
         }
 
-        // 检查图形认知答案
         function checkShapeRecognition() {
             stopGameTimer();
             
@@ -1934,20 +1316,10 @@
                 gameData.player.score += 10;
                 gameData.player.pieces += 1;
                 gameData.player.completedGames += 1;
+                gameData.gameProgress.geometryCastle.completed = 1;
                 
-                // 解锁下一关
-                if (gameData.gameProgress.geometryCastle.level < 2) {
-                    gameData.gameProgress.geometryCastle.level = 2;
-                    if (gameContent.areas["geometry-castle"].games[1]) {
-                        gameContent.areas["geometry-castle"].games[1].locked = false;
-                    }
-                }
+                showMessage('🎉 恭喜获得城堡碎片！', 'success');
                 
-                // 显示游戏完成弹窗
-                setTimeout(() => {
-                    resultArea.classList.remove('hidden');
-                    showGameCompleteModal();
-                }, 500);
             } else {
                 // 游戏失败
                 resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
@@ -1955,36 +1327,22 @@
                 resultTitle.textContent = '不要灰心！';
                 resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
                 resultMessage.textContent = `这是 ${selectedShape}，不是 ${correctShape}。再试一次吧！`;
-                
-                resultArea.classList.remove('hidden');
             }
             
+            resultArea.classList.remove('hidden');
             saveGameData();
             updateUI();
         }
 
-        // 重新玩图形认知游戏
         function playShapeRecognitionAgain() {
             initShapeRecognitionGame();
         }
 
-        // 下一关图形认知游戏
-        function nextShapeRecognitionLevel() {
-            if (gameData.gameProgress.geometryCastle.level < 2) {
-                gameData.gameProgress.geometryCastle.level = 2;
-                if (gameContent.areas["geometry-castle"].games[1]) {
-                    gameContent.areas["geometry-castle"].games[1].locked = false;
-                }
-                saveGameData();
-            }
-            
-            showScreen('gameArea');
-        }
-
-        // 初始化时间认识游戏
+        // ==================== 时间认识游戏 ====================
         function initTimeRecognitionGame() {
-            const level = gameData.gameProgress.timeTower.level;
-            const gameLevel = gameContent.timeRecognition[`level${level}`] || gameContent.timeRecognition.level1;
+            console.log('🕐 初始化时间认识游戏');
+            
+            const gameLevel = gameContent.timeRecognition.level1;
             
             // 设置时间限制
             document.getElementById('time-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
@@ -1998,18 +1356,16 @@
             
             // 开始计时器
             startGameTimer('time-timer', () => {
-                // 时间到，自动检查答案
                 checkTimeRecognition();
             });
         }
 
-        // 生成时间题目
         function generateTimeQuestion(gameLevel) {
             // 随机选择一个时间
             const times = gameLevel.times;
             const randomTime = times[Math.floor(Math.random() * times.length)];
             
-            // 设置时钟
+            // 设置时钟显示
             setClockTime(randomTime.hour, randomTime.minute);
             
             // 生成选项
@@ -2036,33 +1392,30 @@
             shuffleChildren(options);
         }
 
-        // 设置时钟时间
         function setClockTime(hour, minute) {
             const hourHand = document.getElementById('hour-hand');
             const minuteHand = document.getElementById('minute-hand');
             
-            // 计算指针角度
-            const hourAngle = (hour % 12) * 30 + minute * 0.5;
+            const hourAngle = (hour % 12) * 30 + (minute / 60) * 30;
             const minuteAngle = minute * 6;
             
-            // 设置指针旋转
             hourHand.style.transform = `translate(-50%, -100%) rotate(${hourAngle}deg)`;
             minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteAngle}deg)`;
-            
-            // 存储正确答案
-            document.getElementById('clock-container').dataset.time = `${hour}:${minute.toString().padStart(2, '0')}`;
         }
 
-        // 创建时间选项
         function createTimeOption(hour, minute, isCorrect) {
             const option = document.createElement('div');
             option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-ocean transition-colors';
-            
-            const timeStr = minute === 0 ? `${hour}点` : `${hour}点${minute}分`;
-            option.dataset.time = `${hour}:${minute.toString().padStart(2, '0')}`;
+            option.dataset.hour = hour;
+            option.dataset.minute = minute;
             option.dataset.correct = isCorrect;
             
-            option.innerHTML = `<span class="text-xl font-bold text-ocean">${timeStr}</span>`;
+            const timeStr = `${hour}:${minute.toString().padStart(2, '0')}`;
+            
+            option.innerHTML = `
+                <div class="text-xl font-bold text-ocean">${timeStr}</div>
+                <div class="text-sm text-gray-500">${hour}点${minute}分</div>
+            `;
             
             option.addEventListener('click', () => {
                 // 移除其他选项的选中状态
@@ -2077,7 +1430,6 @@
             return option;
         }
 
-        // 检查时间认识答案
         function checkTimeRecognition() {
             stopGameTimer();
             
@@ -2093,8 +1445,8 @@
             }
             
             const isCorrect = selectedOption.dataset.correct === 'true';
-            const selectedTime = selectedOption.dataset.time;
-            const correctTime = document.getElementById('clock-container').dataset.time;
+            const selectedHour = selectedOption.dataset.hour;
+            const selectedMinute = selectedOption.dataset.minute;
             
             if (isCorrect) {
                 // 游戏成功
@@ -2102,399 +1454,17 @@
                 resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
                 resultTitle.textContent = '太棒了！';
                 resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确！时间是 ${formatTime(correctTime)}！`;
+                resultMessage.textContent = `正确！时间是 ${selectedHour}点${selectedMinute}分！`;
                 
                 // 更新游戏进度
                 gameData.player.score += 10;
                 gameData.player.pieces += 1;
                 gameData.player.completedGames += 1;
+                gameData.gameProgress.timeTower.completed = 1;
                 
-                // 解锁下一关
-                if (gameData.gameProgress.timeTower.level < 2) {
-                    gameData.gameProgress.timeTower.level = 2;
-                    if (gameContent.areas["time-tower"].games[1]) {
-                        gameContent.areas["time-tower"].games[1].locked = false;
-                    }
-                }
+                showMessage('🎉 恭喜获得城堡碎片！', 'success');
                 
-                // 显示游戏完成弹窗
-                setTimeout(() => {
-                    resultArea.classList.remove('hidden');
-                    showGameCompleteModal();
-                }, 500);
             } else {
                 // 游戏失败
                 resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = `正确时间是 ${formatTime(correctTime)}，不是 ${formatTime(selectedTime)}。再试一次吧！`;
-                
-                resultArea.classList.remove('hidden');
-            }
-            
-            saveGameData();
-            updateUI();
-        }
-
-        // 格式化时间
-        function formatTime(timeStr) {
-            const [hour, minute] = timeStr.split(':').map(Number);
-            return minute === 0 ? `${hour}点` : `${hour}点${minute}分`;
-        }
-
-        // 重新玩时间认识游戏
-        function playTimeRecognitionAgain() {
-            initTimeRecognitionGame();
-        }
-
-        // 下一关时间认识游戏
-        function nextTimeRecognitionLevel() {
-            if (gameData.gameProgress.timeTower.level < 2) {
-                gameData.gameProgress.timeTower.level = 2;
-                if (gameContent.areas["time-tower"].games[1]) {
-                    gameContent.areas["time-tower"].games[1].locked = false;
-                }
-                saveGameData();
-            }
-            
-            showScreen('gameArea');
-        }
-
-        // 开始游戏计时器
-        function startGameTimer(timerId, callback) {
-            stopGameTimer();
-            
-            const timerElement = document.getElementById(timerId);
-            currentState.gameTimer = setInterval(() => {
-                currentState.remainingTime--;
-                
-                if (currentState.remainingTime <= 0) {
-                    stopGameTimer();
-                    if (callback) callback();
-                } else {
-                    timerElement.textContent = `00:${currentState.remainingTime.toString().padStart(2, '0')}`;
-                }
-            }, 1000);
-        }
-
-        // 停止游戏计时器
-        function stopGameTimer() {
-            if (currentState.gameTimer) {
-                clearInterval(currentState.gameTimer);
-                currentState.gameTimer = null;
-            }
-        }
-
-        // 显示游戏完成弹窗
-        function showGameCompleteModal() {
-            document.getElementById('game-complete-modal').classList.remove('hidden');
-        }
-
-        // 更新城堡页面
-        function updateCastlePage() {
-            // 更新碎片显示
-            const collectedPieces = document.getElementById('collected-pieces');
-            collectedPieces.innerHTML = '';
-            
-            for (let i = 0; i < 6; i++) {
-                const piece = document.createElement('div');
-                piece.className = 'w-full aspect-square rounded-lg flex items-center justify-center';
-                
-                if (i < gameData.player.pieces) {
-                    piece.className += ' bg-secondary bg-opacity-20';
-                    piece.innerHTML = '<i class="fa fa-puzzle-piece text-2xl text-secondary"></i>';
-                } else {
-                    piece.className += ' bg-gray-100';
-                    piece.innerHTML = '<i class="fa fa-puzzle-piece text-gray-300 text-2xl"></i>';
-                }
-                
-                collectedPieces.appendChild(piece);
-            }
-            
-            // 更新建造按钮状态
-            const buildButton = document.getElementById('build-castle-btn');
-            if (gameData.player.pieces >= 10) {
-                buildButton.disabled = false;
-                buildButton.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                buildButton.disabled = true;
-                buildButton.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-            
-            // 更新城堡显示
-            const castleDisplay = document.getElementById('castle-display');
-            if (gameData.player.builtCastles > 0) {
-                castleDisplay.innerHTML = `
-                    <img src="https://p11-doubao-search-sign.byteimg.com/labis/c622ddd52c6befb982cc23c51d6f5842~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=XzeHf7j9RDVL8rPu%2BTY4FpxWJkM%3D" alt="粉色梦幻城堡" class="w-full h-full object-contain">
-                `;
-            } else {
-                castleDisplay.innerHTML = `
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <p class="text-gray-500">收集足够的碎片来建造你的第一座城堡吧！</p>
-                    </div>
-                `;
-            }
-            
-            // 更新城堡收藏
-            const castleCollection = document.getElementById('castle-collection');
-            castleCollection.innerHTML = '';
-            
-            gameContent.castles.forEach((castle, index) => {
-                const castleCard = document.createElement('div');
-                castleCard.className = 'bg-gray-50 rounded-lg p-4 text-center';
-                
-                if (gameData.player.builtCastles > index) {
-                    castleCard.classList.remove('opacity-50');
-                    
-                    let castleImage = '';
-                    switch (castle.id) {
-                        case 'pink-castle':
-                            castleImage = 'https://p11-doubao-search-sign.byteimg.com/labis/c622ddd52c6befb982cc23c51d6f5842~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=XzeHf7j9RDVL8rPu%2BTY4FpxWJkM%3D';
-                            break;
-                        case 'ocean-castle':
-                            castleImage = 'https://p3-doubao-search-sign.byteimg.com/labis/650b4d3de4255088bf6c3ea4e68fcd86~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=sRhIl5sRul%2FMDTfBquGmbOEazf8%3D';
-                            break;
-                        case 'rainbow-castle':
-                            castleImage = 'https://p11-doubao-search-sign.byteimg.com/labis/image/1abe9097263448ce6b280ef2e45f5a15~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=573PT1p2uB8emGaXxC68mD86KtU%3D';
-                            break;
-                    }
-                    
-                    castleCard.innerHTML = `
-                        <div class="w-full aspect-video rounded-lg mb-4 overflow-hidden">
-                            <img src="${castleImage}" alt="${castle.name}" class="w-full h-full object-cover">
-                        </div>
-                        <h4 class="font-bold text-primary mb-2">${castle.name}</h4>
-                        <p class="text-sm text-green-600">已解锁</p>
-                    `;
-                } else {
-                    castleCard.classList.add('opacity-50');
-                    castleCard.innerHTML = `
-                        <div class="w-full aspect-video bg-gray-100 rounded-lg mb-4 flex items-center justify-center">
-                            <i class="fa fa-lock text-gray-400 text-4xl"></i>
-                        </div>
-                        <h4 class="font-bold text-gray-600 mb-2">${castle.name}</h4>
-                        <p class="text-sm text-gray-500">收集${castle.piecesRequired}个碎片解锁</p>
-                    `;
-                }
-                
-                castleCollection.appendChild(castleCard);
-            });
-        }
-
-        // 建造城堡
-        function buildCastle() {
-            if (gameData.player.pieces < 10) {
-                showMessage('你需要至少10个碎片来建造城堡', 'warning');
-                return;
-            }
-            
-            // 扣除碎片
-            gameData.player.pieces -= 10;
-            gameData.player.builtCastles += 1;
-            
-            // 解锁城堡
-            if (gameData.player.builtCastles === 1) {
-                gameContent.castles[0].unlocked = true;
-            }
-            
-            saveGameData();
-            updateUI();
-            updateCastlePage();
-            
-            showMessage('恭喜你建造了第一座城堡！', 'success');
-        }
-
-        // 更新礼物商店页面
-        function updateGiftShopPage() {
-            // 更新我的收藏
-            const myGifts = document.getElementById('my-gifts');
-            myGifts.innerHTML = '';
-            
-            if (gameData.player.collectedGifts.length === 0) {
-                myGifts.innerHTML = `
-                    <div class="text-center col-span-6">
-                        <div class="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-2">
-                            <i class="fa fa-gift text-gray-300"></i>
-                        </div>
-                        <p class="text-xs text-gray-500">还没有购买任何礼物</p>
-                    </div>
-                `;
-            } else {
-                gameData.player.collectedGifts.forEach(giftId => {
-                    const gift = gameContent.gifts.find(g => g.id === giftId);
-                    if (gift) {
-                        const giftElement = document.createElement('div');
-                        giftElement.className = 'text-center';
-                        giftElement.innerHTML = `
-                            <div class="w-16 h-16 mx-auto bg-${gift.color} bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                <i class="fa fa-${gift.icon} text-2xl text-${gift.color}"></i>
-                            </div>
-                            <p class="text-xs text-gray-600">${gift.name}</p>
-                        `;
-                        myGifts.appendChild(giftElement);
-                    }
-                });
-            }
-        }
-
-        // 购买礼物
-        function buyGift(giftId, price) {
-            if (gameData.player.score < price) {
-                showMessage('积分不足，无法购买', 'warning');
-                return;
-            }
-            
-            if (gameData.player.collectedGifts.includes(giftId)) {
-                showMessage('你已经拥有这个礼物了', 'info');
-                return;
-            }
-            
-            // 扣除积分
-            gameData.player.score -= price;
-            
-            // 添加礼物到收藏
-            gameData.player.collectedGifts.push(giftId);
-            
-            saveGameData();
-            updateUI();
-            updateGiftShopPage();
-            
-            const gift = gameContent.gifts.find(g => g.id === giftId);
-            showMessage(`成功购买 ${gift.name}！`, 'success');
-        }
-
-        // 保存设置
-        function saveSettings() {
-            gameData.player.name = document.getElementById('player-name').value || '诺诺';
-            gameData.settings.bgm = document.getElementById('bgm-toggle').checked;
-            gameData.settings.sound = document.getElementById('sound-toggle').checked;
-            gameData.settings.difficulty = document.getElementById('difficulty-select').value;
-            
-            saveGameData();
-            updateUI();
-            
-            showScreen(currentState.screen);
-            showMessage('设置已保存', 'success');
-        }
-
-        // 重置进度
-        function resetProgress() {
-            if (confirm('确定要重置所有游戏进度吗？这将清除所有积分、碎片和解锁的内容。')) {
-                gameData.player = {
-                    name: "诺诺",
-                    score: 0,
-                    pieces: 0,
-                    completedGames: 0,
-                    builtCastles: 0,
-                    collectedGifts: []
-                };
-                
-                gameData.gameProgress = {
-                    numberKingdom: {
-                        completed: false,
-                        level: 1
-                    },
-                    calculationForest: {
-                        completed: false,
-                        level: 1
-                    },
-                    geometryCastle: {
-                        completed: false,
-                        level: 1
-                    },
-                    timeTower: {
-                        completed: false,
-                        level: 1
-                    },
-                    multiplicationGarden: {
-                        completed: false,
-                        level: 0,
-                        locked: true
-                    },
-                    divisionLake: {
-                        completed: false,
-                        level: 0,
-                        locked: true
-                    }
-                };
-                
-                // 重置锁定状态
-                Object.values(gameContent.areas).forEach(area => {
-                    area.games.forEach((game, index) => {
-                        if (index > 0) {
-                            game.locked = true;
-                        }
-                    });
-                });
-                
-                saveGameData();
-                updateUI();
-                updateCastlePage();
-                updateGiftShopPage();
-                
-                showMessage('游戏进度已重置', 'info');
-            }
-        }
-
-        // 显示消息
-        function showMessage(message, type = 'info') {
-            // 创建消息元素
-            const messageElement = document.createElement('div');
-            messageElement.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full`;
-            
-            // 设置消息类型样式
-            switch (type) {
-                case 'success':
-                    messageElement.classList.add('bg-green-100', 'text-green-800', 'border-l-4', 'border-green-500');
-                    break;
-                case 'warning':
-                    messageElement.classList.add('bg-yellow-100', 'text-yellow-800', 'border-l-4', 'border-yellow-500');
-                    break;
-                case 'error':
-                    messageElement.classList.add('bg-red-100', 'text-red-800', 'border-l-4', 'border-red-500');
-                    break;
-                default:
-                    messageElement.classList.add('bg-blue-100', 'text-blue-800', 'border-l-4', 'border-blue-500');
-            }
-            
-            messageElement.textContent = message;
-            
-            // 添加到页面
-            document.body.appendChild(messageElement);
-            
-            // 显示消息
-            setTimeout(() => {
-                messageElement.classList.remove('translate-x-full');
-            }, 100);
-            
-            // 自动隐藏
-            setTimeout(() => {
-                messageElement.classList.add('translate-x-full');
-                setTimeout(() => {
-                    document.body.removeChild(messageElement);
-                }, 300);
-            }, 3000);
-        }
-
-        // 工具函数：随机排序数组
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // 工具函数：随机排序子元素
-        function shuffleChildren(parent) {
-            const children = Array.from(parent.children);
-            shuffleArray(children);
-            children.forEach(child => parent.appendChild(child));
-        }
-
-        // 启动游戏
-        window.addEventListener('DOMContentLoaded', initGame);
-    </script>
-</body>
-</html>
+                resultIcon.innerHTML
