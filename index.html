@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数学城堡 - 6岁女孩数学学习应用</title>
+    <title>诺诺的数学城堡 - 6岁女孩的数学学习乐园</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -12,14 +12,18 @@
                 extend: {
                     colors: {
                         primary: '#FF6B9D',
-                        secondary: '#FFD1DC',
-                        accent: '#FFC8DD',
-                        success: '#CDB4DB',
-                        info: '#A2D2FF',
-                        warning: '#FFAFCC',
-                        danger: '#FF8fab',
-                        light: '#FFE5EC',
-                        dark: '#8338EC'
+                        secondary: '#A2D2FF',
+                        success: '#06D6A0',
+                        warning: '#FFD166',
+                        danger: '#EF476F',
+                        info: '#118AB2',
+                        light: '#F8F9FA',
+                        dark: '#212529',
+                        pink: '#FFC8DD',
+                        purple: '#CDB4DB',
+                        blue: '#BDE0FE',
+                        yellow: '#FFE5B4',
+                        green: '#D1FAE5'
                     },
                     fontFamily: {
                         sans: ['Comic Sans MS', 'Arial', 'sans-serif'],
@@ -29,6 +33,12 @@
                         'spin-slow': 'spin 3s linear infinite',
                         'wiggle': 'wiggle 1s ease-in-out infinite',
                         'float': 'float 3s ease-in-out infinite',
+                        'bounce-in': 'bounceIn 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'sparkle': 'sparkle 2s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
                     },
                     keyframes: {
                         wiggle: {
@@ -38,6 +48,32 @@
                         float: {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: 0 },
+                            '50%': { transform: 'scale(1.05)' },
+                            '70%': { transform: 'scale(0.9)' },
+                            '100%': { transform: 'scale(1)', opacity: 1 },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: 0 },
+                            '100%': { opacity: 1 },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(-100%)', opacity: 0 },
+                            '100%': { transform: 'translateX(0)', opacity: 1 },
+                        },
+                        sparkle: {
+                            '0%, 100%': { transform: 'scale(1)', opacity: 1 },
+                            '50%': { transform: 'scale(1.1)', opacity: 0.8 },
+                        },
+                        glow: {
+                            '0%, 100%': { boxShadow: '0 0 5px rgba(255, 107, 157, 0.5)' },
+                            '50%': { boxShadow: '0 0 20px rgba(255, 107, 157, 0.8)' },
+                        },
+                        pulse: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.05)' },
                         }
                     }
                 }
@@ -52,11 +88,24 @@
             .text-shadow-lg {
                 text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
             }
-            .block-shadow {
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            .btn-shadow {
+                box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
             }
-            .block-shadow-lg {
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            .btn-shadow:active {
+                transform: translateY(4px);
+                box-shadow: 0 0 0 rgba(0, 0, 0, 0.2);
+            }
+            .card-shadow {
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            }
+            .number-shadow {
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            }
+            .castle-shadow {
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            }
+            .gift-shadow {
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             }
             .glass {
                 background: rgba(255, 255, 255, 0.25);
@@ -67,92 +116,120 @@
     </style>
     <style>
         body {
-            background: linear-gradient(135deg, #FFE5EC 0%, #FFC8DD 50%, #CDB4DB 100%);
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFC8DD 25%, #CDB4DB 50%, #A2D2FF 75%, #BDE0FE 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
         
-        .block {
-            width: 60px;
-            height: 60px;
-            margin: 2px;
-            cursor: grab;
-            transition: all 0.3s ease;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 10px;
         }
         
-        .block:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .block:active {
-            cursor: grabbing;
-            transform: scale(0.95);
-        }
-        
-        .drop-zone {
-            min-height: 200px;
-            border: 3px dashed #FF6B9D;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
-        
-        .drop-zone.active {
-            border-color: #8338EC;
-            background-color: rgba(131, 56, 236, 0.1);
-        }
-        
-        .doll {
-            width: 60px;
-            height: 80px;
-            cursor: grab;
-            transition: all 0.3s ease;
+        ::-webkit-scrollbar-track {
+            background: #FFE5EC;
             border-radius: 10px;
         }
         
-        .doll:hover {
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FF6B9D, #8338EC);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #FF8fab, #9333EA);
+        }
+        
+        /* 按钮动画 */
+        .game-btn {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        .game-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+        }
+        
+        .game-btn:active {
+            transform: scale(0.98) translateY(0);
+        }
+        
+        /* 数字卡片 */
+        .number-card {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        .number-card:hover {
+            transform: scale(1.1) rotate(2deg);
+        }
+        
+        /* 形状卡片 */
+        .shape-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .shape-card:hover {
             transform: scale(1.1) rotate(5deg);
         }
         
-        .doll:active {
-            cursor: grabbing;
+        .shape-card.selected {
+            transform: scale(1.2);
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
         }
         
-        .hand {
-            width: 80px;
-            height: 80px;
-            cursor: pointer;
+        /* 城堡碎片 */
+        .castle-piece {
             transition: all 0.3s ease;
-            border-radius: 50%;
+            cursor: pointer;
         }
         
-        .hand:hover {
-            transform: scale(1.2) rotate(10deg);
+        .castle-piece:hover {
+            transform: scale(1.1) rotate(3deg);
         }
         
+        .castle-piece.locked {
+            filter: grayscale(1);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 礼物卡片 */
+        .gift-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .gift-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+        
+        .gift-card.locked {
+            filter: grayscale(1);
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 进度条 */
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #FF6B9D 0%, #8338EC 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 动画效果 */
         .star {
             position: absolute;
             width: 30px;
             height: 30px;
-            background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D');
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIwLjUgMi41QzIwLjUgMi41IDE3LjUgMCAxNiAwQzE0LjUgMCAxMS41IDIuNSAxMS41IDIuNUMxMS41IDIuNSA4LjUgMCA3IDBDNS41IDAgMi41IDIuNSAyLjUgMi41QzIuNSAyLjUgMCA1LjUgMCA3QzAgOC41IDIuNSAxMS41IDIuNSAxMS41QzIuNSAxMS41IDAgMTQuNSAwIDE2QzAgMTcuNSAyLjUgMjAuNSAyLjUgMjAuNUMyLjUgMjAuNSAwIDIyLjUgMCAyNCBDMCAyNS41IDIuNSAyOC41IDIuNSAyOC41QzIuNSAyOC41IDUuNSAzMS41IDcuNSAyOS41QzkuNSAyNy41IDEyLjUgMzAgMTQuNSAyOCBDMTYuNSAyNiAxOS41IDI5IDIxLjUgMjcuNUMyMy41IDI2IDI2LjUgMjguNSAyOC41IDI2LjVDMzAuNSAyNC41IDI4IDIxLjUgMjguIDIwLjVDMjggMTkuNSAzMC41IDE3LjUgMzIuNSAxNiBDMzQuNSAxNC41IDMyIDEyLjUgMzIgMTEuNUMzMiAxMC41IDI5LjUgNyAyOS41IDcuQzI5LjUgNyAzMiA0LjUgMzIuNSAyLjVDMzMgMC41IDMwLjUgMCAyOC41IDBDMjYuNSAwIDI0IDIuNSAyNC41IDIuNUMyNC41IDIuNSAyMS41IDAgMjAuNSAwQzE5LjUgMCAxNi41IDIuNSAxNi41IDIuNUMxNi41IDIuNSAxMy41IDAgMTIuNSAwQzExLjUgMCA4LjUgMi41IDguNSAyLjVDOC41IDIuNSA1LjUgMCA0LjUgMEMzLjUgMCAwIDIuNSAwIDIuNUMwIDIuNSAyLjUgNSAyLjUgNUMyLjUgNSAwIDcuNSAwIDguNUMwIDkuNSAyLjUgMTIuNSAyLjUgMTIuNUMyLjUgMTIuNSAwIDE0LjUgMCAxNkMwIDE3LjUgMi41IDIwLjUgMi41IDIwLjVDMi41IDIwLjUgMCAyMi41IDAgMjRDMCAyNS41IDIuNSAyOC41IDIuNSAyOC41QzIuNSAyOC41IDUuNSAzMS41IDcuNSAyOS41QzkuNSAyNy41IDEyLjUgMzAgMTQuNSAyOEMxNi41IDI2IDE5LjUgMjkgMjEuNSAyNy41QzIzLjUgMjYgMjYuNSAyOC41IDI4LjUgMjYuNUMzMC41IDI0LjUgMjggMjEuNSAyOC4gMjAuNUMyOCAxOS41IDMwLjUgMTcuNSAzMi41IDE2QzM0LjUgMTQuNSAzMiAxMi41IDMyIDExLjVDMzIuNSAxMC41IDI5LjUgNyAyOS41IDcuQzI5LjUgNyAzMiA0LjUgMzIuNSAyLjVDMzMgMC41IDMwLjUgMCAyOC41IDBDMjYuNSAwIDI0IDIuNSAyNC41IDIuNUMyNC41IDIuNSAyMS41IDAgMjAuNSAwWiIgZmlsbD0iI0ZGRDc2NiIvPgo8L3N2Zz4=');
             background-size: contain;
             background-repeat: no-repeat;
             animation: float 2s ease-in-out infinite;
             pointer-events: none;
-        }
-        
-        @keyframes celebrate {
-            0% { transform: scale(1) rotate(0deg); }
-            25% { transform: scale(1.2) rotate(10deg); }
-            50% { transform: scale(1.1) rotate(-10deg); }
-            75% { transform: scale(1.2) rotate(5deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-        
-        .celebrate {
-            animation: celebrate 0.6s ease-in-out;
         }
         
         .confetti {
@@ -176,517 +253,1280 @@
             }
         }
         
-        .number-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #FF6B9D, #FF8fab);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        .bubble {
             position: absolute;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            animation: bubble 3s ease-in-out infinite;
+            pointer-events: none;
         }
         
-        .progress-bar {
-            height: 20px;
-            background: linear-gradient(90deg, #FF6B9D 0%, #8338EC 100%);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        @keyframes bubble {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) scale(1.1);
+                opacity: 1;
+            }
         }
         
-        .tab-content {
-            display: none;
+        .correct-animation {
+            animation: correctPulse 0.6s ease-in-out;
         }
         
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); background-color: #06D6A0; }
+            100% { transform: scale(1); }
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .wrong-animation {
+            animation: wrongShake 0.5s ease-in-out;
         }
         
-        .btn-primary {
-            background: linear-gradient(135deg, #FF6B9D, #FF8fab);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); background-color: #EF476F; }
+            75% { transform: translateX(5px); background-color: #EF476F; }
+        }
+        
+        .equation {
+            font-size: 2rem;
             font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-        
-        .btn-secondary {
-            background: linear-gradient(135deg, #CDB4DB, #A2D2FF);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
             transition: all 0.3s ease;
         }
         
-        .btn-secondary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        .equation.correct {
+            color: #06D6A0;
+            transform: scale(1.1);
+        }
+        
+        .equation.wrong {
+            color: #EF476F;
+            animation: wrongShake 0.5s ease-in-out;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .mobile-hidden {
+                display: none;
+            }
+            
+            .mobile-full {
+                width: 100%;
+            }
+            
+            .equation {
+                font-size: 1.5rem;
+            }
+            
+            .game-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 语音按钮 */
+        .voice-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .voice-btn.speaking {
+            animation: pulse 1s ease-in-out infinite;
+        }
+        
+        /* 城堡建造区域 */
+        .castle-builder {
+            min-height: 300px;
+            border: 3px dashed #FF6B9D;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .castle-builder.active {
+            border-color: #8338EC;
+            background-color: rgba(131, 56, 236, 0.1);
+        }
+        
+        /* 拖拽效果 */
+        .draggable {
+            cursor: grab;
+            user-select: none;
+        }
+        
+        .draggable:active {
+            cursor: grabbing;
+        }
+        
+        .drop-target {
+            transition: all 0.3s ease;
+        }
+        
+        .drop-target.highlight {
+            background-color: rgba(255, 107, 157, 0.1);
+            border: 2px dashed #FF6B9D;
+        }
+        
+        /* 成就徽章 */
+        .achievement-badge {
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        .achievement-badge:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .achievement-badge.locked {
+            filter: grayscale(1);
+            opacity: 0.5;
         }
     </style>
 </head>
 <body class="font-sans text-gray-800">
     <!-- 顶部导航 -->
-    <nav class="bg-white bg-opacity-80 backdrop-blur-md shadow-md py-4">
+    <nav class="bg-white bg-opacity-90 backdrop-blur-md shadow-md py-3 sticky top-0 z-50">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D" alt="Logo" class="w-10 h-10">
-                <h1 class="text-2xl font-bold text-primary text-shadow">数学城堡</h1>
-            </div>
-            <div class="flex items-center space-x-4">
-                <div class="bg-light rounded-full px-4 py-2 flex items-center space-x-2">
-                    <i class="fa fa-star text-yellow-400"></i>
-                    <span id="score" class="font-bold">0</span>
+                <div class="w-10 h-10 bg-gradient-to-r from-primary to-purple-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                    1+1
                 </div>
-                <button id="helpBtn" class="btn-secondary">
-                    <i class="fa fa-question-circle mr-2"></i>帮助
+                <h1 class="text-xl font-bold text-primary text-shadow">诺诺的数学城堡</h1>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <span id="totalScore" class="font-bold">0</span>
+                </div>
+                <div class="bg-blue-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                    <i class="fa fa-puzzle-piece text-blue-500"></i>
+                    <span id="totalPieces" class="font-bold">0</span>
+                </div>
+                <button id="helpBtn" class="bg-info text-white px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                    <i class="fa fa-question-circle mr-1"></i>帮助
                 </button>
             </div>
         </div>
     </nav>
 
     <!-- 主内容区 -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="container mx-auto px-4 py-6">
         <!-- 欢迎页面 -->
-        <div id="welcome" class="text-center mb-8 animate-float">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/68215caad47a4602b577677a4e017130~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398217&x-signature=TcfE%2BRTGf8%2BAa7oK9WduzdRT1DY%3D" alt="城堡" class="w-64 h-64 mx-auto mb-6 block-shadow-lg rounded-2xl">
-            <h2 class="text-3xl font-bold text-primary mb-4 text-shadow-lg">欢迎来到数学城堡！</h2>
-            <p class="text-lg text-gray-700 mb-6 max-w-md mx-auto">亲爱的小朋友，准备好开始有趣的数学冒险了吗？在这里，你可以学习正方体计数、左右认知和序数间隔哦！</p>
-            <button id="startBtn" class="btn-primary text-xl px-8 py-4">
-                <i class="fa fa-play-circle mr-2"></i>开始游戏
-            </button>
+        <div id="welcomeScreen" class="screen active">
+            <div class="max-w-md mx-auto bg-white rounded-3xl p-6 card-shadow">
+                <div class="flex justify-center mb-4">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/fd22a82e3897462c8b883ac58df33bb4~tplv-a9rns2rl98-image.image?rcl=20251215220502112A05041D106A479CA7&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768399545&x-signature=Y%2F4pbUwZ%2B0CRjg8KW9syE3ruIOU%3D" alt="诺诺" class="w-48 h-48 object-contain animate-float">
+                </div>
+                <h2 class="text-2xl font-bold text-primary mb-3 text-shadow-lg text-center">欢迎来到数学城堡！</h2>
+                <p class="text-gray-700 mb-4 text-center">亲爱的诺诺，准备好开始有趣的数学冒险了吗？</p>
+                
+                <div class="bg-pink-50 rounded-xl p-4 mb-6">
+                    <h3 class="font-bold text-primary mb-2">今天的学习目标：</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span>完成3个数学游戏</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span>收集5个城堡碎片</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fa fa-check-circle text-green-500 mr-2"></i>
+                            <span>获得100个积分</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <button id="startAdventureBtn" class="w-full bg-primary text-white py-3 rounded-full text-lg font-bold btn-shadow mb-4">
+                    <i class="fa fa-rocket mr-2"></i>开始冒险
+                </button>
+                
+                <div class="flex space-x-2">
+                    <button id="visitCastleBtn" class="flex-1 bg-purple-500 text-white py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-castle mr-1"></i>我的城堡
+                    </button>
+                    <button id="visitShopBtn" class="flex-1 bg-blue-500 text-white py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-gift mr-1"></i>礼物商店
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- 游戏选择标签页 -->
-        <div id="gameTabs" class="hidden">
-            <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
-                <div class="flex flex-wrap justify-center gap-4 mb-6">
-                    <button class="tab-btn active px-6 py-3 rounded-full bg-primary text-white font-bold text-lg" data-tab="blockGame">
-                        <i class="fa fa-cubes mr-2"></i>正方体计数
-                    </button>
-                    <button class="tab-btn px-6 py-3 rounded-full bg-secondary text-gray-700 font-bold text-lg" data-tab="leftRightGame">
-                        <i class="fa fa-hand-paper-o mr-2"></i>左右认知
-                    </button>
-                    <button class="tab-btn px-6 py-3 rounded-full bg-secondary text-gray-700 font-bold text-lg" data-tab="orderGame">
-                        <i class="fa fa-sort-numeric-asc mr-2"></i>序数间隔
-                    </button>
-                </div>
-
-                <!-- 正方体计数游戏 -->
-                <div id="blockGame" class="tab-content active">
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary mb-2">公主城堡搭建</h3>
-                        <p class="text-gray-600">把彩色积木拖到城堡上，数一数有多少层吧！</p>
-                    </div>
-                    
-                    <div class="flex flex-col md:flex-row gap-8">
-                        <!-- 积木选择区 -->
-                        <div class="bg-light rounded-xl p-4 block-shadow">
-                            <h4 class="font-bold mb-3 text-center">选择积木</h4>
-                            <div class="flex flex-wrap justify-center gap-2" id="blockContainer">
-                                <div class="block" style="background: linear-gradient(135deg, #FF6B9D, #FF8fab);" data-color="pink"></div>
-                                <div class="block" style="background: linear-gradient(135deg, #A2D2FF, #BDE0FE);" data-color="blue"></div>
-                                <div class="block" style="background: linear-gradient(135deg, #CDB4DB, #E0AAFF);" data-color="purple"></div>
-                                <div class="block" style="background: linear-gradient(135deg, #FFAFCC, #FFC8DD);" data-color="lightpink"></div>
-                                <div class="block" style="background: linear-gradient(135deg, #BDE0FE, #A2D2FF);" data-color="lightblue"></div>
-                            </div>
+        <!-- 游戏选择页面 -->
+        <div id="gameSelectionScreen" class="screen hidden">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-primary mb-3 text-shadow-lg">选择游戏</h2>
+                <p class="text-gray-700 mb-4">诺诺，今天想玩哪个数学游戏呢？</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                <!-- 数字认知游戏 -->
+                <div class="game-card bg-white rounded-2xl p-5 card-shadow game-btn animate-bounce-in">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-2xl font-bold text-red-500">123</span>
                         </div>
-                        
-                        <!-- 城堡搭建区 -->
+                        <div>
+                            <h3 class="font-bold">数字认知</h3>
+                            <p class="text-xs text-gray-500">数字配对、顺序排列</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <span class="text-xs ml-1">简单</span>
+                        </div>
+                        <button class="start-game-btn bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold btn-shadow" data-game="number">
+                            开始
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 基础运算游戏 -->
+                <div class="game-card bg-white rounded-2xl p-5 card-shadow game-btn animate-bounce-in" style="animation-delay: 0.1s;">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-2xl font-bold text-blue-500">+</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">基础运算</h3>
+                            <p class="text-xs text-gray-500">10以内加减法</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <span class="text-xs ml-1">中等</span>
+                        </div>
+                        <button class="start-game-btn bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold btn-shadow" data-game="math">
+                            开始
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 图形识别游戏 -->
+                <div class="game-card bg-white rounded-2xl p-5 card-shadow game-btn animate-bounce-in" style="animation-delay: 0.2s;">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-2xl font-bold text-green-500">△</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">图形识别</h3>
+                            <p class="text-xs text-gray-500">认识几何图形</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <span class="text-xs ml-1">简单</span>
+                        </div>
+                        <button class="start-game-btn bg-green-500 text-white px-4 py-1 rounded-full text-sm font-bold btn-shadow" data-game="shape">
+                            开始
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 记忆力游戏 -->
+                <div class="game-card bg-white rounded-2xl p-5 card-shadow game-btn animate-bounce-in" style="animation-delay: 0.3s;">
+                    <div class="flex items-center mb-3">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-2xl font-bold text-yellow-500">?</span>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">数学记忆</h3>
+                            <p class="text-xs text-gray-500">数字配对记忆</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <i class="fa fa-star text-yellow-400 text-xs"></i>
+                            <span class="text-xs ml-1">中等</span>
+                        </div>
+                        <button class="start-game-btn bg-yellow-500 text-white px-4 py-1 rounded-full text-sm font-bold btn-shadow" data-game="memory">
+                            开始
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 推荐游戏 -->
+            <div class="bg-white rounded-2xl p-5 card-shadow mb-8">
+                <h3 class="font-bold mb-3 flex items-center">
+                    <i class="fa fa-lightbulb-o text-yellow-500 mr-2"></i>
+                    今天推荐
+                </h3>
+                <div class="bg-pink-50 rounded-xl p-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                            <span class="text-xl font-bold text-blue-500">+</span>
+                        </div>
                         <div class="flex-1">
-                            <div class="relative">
-                                <div id="castle" class="drop-zone bg-white rounded-xl p-4 min-h-[300px] flex items-end justify-center">
-                                    <div class="text-center text-gray-400" id="castlePlaceholder">
-                                        <p>把积木拖到这里搭建城堡吧！</p>
-                                    </div>
-                                </div>
-                                <div id="castleBase" class="w-32 h-20 bg-yellow-100 rounded-t-full mx-auto mt-2 relative">
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <span class="text-sm font-bold">城堡底座</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 计数显示 -->
-                            <div class="mt-4 bg-light rounded-xl p-4 block-shadow">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-bold">当前层数：</span>
-                                    <span id="currentLayers" class="text-xl font-bold text-primary">0</span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="font-bold">总积木数：</span>
-                                    <span id="totalBlocks" class="text-xl font-bold text-primary">0</span>
-                                </div>
-                            </div>
+                            <h4 class="font-bold">基础运算游戏</h4>
+                            <p class="text-xs text-gray-600">根据你的学习情况，建议加强加减法练习</p>
                         </div>
-                    </div>
-                    
-                    <!-- 问题区域 -->
-                    <div class="mt-6 bg-white rounded-xl p-4 block-shadow">
-                        <div id="blockQuestion" class="hidden">
-                            <h4 class="font-bold mb-3 text-center">回答问题</h4>
-                            <p id="blockQuestionText" class="text-lg text-center mb-4"></p>
-                            <div class="flex justify-center gap-4">
-                                <button class="btn-secondary" id="blockAnswer1"></button>
-                                <button class="btn-secondary" id="blockAnswer2"></button>
-                                <button class="btn-secondary" id="blockAnswer3"></button>
-                            </div>
-                        </div>
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                            开始
+                        </button>
                     </div>
                 </div>
-
-                <!-- 左右认知游戏 -->
-                <div id="leftRightGame" class="tab-content">
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary mb-2">左右手游戏</h3>
-                        <p class="text-gray-600">根据提示点击正确的手，看看你能得多少分！</p>
-                    </div>
-                    
-                    <div class="flex justify-center mb-8">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/569bd97718044666aaff8479fd8c6f3d~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398231&x-signature=FmbEznajlnrXqO1p45eUJ1UJECE%3D" alt="左右认知" class="w-64 h-64 block-shadow-lg rounded-2xl">
-                    </div>
-                    
-                    <!-- 游戏区域 -->
-                    <div class="bg-light rounded-xl p-6 block-shadow">
-                        <div class="text-center mb-6">
-                            <h4 id="lrInstruction" class="text-xl font-bold text-primary mb-2">请点击左手！</h4>
-                            <p id="lrFeedback" class="text-lg hidden"></p>
+            </div>
+            
+            <!-- 学习进度 -->
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <h3 class="font-bold mb-3">本周学习进度</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>数字认知</span>
+                            <span>80%</span>
                         </div>
-                        
-                        <div class="flex justify-center gap-12 mb-6">
-                            <div class="relative">
-                                <div id="leftHand" class="hand bg-blue-100 p-4 rounded-full block-shadow" data-hand="left">
-                                    <span class="block text-center font-bold">左手</span>
-                                </div>
-                            </div>
-                            <div class="relative">
-                                <div id="rightHand" class="hand bg-pink-100 p-4 rounded-full block-shadow" data-hand="right">
-                                    <span class="block text-center font-bold">右手</span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <span class="font-bold">得分：</span>
-                                <span id="lrScore" class="text-xl font-bold text-primary">0</span>
-                            </div>
-                            <div>
-                                <span class="font-bold">回合：</span>
-                                <span id="lrRound" class="text-xl font-bold text-primary">1/10</span>
-                            </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-red-500 h-2 rounded-full" style="width: 80%"></div>
                         </div>
                     </div>
-                </div>
-
-                <!-- 序数间隔游戏 -->
-                <div id="orderGame" class="tab-content">
-                    <div class="text-center mb-6">
-                        <h3 class="text-2xl font-bold text-primary mb-2">娃娃排队</h3>
-                        <p class="text-gray-600">帮助娃娃们排队，学习序数和间隔的概念！</p>
-                    </div>
-                    
-                    <div class="flex justify-center mb-8">
-                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/25f0ac59a1ec4914a044b6836bca71af~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398242&x-signature=m22PrB8lrA9m4knUF7kERmr%2FEPo%3D" alt="娃娃排队" class="w-64 h-64 block-shadow-lg rounded-2xl">
-                    </div>
-                    
-                    <!-- 游戏区域 -->
-                    <div class="bg-light rounded-xl p-6 block-shadow">
-                        <!-- 排队区域 -->
-                        <div class="mb-6">
-                            <h4 class="font-bold mb-3 text-center">娃娃排队区</h4>
-                            <div id="queueArea" class="flex justify-center items-end gap-4 min-h-[120px] p-4 border-2 border-dashed border-primary rounded-xl">
-                                <!-- 娃娃会被拖到这里 -->
-                            </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>基础运算</span>
+                            <span>60%</span>
                         </div>
-                        
-                        <!-- 娃娃选择区 -->
-                        <div class="mb-6">
-                            <h4 class="font-bold mb-3 text-center">选择娃娃</h4>
-                            <div id="dollContainer" class="flex flex-wrap justify-center gap-4">
-                                <div class="doll bg-pink-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="1">
-                                    <div class="text-center">
-                                        <div class="w-12 h-16 bg-pink-200 rounded-full mx-auto mb-1"></div>
-                                        <span class="text-sm font-bold">娃娃1</span>
-                                    </div>
-                                </div>
-                                <div class="doll bg-blue-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="2">
-                                    <div class="text-center">
-                                        <div class="w-12 h-16 bg-blue-200 rounded-full mx-auto mb-1"></div>
-                                        <span class="text-sm font-bold">娃娃2</span>
-                                    </div>
-                                </div>
-                                <div class="doll bg-purple-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="3">
-                                    <div class="text-center">
-                                        <div class="w-12 h-16 bg-purple-200 rounded-full mx-auto mb-1"></div>
-                                        <span class="text-sm font-bold">娃娃3</span>
-                                    </div>
-                                </div>
-                                <div class="doll bg-yellow-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="4">
-                                    <div class="text-center">
-                                        <div class="w-12 h-16 bg-yellow-200 rounded-full mx-auto mb-1"></div>
-                                        <span class="text-sm font-bold">娃娃4</span>
-                                    </div>
-                                </div>
-                                <div class="doll bg-green-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="5">
-                                    <div class="text-center">
-                                        <div class="w-12 h-16 bg-green-200 rounded-full mx-auto mb-1"></div>
-                                        <span class="text-sm font-bold">娃娃5</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-500 h-2 rounded-full" style="width: 60%"></div>
                         </div>
-                        
-                        <!-- 问题区域 -->
-                        <div id="orderQuestion" class="hidden">
-                            <h4 class="font-bold mb-3 text-center">回答问题</h4>
-                            <p id="orderQuestionText" class="text-lg text-center mb-4"></p>
-                            <div class="flex justify-center gap-4">
-                                <button class="btn-secondary" id="orderAnswer1"></button>
-                                <button class="btn-secondary" id="orderAnswer2"></button>
-                                <button class="btn-secondary" id="orderAnswer3"></button>
-                            </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>图形识别</span>
+                            <span>90%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 成就展示 -->
-        <div id="achievements" class="bg-white rounded-xl p-6 shadow-lg hidden">
-            <h3 class="text-2xl font-bold text-primary mb-4 text-center">我的成就</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-light rounded-xl p-4 block-shadow text-center">
-                    <h4 class="font-bold mb-2">正方体大师</h4>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                        <div id="blockProgress" class="progress-bar" style="width: 0%"></div>
+        <!-- 数字认知游戏 -->
+        <div id="numberGame" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-star text-yellow-400"></i>
+                            <span id="numberGameScore" class="font-bold">0</span>
+                        </div>
+                        <div class="bg-blue-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-clock-o text-blue-500"></i>
+                            <span id="numberGameTimer" class="font-bold">60</span>
+                        </div>
                     </div>
-                    <span id="blockLevel" class="text-sm">等级 1</span>
                 </div>
-                <div class="bg-light rounded-xl p-4 block-shadow text-center">
-                    <h4 class="font-bold mb-2">左右小能手</h4>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                        <div id="lrProgress" class="progress-bar" style="width: 0%"></div>
-                    </div>
-                    <span id="lrLevel" class="text-sm">等级 1</span>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2 game-title">数字配对游戏</h3>
+                    <p class="text-sm text-gray-600">将数字和对应的数量配对起来吧！</p>
+                    <button class="voice-btn bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-2" onclick="playVoice('numberGameInstruction')">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
                 </div>
-                <div class="bg-light rounded-xl p-4 block-shadow text-center">
-                    <h4 class="font-bold mb-2">序数达人</h4>
-                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
-                        <div id="orderProgress" class="progress-bar" style="width: 0%"></div>
+                
+                <!-- 游戏区域 -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <!-- 数字卡片 -->
+                        <div class="bg-pink-50 rounded-xl p-3">
+                            <h4 class="text-center font-bold mb-3">数字</h4>
+                            <div id="numberCards" class="space-y-3">
+                                <!-- 数字卡片将在这里动态生成 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 数量卡片 -->
+                        <div class="bg-blue-50 rounded-xl p-3">
+                            <h4 class="text-center font-bold mb-3">数量</h4>
+                            <div id="quantityCards" class="space-y-3">
+                                <!-- 数量卡片将在这里动态生成 -->
+                            </div>
+                        </div>
                     </div>
-                    <span id="orderLevel" class="text-sm">等级 1</span>
+                    
+                    <!-- 进度条 -->
+                    <div class="mb-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>进度</span>
+                            <span id="numberGameProgress">0/5</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="numberGameProgressBar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 提示按钮 -->
+                <div class="text-center">
+                    <button id="numberGameHintBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-lightbulb-o mr-1"></i>提示
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 基础运算游戏 -->
+        <div id="mathGame" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-star text-yellow-400"></i>
+                            <span id="mathGameScore" class="font-bold">0</span>
+                        </div>
+                        <div class="bg-blue-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-clock-o text-blue-500"></i>
+                            <span id="mathGameTimer" class="font-bold">60</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2 game-title">加减法练习</h3>
+                    <p class="text-sm text-gray-600">选择正确的答案，看看你能得多少分！</p>
+                    <button class="voice-btn bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-2" onclick="playVoice('mathGameInstruction')">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
+                </div>
+                
+                <!-- 游戏区域 -->
+                <div class="mb-6">
+                    <!-- 等式显示 -->
+                    <div class="equation text-center mb-6" id="mathEquation">
+                        3 + 2 = ?
+                    </div>
+                    
+                    <!-- 答案选项 -->
+                    <div class="grid grid-cols-3 gap-3 max-w-md mx-auto" id="mathAnswers">
+                        <!-- 答案按钮将在这里动态生成 -->
+                    </div>
+                    
+                    <!-- 进度条 -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>进度</span>
+                            <span id="mathGameProgress">0/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="mathGameProgressBar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="flex justify-center space-x-3">
+                    <button id="mathGameHintBtn" class="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                        <i class="fa fa-lightbulb-o mr-1"></i>提示
+                    </button>
+                    <button id="mathGameSkipBtn" class="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                        <i class="fa fa-forward mr-1"></i>跳过
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图形识别游戏 -->
+        <div id="shapeGame" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-star text-yellow-400"></i>
+                            <span id="shapeGameScore" class="font-bold">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2 game-title">图形认知</h3>
+                    <p class="text-sm text-gray-600">根据提示选择正确的图形！</p>
+                    <button class="voice-btn bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-2" onclick="playVoice('shapeGameInstruction')">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
+                </div>
+                
+                <!-- 游戏区域 -->
+                <div class="mb-6">
+                    <!-- 问题显示 -->
+                    <div class="text-center mb-6">
+                        <p class="text-lg font-bold mb-2" id="shapeQuestion">请选择：圆形</p>
+                        <p class="text-sm text-gray-600" id="shapeHint">圆形是没有棱角的形状</p>
+                    </div>
+                    
+                    <!-- 图形选项 -->
+                    <div class="grid grid-cols-2 gap-4 max-w-md mx-auto" id="shapeOptions">
+                        <!-- 图形选项将在这里动态生成 -->
+                    </div>
+                    
+                    <!-- 进度条 -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>进度</span>
+                            <span id="shapeGameProgress">0/8</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="shapeGameProgressBar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 记忆力游戏 -->
+        <div id="memoryGame" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-star text-yellow-400"></i>
+                            <span id="memoryGameScore" class="font-bold">0</span>
+                        </div>
+                        <div class="bg-blue-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                            <i class="fa fa-clock-o text-blue-500"></i>
+                            <span id="memoryGameTimer" class="font-bold">60</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2 game-title">数学记忆</h3>
+                    <p class="text-sm text-gray-600">找出配对的数字卡片！</p>
+                    <button class="voice-btn bg-purple-100 text-purple-600 w-8 h-8 rounded-full flex items-center justify-center mx-auto mt-2" onclick="playVoice('memoryGameInstruction')">
+                        <i class="fa fa-volume-up"></i>
+                    </button>
+                </div>
+                
+                <!-- 游戏区域 -->
+                <div class="mb-6">
+                    <!-- 记忆卡片 -->
+                    <div class="grid grid-cols-3 gap-3 max-w-md mx-auto" id="memoryCards">
+                        <!-- 记忆卡片将在这里动态生成 -->
+                    </div>
+                    
+                    <!-- 进度条 -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>配对进度</span>
+                            <span id="memoryGameProgress">0/6</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="memoryGameProgressBar" class="bg-green-500 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 操作按钮 -->
+                <div class="text-center">
+                    <button id="memoryGameHintBtn" class="bg-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-lightbulb-o mr-1"></i>提示
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 城堡页面 -->
+        <div id="castleScreen" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="bg-blue-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                        <i class="fa fa-puzzle-piece text-blue-500"></i>
+                        <span id="castlePieces" class="font-bold">0/20</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2">诺诺的魔法城堡</h3>
+                    <p class="text-sm text-gray-600">使用收集到的碎片建造你的城堡吧！</p>
+                </div>
+                
+                <!-- 城堡展示区域 -->
+                <div class="mb-6">
+                    <div class="castle-builder flex items-center justify-center p-4 mb-4">
+                        <div id="castleDisplay" class="relative">
+                            <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/8195af6b42d94af19c5fa93941ac38d3~tplv-a9rns2rl98-image.image?rcl=20251215220502112A05041D106A479CA7&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768399530&x-signature=qhCjblFhVzSx4Kzp0Qu5T0Os8i0%3D" alt="城堡" class="w-full max-w-xs mx-auto castle-shadow rounded-xl">
+                            <!-- 城堡碎片将在这里动态添加 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 城堡状态 -->
+                    <div class="bg-pink-50 rounded-xl p-4">
+                        <h4 class="font-bold mb-2">城堡状态</h4>
+                        <div class="space-y-2">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>完成度</span>
+                                    <span id="castleCompletion">25%</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div id="castleCompletionBar" class="bg-purple-500 h-2 rounded-full" style="width: 25%"></div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-600">
+                                <p>已收集碎片：<span id="collectedPieces">5</span>/20</p>
+                                <p>已解锁区域：<span id="unlockedAreas">2</span>/5</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 碎片选择区域 -->
+                <div>
+                    <h4 class="font-bold mb-3">可用碎片</h4>
+                    <div class="grid grid-cols-4 gap-3" id="castlePiecesGrid">
+                        <!-- 碎片将在这里动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 礼物商店页面 -->
+        <div id="shopScreen" class="screen hidden">
+            <div class="bg-white rounded-2xl p-5 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <button class="back-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-arrow-left mr-1"></i>返回
+                    </button>
+                    <div class="bg-pink-100 rounded-full px-3 py-1 flex items-center space-x-1">
+                        <i class="fa fa-star text-yellow-400"></i>
+                        <span id="shopScore" class="font-bold">0</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mb-5">
+                    <h3 class="text-xl font-bold text-primary mb-2">礼物商店</h3>
+                    <p class="text-sm text-gray-600">用你的积分兑换喜欢的礼物吧！</p>
+                </div>
+                
+                <!-- 礼物分类 -->
+                <div class="flex space-x-2 mb-5 overflow-x-auto pb-2">
+                    <button class="shop-category-btn bg-primary text-white px-3 py-1 rounded-full text-sm font-bold btn-shadow whitespace-nowrap">
+                        全部礼物
+                    </button>
+                    <button class="shop-category-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow whitespace-nowrap">
+                        装饰品
+                    </button>
+                    <button class="shop-category-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow whitespace-nowrap">
+                        服装
+                    </button>
+                    <button class="shop-category-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm font-bold btn-shadow whitespace-nowrap">
+                        特效
+                    </button>
+                </div>
+                
+                <!-- 礼物列表 -->
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <!-- 礼物将在这里动态生成 -->
+                    <div class="gift-card bg-pink-50 rounded-xl p-4 gift-shadow">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa fa-star text-yellow-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">星星魔法棒</h4>
+                                <p class="text-xs text-gray-500">闪闪发光的魔法棒</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-xs ml-1">50积分</span>
+                            </div>
+                            <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="gift-card bg-blue-50 rounded-xl p-4 gift-shadow">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa fa-gem text-purple-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">宝石皇冠</h4>
+                                <p class="text-xs text-gray-500">华丽的公主皇冠</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-xs ml-1">100积分</span>
+                            </div>
+                            <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="gift-card bg-purple-50 rounded-xl p-4 gift-shadow">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa fa-wand text-pink-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">仙女翅膀</h4>
+                                <p class="text-xs text-gray-500">漂亮的蝴蝶翅膀</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-xs ml-1">150积分</span>
+                            </div>
+                            <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="gift-card bg-green-50 rounded-xl p-4 gift-shadow">
+                        <div class="flex items-center mb-3">
+                            <div class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center mr-3">
+                                <i class="fa fa-paint-brush text-blue-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">彩虹画笔</h4>
+                                <p class="text-xs text-gray-500">画出彩虹的魔法笔</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fa fa-star text-yellow-400 text-xs"></i>
+                                <span class="text-xs ml-1">80积分</span>
+                            </div>
+                            <button class="buy-gift-btn bg-primary text-white px-3 py-1 rounded-full text-xs font-bold btn-shadow">
+                                购买
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 我的物品 -->
+                <div>
+                    <h4 class="font-bold mb-3">我的物品</h4>
+                    <div class="grid grid-cols-4 gap-3" id="myItems">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-star text-yellow-500 text-xl"></i>
+                            </div>
+                            <span class="text-xs">魔法棒</span>
+                        </div>
+                        <div class="text-center opacity-50">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-lock text-gray-500"></i>
+                            </div>
+                            <span class="text-xs">未解锁</span>
+                        </div>
+                        <div class="text-center opacity-50">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-lock text-gray-500"></i>
+                            </div>
+                            <span class="text-xs">未解锁</span>
+                        </div>
+                        <div class="text-center opacity-50">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-plus text-gray-500"></i>
+                            </div>
+                            <span class="text-xs">更多</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 游戏结束页面 -->
+        <div id="gameOverScreen" class="screen hidden">
+            <div class="max-w-md mx-auto bg-white rounded-3xl p-6 card-shadow text-center">
+                <div class="w-24 h-24 mx-auto mb-4 bg-yellow-100 rounded-full flex items-center justify-center animate-bounce-slow">
+                    <i class="fa fa-trophy text-yellow-500 text-4xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-2">太棒了！</h3>
+                <p class="text-gray-700 mb-4" id="gameOverMessage">你完成了游戏挑战！</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-pink-50 rounded-xl p-3">
+                        <p class="text-sm text-gray-600 mb-1">获得积分</p>
+                        <p class="text-xl font-bold text-primary" id="gameOverScore">0</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-3">
+                        <p class="text-sm text-gray-600 mb-1">获得碎片</p>
+                        <p class="text-xl font-bold text-blue-500" id="gameOverPieces">0</p>
+                    </div>
+                </div>
+                
+                <!-- 奖励显示 -->
+                <div class="bg-purple-50 rounded-xl p-4 mb-6">
+                    <h4 class="font-bold mb-2">额外奖励</h4>
+                    <div class="flex justify-center space-x-4">
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-yellow-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-star text-yellow-500"></i>
+                            </div>
+                            <span class="text-xs">+10积分</span>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center mx-auto mb-1">
+                                <i class="fa fa-puzzle-piece text-blue-500"></i>
+                            </div>
+                            <span class="text-xs">城堡碎片</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button id="playAgainBtn" class="flex-1 bg-primary text-white py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-refresh mr-1"></i>再玩一次
+                    </button>
+                    <button id="backToGamesBtn" class="flex-1 bg-secondary text-white py-2 rounded-full text-sm font-bold btn-shadow">
+                        <i class="fa fa-gamepad mr-1"></i>选择游戏
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 帮助模态框 -->
+        <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+            <div class="bg-white rounded-2xl p-5 max-w-md w-full mx-4 card-shadow">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-primary">游戏帮助</h3>
+                    <button id="closeHelpBtn" class="text-gray-500 hover:text-gray-700">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div>
+                        <h4 class="font-bold">数字认知游戏</h4>
+                        <p class="text-sm text-gray-600">将数字卡片拖到对应的数量卡片上，完成配对。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">基础运算游戏</h4>
+                        <p class="text-sm text-gray-600">选择正确的答案来完成加减法题目。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">图形识别游戏</h4>
+                        <p class="text-sm text-gray-600">根据提示选择正确的几何图形。</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold">数学记忆游戏</h4>
+                        <p class="text-sm text-gray-600">翻开卡片，找出配对的数字组合。</p>
+                    </div>
+                    <div class="bg-pink-50 rounded-lg p-3">
+                        <p class="text-sm font-bold text-center">完成游戏可以获得积分和城堡碎片，用来建造城堡和兑换礼物！</p>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- 帮助模态框 -->
-    <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 block-shadow-lg">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-2xl font-bold text-primary">游戏帮助</h3>
-                <button id="closeHelp" class="text-gray-500 hover:text-gray-700">
-                    <i class="fa fa-times text-xl"></i>
-                </button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <h4 class="font-bold text-lg">正方体计数</h4>
-                    <p>把积木拖到城堡上，搭建漂亮的城堡！完成后会有有趣的数学问题哦。</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-lg">左右认知</h4>
-                    <p>根据提示点击正确的手，锻炼你的左右认知能力！</p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-lg">序数间隔</h4>
-                    <p>帮助娃娃们排队，然后回答关于序数和间隔的问题。</p>
-                </div>
-                <div class="bg-light rounded-lg p-3">
-                    <p class="font-bold text-center">完成游戏可以获得星星奖励哦！</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 成功模态框 -->
-    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 block-shadow-lg text-center">
-            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D" alt="成功" class="w-20 h-20 mx-auto mb-4 animate-bounce-slow">
-            <h3 class="text-2xl font-bold text-primary mb-2">太棒了！</h3>
-            <p id="successMessage" class="text-lg mb-4"></p>
-            <div class="flex justify-center items-center space-x-2 mb-4">
-                <i class="fa fa-star text-yellow-400 text-xl"></i>
-                <span id="starsEarned" class="text-xl font-bold text-primary">+3</span>
-            </div>
-            <button id="continueBtn" class="btn-primary">
-                继续游戏
-            </button>
-        </div>
-    </div>
-
     <script>
-        // 全局变量
-        let totalScore = 0;
-        let draggedItem = null;
-        let placedBlocks = [];
-        let placedDolls = [];
-        let lrCurrentRound = 1;
-        let lrCurrentScore = 0;
-        let lrCurrentAnswer = '';
-        
-        // 游戏进度
-        let gameProgress = {
-            block: { score: 0, level: 1, progress: 0 },
-            leftRight: { score: 0, level: 1, progress: 0 },
-            order: { score: 0, level: 1, progress: 0 }
+        // 全局游戏数据
+        const gameData = {
+            player: {
+                name: '诺诺',
+                score: 120,
+                pieces: 8,
+                level: 1
+            },
+            games: {
+                number: { completed: 12, bestScore: 85, level: 2 },
+                math: { completed: 8, bestScore: 70, level: 1 },
+                shape: { completed: 15, bestScore: 90, level: 2 },
+                memory: { completed: 5, bestScore: 60, level: 1 }
+            },
+            castle: {
+                completion: 25,
+                unlockedAreas: 2,
+                pieces: {
+                    collected: 8,
+                    total: 20,
+                    unlocked: [1, 2, 5, 8, 10, 12, 15, 18]
+                }
+            },
+            shop: {
+                items: [
+                    { id: 1, name: '星星魔法棒', price: 50, category: '装饰', owned: true },
+                    { id: 2, name: '宝石皇冠', price: 100, category: '装饰', owned: false },
+                    { id: 3, name: '仙女翅膀', price: 150, category: '服装', owned: false },
+                    { id: 4, name: '彩虹画笔', price: 80, category: '装饰', owned: false },
+                    { id: 5, name: '魔法斗篷', price: 120, category: '服装', owned: false },
+                    { id: 6, name: '闪光特效', price: 200, category: '特效', owned: false }
+                ]
+            },
+            currentGame: null,
+            currentScreen: 'welcomeScreen'
         };
 
-        // DOM 元素
-        const startBtn = document.getElementById('startBtn');
-        const welcome = document.getElementById('welcome');
-        const gameTabs = document.getElementById('gameTabs');
-        const achievements = document.getElementById('achievements');
-        const scoreDisplay = document.getElementById('score');
-        const helpBtn = document.getElementById('helpBtn');
-        const helpModal = document.getElementById('helpModal');
-        const closeHelp = document.getElementById('closeHelp');
-        const successModal = document.getElementById('successModal');
-        const successMessage = document.getElementById('successMessage');
-        const starsEarned = document.getElementById('starsEarned');
-        const continueBtn = document.getElementById('continueBtn');
+        // 游戏配置
+        const gameConfig = {
+            number: {
+                rounds: 5,
+                timeLimit: 60,
+                baseScore: 10,
+                pieceChance: 0.5
+            },
+            math: {
+                rounds: 10,
+                timeLimit: 60,
+                baseScore: 15,
+                pieceChance: 0.7
+            },
+            shape: {
+                rounds: 8,
+                timeLimit: 0,
+                baseScore: 12,
+                pieceChance: 0.6
+            },
+            memory: {
+                rounds: 6,
+                timeLimit: 60,
+                baseScore: 20,
+                pieceChance: 0.8
+            }
+        };
+
+        // 形状数据
+        const shapesData = [
+            { name: '圆形', hint: '圆形是没有棱角的形状', symbol: '○', color: 'bg-red-400' },
+            { name: '三角形', hint: '三角形有3个角和3条边', symbol: '△', color: 'bg-blue-400' },
+            { name: '正方形', hint: '正方形有4个相等的角和4条相等的边', symbol: '□', color: 'bg-green-400' },
+            { name: '长方形', hint: '长方形有4个角和4条边，对边相等', symbol: '▭', color: 'bg-yellow-400' },
+            { name: '五角星', hint: '五角星有5个尖角', symbol: '★', color: 'bg-purple-400' },
+            { name: '菱形', hint: '菱形是四条边都相等的平行四边形', symbol: '◇', color: 'bg-pink-400' },
+            { name: '梯形', hint: '梯形有一组对边平行', symbol: '▯', color: 'bg-orange-400' },
+            { name: '椭圆形', hint: '椭圆形像压扁的圆形', symbol: '⬭', color: 'bg-indigo-400' }
+        ];
+
+        // 当前游戏状态
+        let currentGameState = {
+            game: null,
+            score: 0,
+            round: 0,
+            correct: 0,
+            timer: null,
+            timeLeft: 0,
+            data: {}
+        };
 
         // 初始化游戏
+        document.addEventListener('DOMContentLoaded', init);
+
         function init() {
-            // 开始按钮
-            startBtn.addEventListener('click', startGame);
+            // 绑定事件
+            bindEvents();
+            
+            // 初始化UI
+            updateUI();
+            
+            // 显示欢迎页面
+            showScreen('welcomeScreen');
+        }
+
+        // 绑定所有事件
+        function bindEvents() {
+            // 欢迎页面按钮
+            document.getElementById('startAdventureBtn').addEventListener('click', () => showScreen('gameSelectionScreen'));
+            document.getElementById('visitCastleBtn').addEventListener('click', () => showScreen('castleScreen'));
+            document.getElementById('visitShopBtn').addEventListener('click', () => showScreen('shopScreen'));
             
             // 帮助按钮
-            helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
-            closeHelp.addEventListener('click', () => helpModal.classList.add('hidden'));
-            
-            // 继续按钮
-            continueBtn.addEventListener('click', () => {
-                successModal.classList.add('hidden');
-                resetCurrentGame();
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                document.getElementById('helpModal').classList.remove('hidden');
             });
             
-            // 标签页切换
-            document.querySelectorAll('.tab-btn').forEach(btn => {
+            document.getElementById('closeHelpBtn').addEventListener('click', () => {
+                document.getElementById('helpModal').classList.add('hidden');
+            });
+            
+            // 游戏选择按钮
+            document.querySelectorAll('.start-game-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const tabId = btn.dataset.tab;
-                    switchTab(tabId);
+                    const game = btn.dataset.game;
+                    startGame(game);
                 });
             });
             
-            // 初始化拖拽功能
-            initDragAndDrop();
+            // 返回按钮
+            document.querySelectorAll('.back-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    stopGame();
+                    showScreen('gameSelectionScreen');
+                });
+            });
             
-            // 初始化左右认知游戏
-            initLeftRightGame();
+            // 游戏结束页面按钮
+            document.getElementById('playAgainBtn').addEventListener('click', () => {
+                if (currentGameState.game) {
+                    startGame(currentGameState.game);
+                }
+            });
             
-            // 初始化序数间隔游戏
-            initOrderGame();
+            document.getElementById('backToGamesBtn').addEventListener('click', () => {
+                showScreen('gameSelectionScreen');
+            });
+            
+            // 游戏内按钮
+            document.getElementById('numberGameHintBtn')?.addEventListener('click', showNumberGameHint);
+            document.getElementById('mathGameHintBtn')?.addEventListener('click', showMathGameHint);
+            document.getElementById('mathGameSkipBtn')?.addEventListener('click', skipMathRound);
+            document.getElementById('memoryGameHintBtn')?.addEventListener('click', showMemoryGameHint);
+            
+            // 商店分类按钮
+            document.querySelectorAll('.shop-category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.shop-category-btn').forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-gray-700');
+                    });
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-primary', 'text-white');
+                });
+            });
+            
+            // 购买礼物按钮
+            document.querySelectorAll('.buy-gift-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const price = parseInt(btn.parentElement.querySelector('span').textContent);
+                    buyGift(price);
+                });
+            });
+        }
+
+        // 更新UI
+        function updateUI() {
+            // 更新总分和碎片数
+            document.getElementById('totalScore').textContent = gameData.player.score;
+            document.getElementById('totalPieces').textContent = gameData.player.pieces;
+            
+            // 更新城堡页面
+            document.getElementById('castlePieces')?.textContent = `${gameData.castle.pieces.collected}/${gameData.castle.pieces.total}`;
+            document.getElementById('castleCompletion')?.textContent = `${gameData.castle.completion}%`;
+            document.getElementById('castleCompletionBar')?.style.setProperty('width', `${gameData.castle.completion}%`);
+            document.getElementById('collectedPieces')?.textContent = gameData.castle.pieces.collected;
+            document.getElementById('unlockedAreas')?.textContent = gameData.castle.unlockedAreas;
+            
+            // 更新商店页面
+            document.getElementById('shopScore')?.textContent = gameData.player.score;
+            
+            // 更新游戏页面的分数显示
+            Object.keys(gameData.games).forEach(game => {
+                const scoreElement = document.getElementById(`${game}GameScore`);
+                if (scoreElement) {
+                    scoreElement.textContent = '0';
+                }
+            });
+        }
+
+        // 显示指定页面
+        function showScreen(screenId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // 显示指定页面
+            document.getElementById(screenId).classList.remove('hidden');
+            gameData.currentScreen = screenId;
+            
+            // 如果是城堡页面，初始化城堡碎片
+            if (screenId === 'castleScreen') {
+                initCastlePieces();
+            }
         }
 
         // 开始游戏
-        function startGame() {
-            welcome.classList.add('hidden');
-            gameTabs.classList.remove('hidden');
-            achievements.classList.remove('hidden');
-            playSound('start');
+        function startGame(game) {
+            // 停止当前游戏
+            stopGame();
+            
+            // 设置当前游戏
+            currentGameState = {
+                game: game,
+                score: 0,
+                round: 0,
+                correct: 0,
+                timer: null,
+                timeLeft: gameConfig[game].timeLimit,
+                data: {}
+            };
+            
+            // 显示游戏页面
+            showScreen(`${game}Game`);
+            
+            // 根据游戏类型初始化
+            switch (game) {
+                case 'number':
+                    initNumberGame();
+                    break;
+                case 'math':
+                    initMathGame();
+                    break;
+                case 'shape':
+                    initShapeGame();
+                    break;
+                case 'memory':
+                    initMemoryGame();
+                    break;
+            }
+            
+            // 开始计时（如果有时间限制）
+            if (gameConfig[game].timeLimit > 0) {
+                startGameTimer(game);
+            }
+            
+            // 播放开始音效
+            playVoice(`${game}GameStart`);
         }
 
-        // 切换标签页
-        function switchTab(tabId) {
-            // 更新标签按钮状态
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active', 'bg-primary', 'text-white');
-                btn.classList.add('bg-secondary', 'text-gray-700');
-            });
-            
-            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active', 'bg-primary', 'text-white');
-            document.querySelector(`[data-tab="${tabId}"]`).classList.remove('bg-secondary', 'text-gray-700');
-            
-            // 更新内容显示
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            document.getElementById(tabId).classList.add('active');
+        // 停止游戏
+        function stopGame() {
+            if (currentGameState.timer) {
+                clearInterval(currentGameState.timer);
+                currentGameState.timer = null;
+            }
         }
 
-        // 初始化拖拽功能
-        function initDragAndDrop() {
-            // 积木拖拽
-            document.querySelectorAll('.block').forEach(block => {
-                block.addEventListener('dragstart', handleDragStart);
-                block.addEventListener('dragend', handleDragEnd);
-                block.setAttribute('draggable', true);
+        // 开始游戏计时器
+        function startGameTimer(game) {
+            const timerElement = document.getElementById(`${game}GameTimer`);
+            if (!timerElement) return;
+            
+            currentGameState.timeLeft = gameConfig[game].timeLimit;
+            timerElement.textContent = currentGameState.timeLeft;
+            
+            currentGameState.timer = setInterval(() => {
+                currentGameState.timeLeft--;
+                timerElement.textContent = currentGameState.timeLeft;
+                
+                if (currentGameState.timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // 初始化数字认知游戏
+        function initNumberGame() {
+            // 生成数字和数量卡片
+            generateNumberCards();
+            
+            // 更新进度
+            updateNumberGameProgress();
+        }
+
+        // 生成数字和数量卡片
+        function generateNumberCards() {
+            const numbers = [];
+            const usedNumbers = new Set();
+            
+            // 生成5个不重复的数字（1-10）
+            while (numbers.length < 5) {
+                const num = Math.floor(Math.random() * 10) + 1;
+                if (!usedNumbers.has(num)) {
+                    numbers.push(num);
+                    usedNumbers.add(num);
+                }
+            }
+            
+            // 打乱数字顺序
+            const shuffledNumbers = [...numbers];
+            shuffleArray(shuffledNumbers);
+            
+            // 生成数字卡片
+            const numberCardsContainer = document.getElementById('numberCards');
+            numberCardsContainer.innerHTML = '';
+            
+            numbers.forEach(num => {
+                const card = document.createElement('div');
+                card.className = 'number-card bg-white rounded-lg p-3 flex items-center justify-center cursor-move draggable';
+                card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                card.dataset.number = num;
+                card.innerHTML = `<span class="text-2xl font-bold text-primary">${num}</span>`;
+                
+                // 添加拖拽事件
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                card.setAttribute('draggable', true);
+                
+                numberCardsContainer.appendChild(card);
             });
             
-            // 城堡放置区
-            const castle = document.getElementById('castle');
-            castle.addEventListener('dragover', handleDragOver);
-            castle.addEventListener('dragenter', handleDragEnter);
-            castle.addEventListener('dragleave', handleDragLeave);
-            castle.addEventListener('drop', handleBlockDrop);
+            // 生成数量卡片
+            const quantityCardsContainer = document.getElementById('quantityCards');
+            quantityCardsContainer.innerHTML = '';
             
-            // 娃娃拖拽
-            document.querySelectorAll('.doll').forEach(doll => {
-                doll.addEventListener('dragstart', handleDragStart);
-                doll.addEventListener('dragend', handleDragEnd);
-                doll.setAttribute('draggable', true);
+            shuffledNumbers.forEach(num => {
+                const card = document.createElement('div');
+                card.className = 'quantity-card bg-white rounded-lg p-3 flex items-center justify-center drop-target';
+                card.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                card.dataset.number = num;
+                
+                // 生成数量表示（星星）
+                let stars = '';
+                for (let i = 0; i < num; i++) {
+                    stars += '<i class="fa fa-star text-yellow-400 mx-0.5"></i>';
+                }
+                
+                card.innerHTML = `
+                    <div class="text-center">
+                        <div class="flex justify-center mb-1">${stars}</div>
+                        <div class="number-display hidden text-xl font-bold text-primary">?</div>
+                    </div>
+                `;
+                
+                // 添加放置事件
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('dragenter', handleDragEnter);
+                card.addEventListener('dragleave', handleDragLeave);
+                card.addEventListener('drop', handleNumberDrop);
+                
+                quantityCardsContainer.appendChild(card);
             });
             
-            // 排队区域
-            const queueArea = document.getElementById('queueArea');
-            queueArea.addEventListener('dragover', handleDragOver);
-            queueArea.addEventListener('dragenter', handleDragEnter);
-            queueArea.addEventListener('dragleave', handleDragLeave);
-            queueArea.addEventListener('drop', handleDollDrop);
+            // 保存游戏数据
+            currentGameState.data = {
+                numbers: numbers,
+                matched: new Set()
+            };
         }
 
         // 拖拽开始
         function handleDragStart(e) {
-            draggedItem = this;
-            setTimeout(() => this.style.opacity = '0.5', 0);
+            this.classList.add('opacity-50');
+            e.dataTransfer.setData('text/plain', this.dataset.number);
         }
 
         // 拖拽结束
         function handleDragEnd() {
-            this.style.opacity = '1';
-            draggedItem = null;
+            this.classList.remove('opacity-50');
         }
 
         // 拖拽经过
@@ -697,479 +1537,741 @@
         // 拖拽进入
         function handleDragEnter(e) {
             e.preventDefault();
-            this.classList.add('active');
+            this.classList.add('highlight');
         }
 
         // 拖拽离开
         function handleDragLeave() {
-            this.classList.remove('active');
+            this.classList.remove('highlight');
         }
 
-        // 积木放置
-        function handleBlockDrop(e) {
+        // 拖拽放置（数字游戏）
+        function handleNumberDrop(e) {
             e.preventDefault();
-            this.classList.remove('active');
+            this.classList.remove('highlight');
             
-            if (draggedItem && draggedItem.classList.contains('block')) {
-                const blockColor = draggedItem.dataset.color;
-                const newBlock = document.createElement('div');
-                newBlock.className = 'block absolute';
-                newBlock.style.background = draggedItem.style.background;
-                newBlock.style.left = `${e.offsetX - 30}px`;
-                newBlock.style.top = `${e.offsetY - 30}px`;
-                newBlock.dataset.color = blockColor;
-                
-                this.appendChild(newBlock);
-                placedBlocks.push({
-                    element: newBlock,
-                    color: blockColor,
-                    x: e.offsetX,
-                    y: e.offsetY
-                });
-                
-                // 更新计数
-                updateBlockCount();
-                
-                // 播放音效
-                playSound('drop');
-                
-                // 检查是否可以出题
-                if (placedBlocks.length >= 3) {
-                    setTimeout(() => showBlockQuestion(), 1000);
-                }
-            }
-        }
-
-        // 娃娃放置
-        function handleDollDrop(e) {
-            e.preventDefault();
-            this.classList.remove('active');
+            const draggedNumber = e.dataTransfer.getData('text/plain');
+            const targetNumber = this.dataset.number;
             
-            if (draggedItem && draggedItem.classList.contains('doll')) {
-                const dollNumber = draggedItem.dataset.doll;
-                
-                // 检查是否已经放置了这个娃娃
-                if (placedDolls.some(doll => doll.number === dollNumber)) {
-                    return;
+            // 检查是否匹配
+            if (draggedNumber === targetNumber) {
+                // 匹配成功
+                const draggedCard = document.querySelector(`.number-card[data-number="${draggedNumber}"]`);
+                if (draggedCard) {
+                    draggedCard.classList.add('correct-animation');
+                    draggedCard.style.pointerEvents = 'none';
                 }
                 
-                const newDoll = draggedItem.cloneNode(true);
-                newDoll.classList.remove('cursor-grab');
-                newDoll.style.position = 'relative';
+                this.classList.add('correct-animation');
+                this.style.pointerEvents = 'none';
                 
-                // 添加数字标签
-                const numberCircle = document.createElement('div');
-                numberCircle.className = 'number-circle';
-                numberCircle.textContent = placedDolls.length + 1;
-                newDoll.appendChild(numberCircle);
+                // 显示数字
+                const numberDisplay = this.querySelector('.number-display');
+                numberDisplay.textContent = targetNumber;
+                numberDisplay.classList.remove('hidden');
                 
-                this.appendChild(newDoll);
-                placedDolls.push({
-                    element: newDoll,
-                    number: dollNumber,
-                    position: placedDolls.length + 1
-                });
+                // 更新游戏状态
+                currentGameState.score += gameConfig.number.baseScore;
+                currentGameState.correct++;
+                currentGameState.data.matched.add(targetNumber);
                 
-                // 播放音效
-                playSound('drop');
+                // 更新UI
+                document.getElementById('numberGameScore').textContent = currentGameState.score;
+                updateNumberGameProgress();
                 
-                // 检查是否可以出题
-                if (placedDolls.length >= 4) {
-                    setTimeout(() => showOrderQuestion(), 1000);
-                }
-            }
-        }
-
-        // 更新积木计数
-        function updateBlockCount() {
-            const totalBlocks = placedBlocks.length;
-            const uniqueLayers = new Set();
-            
-            // 简单计算层数（基于Y坐标分组）
-            placedBlocks.forEach(block => {
-                const layer = Math.floor(block.y / 70); // 假设每层高度为70px
-                uniqueLayers.add(layer);
-            });
-            
-            document.getElementById('currentLayers').textContent = uniqueLayers.size;
-            document.getElementById('totalBlocks').textContent = totalBlocks;
-        }
-
-        // 显示积木问题
-        function showBlockQuestion() {
-            const questionArea = document.getElementById('blockQuestion');
-            const questionText = document.getElementById('blockQuestionText');
-            const answer1 = document.getElementById('blockAnswer1');
-            const answer2 = document.getElementById('blockAnswer2');
-            const answer3 = document.getElementById('blockAnswer3');
-            
-            // 隐藏占位符
-            document.getElementById('castlePlaceholder').style.display = 'none';
-            
-            // 生成问题
-            const totalBlocks = placedBlocks.length;
-            const uniqueLayers = new Set();
-            placedBlocks.forEach(block => {
-                const layer = Math.floor(block.y / 70);
-                uniqueLayers.add(layer);
-            });
-            const totalLayers = uniqueLayers.size;
-            
-            // 随机选择问题类型
-            const questionTypes = [
-                {
-                    text: `城堡一共有多少层？`,
-                    correct: totalLayers,
-                    options: generateOptions(totalLayers, 5)
-                },
-                {
-                    text: `城堡一共有多少个积木？`,
-                    correct: totalBlocks,
-                    options: generateOptions(totalBlocks, 8)
-                },
-                {
-                    text: `如果再加上2个积木，总共有多少个？`,
-                    correct: totalBlocks + 2,
-                    options: generateOptions(totalBlocks + 2, 8)
-                }
-            ];
-            
-            const question = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-            
-            // 设置问题内容
-            questionText.textContent = question.text;
-            const shuffledOptions = shuffleArray([question.correct, ...question.options]);
-            
-            answer1.textContent = shuffledOptions[0];
-            answer2.textContent = shuffledOptions[1];
-            answer3.textContent = shuffledOptions[2];
-            
-            // 添加点击事件
-            const answers = [answer1, answer2, answer3];
-            answers.forEach(btn => {
-                btn.onclick = () => {
-                    const selectedAnswer = parseInt(btn.textContent);
-                    checkBlockAnswer(selectedAnswer, question.correct);
-                    
-                    // 移除点击事件
-                    answers.forEach(b => b.onclick = null);
-                };
-            });
-            
-            questionArea.classList.remove('hidden');
-        }
-
-        // 检查积木答案
-        function checkBlockAnswer(selected, correct) {
-            if (selected === correct) {
-                showSuccess('回答正确！', 3);
-                updateProgress('block', 3);
-                playSound('correct');
+                // 播放成功音效
+                playVoice('correct');
                 createConfetti();
-            } else {
-                showSuccess('再试一次吧！', 0);
-                playSound('wrong');
-            }
-        }
-
-        // 初始化左右认知游戏
-        function initLeftRightGame() {
-            const leftHand = document.getElementById('leftHand');
-            const rightHand = document.getElementById('rightHand');
-            const instruction = document.getElementById('lrInstruction');
-            
-            // 生成第一个问题
-            generateLRQuestion();
-            
-            // 手部点击事件
-            leftHand.addEventListener('click', () => checkLRAnswer('left'));
-            rightHand.addEventListener('click', () => checkLRAnswer('right'));
-        }
-
-        // 生成左右认知问题
-        function generateLRQuestion() {
-            const instructions = [
-                { text: '请点击左手！', answer: 'left' },
-                { text: '请点击右手！', answer: 'right' },
-                { text: '吃饭时用哪只手拿勺子？', answer: 'right' },
-                { text: '写字时用哪只手？', answer: 'right' },
-                { text: '敬礼时用哪只手？', answer: 'right' }
-            ];
-            
-            const randomInstruction = instructions[Math.floor(Math.random() * instructions.length)];
-            
-            document.getElementById('lrInstruction').textContent = randomInstruction.text;
-            document.getElementById('lrFeedback').classList.add('hidden');
-            lrCurrentAnswer = randomInstruction.answer;
-        }
-
-        // 检查左右认知答案
-        function checkLRAnswer(selected) {
-            const feedback = document.getElementById('lrFeedback');
-            
-            if (selected === lrCurrentAnswer) {
-                feedback.textContent = '太棒了！';
-                feedback.className = 'text-lg text-green-600';
-                lrCurrentScore += 1;
-                playSound('correct');
                 
-                // 添加庆祝动画
-                document.getElementById(selected === 'left' ? 'leftHand' : 'rightHand').classList.add('celebrate');
-                setTimeout(() => {
-                    document.getElementById(selected === 'left' ? 'leftHand' : 'rightHand').classList.remove('celebrate');
-                }, 600);
+                // 检查是否完成所有匹配
+                if (currentGameState.correct >= gameConfig.number.rounds) {
+                    setTimeout(() => {
+                        endGame();
+                    }, 1000);
+                }
             } else {
-                feedback.textContent = '不对哦，再试试！';
-                feedback.className = 'text-lg text-red-600';
-                playSound('wrong');
-            }
-            
-            feedback.classList.remove('hidden');
-            document.getElementById('lrScore').textContent = lrCurrentScore;
-            
-            // 检查是否完成所有回合
-            if (lrCurrentRound >= 10) {
-                setTimeout(() => {
-                    const stars = Math.floor(lrCurrentScore / 3);
-                    showSuccess(`完成了10个回合！得分：${lrCurrentScore}`, stars);
-                    updateProgress('leftRight', stars);
-                    resetLRGame();
-                }, 1500);
-            } else {
-                lrCurrentRound++;
-                document.getElementById('lrRound').textContent = `${lrCurrentRound}/10`;
+                // 匹配失败
+                this.classList.add('wrong-animation');
+                playVoice('wrong');
                 
                 setTimeout(() => {
-                    generateLRQuestion();
-                }, 1500);
+                    this.classList.remove('wrong-animation');
+                }, 500);
             }
         }
 
-        // 重置左右认知游戏
-        function resetLRGame() {
-            lrCurrentRound = 1;
-            lrCurrentScore = 0;
-            document.getElementById('lrRound').textContent = '1/10';
-            document.getElementById('lrScore').textContent = '0';
-            generateLRQuestion();
+        // 更新数字游戏进度
+        function updateNumberGameProgress() {
+            const progressElement = document.getElementById('numberGameProgress');
+            const progressBarElement = document.getElementById('numberGameProgressBar');
+            
+            if (progressElement && progressBarElement) {
+                progressElement.textContent = `${currentGameState.correct}/${gameConfig.number.rounds}`;
+                progressBarElement.style.setProperty('width', `${(currentGameState.correct / gameConfig.number.rounds) * 100}%`);
+            }
         }
 
-        // 初始化序数间隔游戏
-        function initOrderGame() {
-            // 娃娃点击事件（用于重新排序）
-            document.getElementById('queueArea').addEventListener('click', (e) => {
-                const doll = e.target.closest('.doll');
-                if (doll && doll.parentElement.id === 'queueArea') {
-                    // 移除娃娃
-                    const index = placedDolls.findIndex(d => d.element === doll);
-                    if (index !== -1) {
-                        placedDolls.splice(index, 1);
-                        doll.remove();
-                        
-                        // 重新编号
-                        updateDollNumbers();
+        // 显示数字游戏提示
+        function showNumberGameHint() {
+            // 找到一个未匹配的数字
+            const unmatchedNumbers = currentGameState.data.numbers.filter(num => 
+                !currentGameState.data.matched.has(num.toString())
+            );
+            
+            if (unmatchedNumbers.length > 0) {
+                const hintNumber = unmatchedNumbers[0];
+                const numberCard = document.querySelector(`.number-card[data-number="${hintNumber}"]`);
+                const quantityCard = document.querySelector(`.quantity-card[data-number="${hintNumber}"]`);
+                
+                if (numberCard && quantityCard) {
+                    // 添加高亮效果
+                    numberCard.classList.add('animate-pulse');
+                    quantityCard.classList.add('animate-pulse');
+                    
+                    // 扣除一些分数作为提示代价
+                    if (currentGameState.score >= 5) {
+                        currentGameState.score -= 5;
+                        document.getElementById('numberGameScore').textContent = currentGameState.score;
                     }
-                }
-            });
-        }
-
-        // 更新娃娃编号
-        function updateDollNumbers() {
-            placedDolls.forEach((doll, index) => {
-                const numberCircle = doll.element.querySelector('.number-circle');
-                if (numberCircle) {
-                    numberCircle.textContent = index + 1;
-                }
-                doll.position = index + 1;
-            });
-        }
-
-        // 显示序数间隔问题
-        function showOrderQuestion() {
-            const questionArea = document.getElementById('orderQuestion');
-            const questionText = document.getElementById('orderQuestionText');
-            const answer1 = document.getElementById('orderAnswer1');
-            const answer2 = document.getElementById('orderAnswer2');
-            const answer3 = document.getElementById('orderAnswer3');
-            
-            // 生成问题
-            const questions = [];
-            
-            // 如果有足够的娃娃，生成序数问题
-            if (placedDolls.length >= 3) {
-                // 随机选择两个娃娃
-                const doll1 = placedDolls[Math.floor(Math.random() * placedDolls.length)];
-                let doll2;
-                do {
-                    doll2 = placedDolls[Math.floor(Math.random() * placedDolls.length)];
-                } while (doll1 === doll2);
-                
-                const pos1 = Math.min(doll1.position, doll2.position);
-                const pos2 = Math.max(doll1.position, doll2.position);
-                const between = pos2 - pos1 - 1;
-                
-                questions.push({
-                    text: `娃娃${doll1.number}排在第${pos1}，娃娃${doll2.number}排在第${pos2}，它们之间有几个娃娃？`,
-                    correct: between,
-                    options: generateOptions(between, 3)
-                });
-            }
-            
-            // 生成序数问题
-            if (placedDolls.length >= 2) {
-                const randomDoll = placedDolls[Math.floor(Math.random() * placedDolls.length)];
-                const position = randomDoll.position;
-                
-                questions.push({
-                    text: `娃娃${randomDoll.number}排在第几位？`,
-                    correct: position,
-                    options: generateOptions(position, placedDolls.length)
-                });
-            }
-            
-            // 生成间隔问题
-            questions.push({
-                text: `从第2个娃娃到第5个娃娃，中间有几个娃娃？`,
-                correct: 2,
-                options: generateOptions(2, 4)
-            });
-            
-            const question = questions[Math.floor(Math.random() * questions.length)];
-            
-            // 设置问题内容
-            questionText.textContent = question.text;
-            const shuffledOptions = shuffleArray([question.correct, ...question.options]);
-            
-            answer1.textContent = shuffledOptions[0];
-            answer2.textContent = shuffledOptions[1];
-            answer3.textContent = shuffledOptions[2];
-            
-            // 添加点击事件
-            const answers = [answer1, answer2, answer3];
-            answers.forEach(btn => {
-                btn.onclick = () => {
-                    const selectedAnswer = parseInt(btn.textContent);
-                    checkOrderAnswer(selectedAnswer, question.correct);
                     
-                    // 移除点击事件
-                    answers.forEach(b => b.onclick = null);
-                };
+                    // 3秒后移除高亮
+                    setTimeout(() => {
+                        numberCard.classList.remove('animate-pulse');
+                        quantityCard.classList.remove('animate-pulse');
+                    }, 3000);
+                }
+            }
+        }
+
+        // 初始化基础运算游戏
+        function initMathGame() {
+            // 生成第一个题目
+            generateMathQuestion();
+            
+            // 更新进度
+            updateMathGameProgress();
+        }
+
+        // 生成数学题目
+        function generateMathQuestion() {
+            const level = gameData.games.math.level;
+            const maxNum = level === 1 ? 5 : (level === 2 ? 10 : 15);
+            
+            // 随机选择运算类型（加法或减法）
+            const operation = Math.random() > 0.5 ? '+' : '-';
+            
+            let num1, num2, correctAnswer;
+            
+            if (operation === '+') {
+                // 加法：确保结果不超过maxNum
+                num1 = Math.floor(Math.random() * maxNum) + 1;
+                num2 = Math.floor(Math.random() * (maxNum - num1 + 1)) + 1;
+                correctAnswer = num1 + num2;
+            } else {
+                // 减法：确保结果为正数
+                num1 = Math.floor(Math.random() * maxNum) + 1;
+                num2 = Math.floor(Math.random() * num1) + 1;
+                correctAnswer = num1 - num2;
+            }
+            
+            // 更新等式显示
+            const equationElement = document.getElementById('mathEquation');
+            equationElement.textContent = `${num1} ${operation} ${num2} = ?`;
+            
+            // 生成答案选项
+            const answers = [correctAnswer];
+            while (answers.length < 3) {
+                let wrongAnswer;
+                if (operation === '+') {
+                    wrongAnswer = Math.floor(Math.random() * (maxNum + maxNum)) + 1;
+                } else {
+                    wrongAnswer = Math.floor(Math.random() * maxNum);
+                }
+                
+                if (!answers.includes(wrongAnswer)) {
+                    answers.push(wrongAnswer);
+                }
+            }
+            
+            // 打乱答案顺序
+            shuffleArray(answers);
+            
+            // 更新答案按钮
+            const answersContainer = document.getElementById('mathAnswers');
+            answersContainer.innerHTML = '';
+            
+            answers.forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = 'number-btn w-full h-14 rounded-xl text-xl font-bold btn-shadow';
+                btn.textContent = answer;
+                btn.style.backgroundColor = getRandomColor();
+                btn.addEventListener('click', () => checkMathAnswer(answer, correctAnswer));
+                answersContainer.appendChild(btn);
             });
             
-            questionArea.classList.remove('hidden');
+            // 保存当前题目数据
+            currentGameState.data.currentQuestion = {
+                num1,
+                num2,
+                operation,
+                correctAnswer
+            };
         }
 
-        // 检查序数间隔答案
-        function checkOrderAnswer(selected, correct) {
+        // 检查数学答案
+        function checkMathAnswer(selected, correct) {
+            const equation = document.getElementById('mathEquation');
+            
             if (selected === correct) {
-                showSuccess('回答正确！', 3);
-                updateProgress('order', 3);
-                playSound('correct');
+                // 答对了
+                equation.classList.add('correct');
+                currentGameState.score += gameConfig.math.baseScore;
+                currentGameState.correct++;
+                currentGameState.round++;
+                
+                // 更新UI
+                document.getElementById('mathGameScore').textContent = currentGameState.score;
+                updateMathGameProgress();
+                
+                // 播放成功音效
+                playVoice('correct');
                 createConfetti();
-            } else {
-                showSuccess('再试一次吧！', 0);
-                playSound('wrong');
-            }
-        }
-
-        // 生成选项
-        function generateOptions(correct, range) {
-            const options = [];
-            let attempts = 0;
-            
-            while (options.length < 2 && attempts < 10) {
-                const option = correct + Math.floor(Math.random() * range) - Math.floor(range / 2);
-                if (option !== correct && option > 0 && !options.includes(option)) {
-                    options.push(option);
-                }
-                attempts++;
-            }
-            
-            // 如果无法生成足够的选项，使用默认值
-            while (options.length < 2) {
-                const defaultOption = correct + (options.length === 0 ? 1 : -1);
-                if (defaultOption > 0) {
-                    options.push(defaultOption);
+                
+                // 检查是否完成所有题目
+                if (currentGameState.round >= gameConfig.math.rounds) {
+                    setTimeout(() => {
+                        endGame();
+                    }, 1000);
                 } else {
-                    options.push(correct + 2);
+                    // 生成新题目
+                    setTimeout(() => {
+                        equation.classList.remove('correct');
+                        generateMathQuestion();
+                    }, 1000);
+                }
+            } else {
+                // 答错了
+                equation.classList.add('wrong');
+                playVoice('wrong');
+                
+                // 扣除少量分数
+                if (currentGameState.score >= 2) {
+                    currentGameState.score -= 2;
+                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                }
+                
+                setTimeout(() => {
+                    equation.classList.remove('wrong');
+                }, 1000);
+            }
+        }
+
+        // 更新数学游戏进度
+        function updateMathGameProgress() {
+            const progressElement = document.getElementById('mathGameProgress');
+            const progressBarElement = document.getElementById('mathGameProgressBar');
+            
+            if (progressElement && progressBarElement) {
+                progressElement.textContent = `${currentGameState.round}/${gameConfig.math.rounds}`;
+                progressBarElement.style.setProperty('width', `${(currentGameState.round / gameConfig.math.rounds) * 100}%`);
+            }
+        }
+
+        // 显示数学游戏提示
+        function showMathGameHint() {
+            if (currentGameState.data.currentQuestion) {
+                const { num1, num2, operation, correctAnswer } = currentGameState.data.currentQuestion;
+                
+                // 显示提示（例如，显示正确答案的位置）
+                const answerButtons = document.querySelectorAll('#mathAnswers button');
+                answerButtons.forEach(btn => {
+                    if (parseInt(btn.textContent) === correctAnswer) {
+                        btn.classList.add('animate-pulse');
+                    }
+                });
+                
+                // 扣除一些分数作为提示代价
+                if (currentGameState.score >= 10) {
+                    currentGameState.score -= 10;
+                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                }
+                
+                // 3秒后移除高亮
+                setTimeout(() => {
+                    answerButtons.forEach(btn => {
+                        btn.classList.remove('animate-pulse');
+                    });
+                }, 3000);
+            }
+        }
+
+        // 跳过数学题目
+        function skipMathRound() {
+            if (currentGameState.round < gameConfig.math.rounds) {
+                // 扣除分数作为跳过代价
+                if (currentGameState.score >= 15) {
+                    currentGameState.score -= 15;
+                    document.getElementById('mathGameScore').textContent = currentGameState.score;
+                }
+                
+                currentGameState.round++;
+                updateMathGameProgress();
+                
+                // 生成新题目
+                document.getElementById('mathEquation').classList.remove('correct', 'wrong');
+                generateMathQuestion();
+            }
+        }
+
+        // 初始化图形识别游戏
+        function initShapeGame() {
+            // 生成第一个题目
+            generateShapeQuestion();
+            
+            // 更新进度
+            updateShapeGameProgress();
+        }
+
+        // 生成图形题目
+        function generateShapeQuestion() {
+            // 随机选择一个形状
+            const shapeIndex = Math.floor(Math.random() * shapesData.length);
+            const currentShape = shapesData[shapeIndex];
+            
+            // 更新问题显示
+            document.getElementById('shapeQuestion').textContent = `请选择：${currentShape.name}`;
+            document.getElementById('shapeHint').textContent = currentShape.hint;
+            
+            // 生成选项（包含正确答案和3个错误答案）
+            const options = [shapeIndex];
+            while (options.length < 4) {
+                const wrongShapeIndex = Math.floor(Math.random() * shapesData.length);
+                if (!options.includes(wrongShapeIndex)) {
+                    options.push(wrongShapeIndex);
                 }
             }
             
-            return options;
+            // 打乱选项顺序
+            shuffleArray(options);
+            
+            // 更新选项显示
+            const optionsContainer = document.getElementById('shapeOptions');
+            optionsContainer.innerHTML = '';
+            
+            options.forEach(optionIndex => {
+                const shape = shapesData[optionIndex];
+                const shapeDiv = document.createElement('div');
+                shapeDiv.className = `shape-card w-full aspect-square rounded-xl flex items-center justify-center text-4xl font-bold btn-shadow`;
+                shapeDiv.textContent = shape.symbol;
+                shapeDiv.classList.add(shape.color);
+                shapeDiv.dataset.shapeIndex = optionIndex;
+                shapeDiv.dataset.isCorrect = optionIndex === shapeIndex ? 'true' : 'false';
+                
+                // 添加点击事件
+                shapeDiv.addEventListener('click', handleShapeSelect);
+                
+                optionsContainer.appendChild(shapeDiv);
+            });
+            
+            // 保存当前题目数据
+            currentGameState.data.currentQuestion = {
+                shapeIndex,
+                correctShape: currentShape
+            };
         }
 
-        // 显示成功消息
-        function showSuccess(message, stars) {
-            successMessage.textContent = message;
-            starsEarned.textContent = stars > 0 ? `+${stars}` : '0';
+        // 处理图形选择
+        function handleShapeSelect() {
+            const isCorrect = this.dataset.isCorrect === 'true';
             
-            // 更新总分
-            if (stars > 0) {
-                totalScore += stars;
-                scoreDisplay.textContent = totalScore;
+            if (isCorrect) {
+                // 选择正确
+                this.classList.add('correct-animation');
+                currentGameState.score += gameConfig.shape.baseScore;
+                currentGameState.correct++;
+                currentGameState.round++;
+                
+                // 更新UI
+                document.getElementById('shapeGameScore').textContent = currentGameState.score;
+                updateShapeGameProgress();
+                
+                // 播放成功音效
+                playVoice('correct');
+                createConfetti();
+                
+                // 禁用所有选项
+                document.querySelectorAll('.shape-card').forEach(card => {
+                    card.style.pointerEvents = 'none';
+                });
+                
+                // 检查是否完成所有题目
+                if (currentGameState.round >= gameConfig.shape.rounds) {
+                    setTimeout(() => {
+                        endGame();
+                    }, 1500);
+                } else {
+                    // 生成新题目
+                    setTimeout(() => {
+                        generateShapeQuestion();
+                    }, 1500);
+                }
+            } else {
+                // 选择错误
+                this.classList.add('wrong-animation');
+                playVoice('wrong');
+                
+                setTimeout(() => {
+                    this.classList.remove('wrong-animation');
+                }, 1000);
+            }
+        }
+
+        // 更新图形游戏进度
+        function updateShapeGameProgress() {
+            const progressElement = document.getElementById('shapeGameProgress');
+            const progressBarElement = document.getElementById('shapeGameProgressBar');
+            
+            if (progressElement && progressBarElement) {
+                progressElement.textContent = `${currentGameState.round}/${gameConfig.shape.rounds}`;
+                progressBarElement.style.setProperty('width', `${(currentGameState.round / gameConfig.shape.rounds) * 100}%`);
+            }
+        }
+
+        // 初始化记忆力游戏
+        function initMemoryGame() {
+            // 生成记忆卡片
+            generateMemoryCards();
+            
+            // 更新进度
+            updateMemoryGameProgress();
+        }
+
+        // 生成记忆卡片
+        function generateMemoryCards() {
+            const pairs = gameConfig.memory.rounds;
+            const numbers = [];
+            
+            // 生成数字对
+            for (let i = 1; i <= pairs; i++) {
+                numbers.push(i, i);
             }
             
-            successModal.classList.remove('hidden');
+            // 打乱数字顺序
+            shuffleArray(numbers);
+            
+            // 生成卡片
+            const cardsContainer = document.getElementById('memoryCards');
+            cardsContainer.innerHTML = '';
+            
+            numbers.forEach((num, index) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card w-full aspect-square rounded-xl flex items-center justify-center cursor-pointer btn-shadow';
+                card.style.backgroundColor = getRandomColor();
+                card.dataset.number = num;
+                card.dataset.index = index;
+                card.dataset.flipped = 'false';
+                
+                // 卡片内容（背面）
+                card.innerHTML = `
+                    <div class="memory-card-inner w-full h-full flex items-center justify-center">
+                        <div class="memory-card-front hidden w-full h-full flex items-center justify-center text-3xl font-bold text-white">${num}</div>
+                        <div class="memory-card-back w-full h-full flex items-center justify-center text-3xl font-bold text-white">?</div>
+                    </div>
+                `;
+                
+                // 添加点击事件
+                card.addEventListener('click', handleMemoryCardClick);
+                
+                cardsContainer.appendChild(card);
+            });
+            
+            // 保存游戏数据
+            currentGameState.data = {
+                cards: numbers,
+                flippedCards: [],
+                matchedPairs: 0,
+                canFlip: true
+            };
         }
 
-        // 更新游戏进度
-        function updateProgress(gameType, stars) {
-            const progress = gameProgress[gameType];
-            progress.score += stars;
-            progress.progress = Math.min(100, (progress.score % 10) * 10);
+        // 处理记忆卡片点击
+        function handleMemoryCardClick() {
+            // 如果卡片已经翻开或正在匹配中，不做任何操作
+            if (this.dataset.flipped === 'true' || !currentGameState.data.canFlip) {
+                return;
+            }
             
-            if (progress.score >= 10) {
-                progress.level = Math.floor(progress.score / 10) + 1;
+            // 翻开卡片
+            flipMemoryCard(this);
+            
+            // 添加到已翻开卡片列表
+            currentGameState.data.flippedCards.push({
+                element: this,
+                number: parseInt(this.dataset.number),
+                index: parseInt(this.dataset.index)
+            });
+            
+            // 检查是否有两张卡片被翻开
+            if (currentGameState.data.flippedCards.length === 2) {
+                const [card1, card2] = currentGameState.data.flippedCards;
+                
+                // 暂时禁用翻牌
+                currentGameState.data.canFlip = false;
+                
+                if (card1.number === card2.number) {
+                    // 匹配成功
+                    setTimeout(() => {
+                        card1.element.classList.add('correct-animation');
+                        card2.element.classList.add('correct-animation');
+                        card1.element.style.pointerEvents = 'none';
+                        card2.element.style.pointerEvents = 'none';
+                        
+                        currentGameState.score += gameConfig.memory.baseScore;
+                        currentGameState.data.matchedPairs++;
+                        
+                        // 更新UI
+                        document.getElementById('memoryGameScore').textContent = currentGameState.score;
+                        updateMemoryGameProgress();
+                        
+                        // 播放成功音效
+                        playVoice('correct');
+                        
+                        // 清空已翻开卡片列表
+                        currentGameState.data.flippedCards = [];
+                        currentGameState.data.canFlip = true;
+                        
+                        // 检查是否完成所有匹配
+                        if (currentGameState.data.matchedPairs >= gameConfig.memory.rounds) {
+                            setTimeout(() => {
+                                endGame();
+                            }, 1000);
+                        }
+                    }, 1000);
+                } else {
+                    // 匹配失败
+                    setTimeout(() => {
+                        flipMemoryCard(card1.element);
+                        flipMemoryCard(card2.element);
+                        
+                        // 清空已翻开卡片列表
+                        currentGameState.data.flippedCards = [];
+                        currentGameState.data.canFlip = true;
+                        
+                        // 播放失败音效
+                        playVoice('wrong');
+                    }, 1000);
+                }
+            }
+        }
+
+        // 翻转记忆卡片
+        function flipMemoryCard(card) {
+            const isFlipped = card.dataset.flipped === 'true';
+            const front = card.querySelector('.memory-card-front');
+            const back = card.querySelector('.memory-card-back');
+            
+            if (isFlipped) {
+                // 翻回背面
+                front.classList.add('hidden');
+                back.classList.remove('hidden');
+                card.dataset.flipped = 'false';
+            } else {
+                // 翻到正面
+                front.classList.remove('hidden');
+                back.classList.add('hidden');
+                card.dataset.flipped = 'true';
+            }
+        }
+
+        // 更新记忆游戏进度
+        function updateMemoryGameProgress() {
+            const progressElement = document.getElementById('memoryGameProgress');
+            const progressBarElement = document.getElementById('memoryGameProgressBar');
+            
+            if (progressElement && progressBarElement) {
+                progressElement.textContent = `${currentGameState.data.matchedPairs}/${gameConfig.memory.rounds}`;
+                progressBarElement.style.setProperty('width', `${(currentGameState.data.matchedPairs / gameConfig.memory.rounds) * 100}%`);
+            }
+        }
+
+        // 显示记忆游戏提示
+        function showMemoryGameHint() {
+            // 找到一对未匹配的卡片
+            const allCards = Array.from(document.querySelectorAll('.memory-card'));
+            const unflippedCards = allCards.filter(card => card.dataset.flipped === 'false' && card.style.pointerEvents !== 'none');
+            
+            if (unflippedCards.length >= 2) {
+                // 随机选择一张卡片
+                const card1 = unflippedCards[0];
+                const number1 = parseInt(card1.dataset.number);
+                
+                // 找到匹配的卡片
+                const card2 = unflippedCards.find(card => parseInt(card.dataset.number) === number1 && card !== card1);
+                
+                if (card2) {
+                    // 添加高亮效果
+                    card1.classList.add('animate-pulse');
+                    card2.classList.add('animate-pulse');
+                    
+                    // 扣除一些分数作为提示代价
+                    if (currentGameState.score >= 15) {
+                        currentGameState.score -= 15;
+                        document.getElementById('memoryGameScore').textContent = currentGameState.score;
+                    }
+                    
+                    // 3秒后移除高亮
+                    setTimeout(() => {
+                        card1.classList.remove('animate-pulse');
+                        card2.classList.remove('animate-pulse');
+                    }, 3000);
+                }
+            }
+        }
+
+        // 初始化城堡碎片
+        function initCastlePieces() {
+            const piecesGrid = document.getElementById('castlePiecesGrid');
+            if (!piecesGrid) return;
+            
+            piecesGrid.innerHTML = '';
+            
+            // 生成碎片
+            for (let i = 1; i <= 20; i++) {
+                const isUnlocked = gameData.castle.pieces.unlocked.includes(i);
+                
+                const piece = document.createElement('div');
+                piece.className = `castle-piece w-12 h-12 rounded-lg flex items-center justify-center ${isUnlocked ? '' : 'locked'}`;
+                piece.style.backgroundColor = isUnlocked ? getRandomColor() : '#e5e7eb';
+                piece.dataset.pieceId = i;
+                
+                piece.innerHTML = `
+                    <div class="text-center">
+                        <i class="fa ${isUnlocked ? 'fa-puzzle-piece' : 'fa-lock'} text-white"></i>
+                        <div class="text-xs mt-1 text-white">${i}</div>
+                    </div>
+                `;
+                
+                if (isUnlocked) {
+                    piece.addEventListener('click', () => selectCastlePiece(i));
+                }
+                
+                piecesGrid.appendChild(piece);
+            }
+        }
+
+        // 选择城堡碎片
+        function selectCastlePiece(pieceId) {
+            // 这里可以实现碎片放置逻辑
+            console.log(`Selected piece ${pieceId}`);
+        }
+
+        // 购买礼物
+        function buyGift(price) {
+            if (gameData.player.score >= price) {
+                // 扣除积分
+                gameData.player.score -= price;
+                
+                // 更新UI
+                updateUI();
+                
+                // 显示购买成功消息
+                showMessage('购买成功！', 'success');
+            } else {
+                // 显示积分不足消息
+                showMessage('积分不足！', 'error');
+            }
+        }
+
+        // 结束游戏
+        function endGame() {
+            // 停止计时器
+            stopGame();
+            
+            // 计算获得的碎片数
+            const pieceChance = gameConfig[currentGameState.game].pieceChance;
+            const piecesEarned = Math.random() < pieceChance ? 1 : 0;
+            
+            // 更新游戏数据
+            gameData.player.score += currentGameState.score;
+            gameData.games[currentGameState.game].completed++;
+            
+            if (piecesEarned > 0) {
+                gameData.player.pieces += piecesEarned;
+                gameData.castle.pieces.collected += piecesEarned;
+                
+                // 更新城堡完成度
+                gameData.castle.completion = Math.min(100, Math.round((gameData.castle.pieces.collected / gameData.castle.pieces.total) * 100));
             }
             
             // 更新UI
-            document.getElementById(`${gameType}Progress`).style.width = `${progress.progress}%`;
-            document.getElementById(`${gameType}Level`).textContent = `等级 ${progress.level}`;
-        }
-
-        // 重置当前游戏
-        function resetCurrentGame() {
-            const activeTab = document.querySelector('.tab-content.active').id;
+            updateUI();
             
-            switch (activeTab) {
-                case 'blockGame':
-                    // 清空城堡
-                    const castle = document.getElementById('castle');
-                    placedBlocks.forEach(block => block.element.remove());
-                    placedBlocks = [];
-                    document.getElementById('blockQuestion').classList.add('hidden');
-                    document.getElementById('castlePlaceholder').style.display = 'block';
-                    document.getElementById('currentLayers').textContent = '0';
-                    document.getElementById('totalBlocks').textContent = '0';
-                    break;
-                    
-                case 'leftRightGame':
-                    resetLRGame();
-                    break;
-                    
-                case 'orderGame':
-                    // 清空排队区
-                    const queueArea = document.getElementById('queueArea');
-                    placedDolls.forEach(doll => doll.element.remove());
-                    placedDolls = [];
-                    document.getElementById('orderQuestion').classList.add('hidden');
-                    break;
-            }
+            // 显示游戏结束页面
+            showGameOverScreen(currentGameState.score, piecesEarned);
         }
 
-        // 创建星星动画
-        function createStars(x, y, count = 5) {
-            for (let i = 0; i < count; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = `${x + Math.random() * 100 - 50}px`;
-                star.style.top = `${y + Math.random() * 100 - 50}px`;
-                star.style.animationDelay = `${Math.random() * 0.5}s`;
-                
-                document.body.appendChild(star);
-                
-                setTimeout(() => star.remove(), 2000);
+        // 显示游戏结束页面
+        function showGameOverScreen(score, pieces) {
+            // 更新游戏结束页面内容
+            document.getElementById('gameOverScore').textContent = score;
+            document.getElementById('gameOverPieces').textContent = pieces;
+            
+            // 根据游戏类型设置消息
+            let message;
+            switch (currentGameState.game) {
+                case 'number':
+                    message = '你成功完成了数字配对挑战！';
+                    break;
+                case 'math':
+                    message = '你是加减法小能手！';
+                    break;
+                case 'shape':
+                    message = '你认识了所有的图形！';
+                    break;
+                case 'memory':
+                    message = '你的记忆力真棒！';
+                    break;
+                default:
+                    message = '你完成了游戏挑战！';
             }
+            
+            document.getElementById('gameOverMessage').textContent = message;
+            
+            // 显示游戏结束页面
+            showScreen('gameOverScreen');
+        }
+
+        // 显示消息
+        function showMessage(message, type = 'info') {
+            // 创建消息元素
+            const messageEl = document.createElement('div');
+            messageEl.className = `fixed top-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in`;
+            
+            // 根据类型设置样式
+            switch (type) {
+                case 'success':
+                    messageEl.classList.add('bg-green-500', 'text-white');
+                    break;
+                case 'error':
+                    messageEl.classList.add('bg-red-500', 'text-white');
+                    break;
+                case 'warning':
+                    messageEl.classList.add('bg-yellow-500', 'text-white');
+                    break;
+                default:
+                    messageEl.classList.add('bg-blue-500', 'text-white');
+            }
+            
+            messageEl.textContent = message;
+            document.body.appendChild(messageEl);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                messageEl.classList.add('opacity-0', 'transition-opacity', 'duration-500');
+                setTimeout(() => {
+                    messageEl.remove();
+                }, 500);
+            }, 3000);
         }
 
         // 创建五彩纸屑
@@ -1189,14 +2291,8 @@
 
         // 获取随机颜色
         function getRandomColor() {
-            const colors = ['#FF6B9D', '#A2D2FF', '#CDB4DB', '#FFAFCC', '#BDE0FE', '#FFC8DD'];
+            const colors = ['#FF6B9D', '#A2D2FF', '#CDB4DB', '#FFAFCC', '#BDE0FE', '#FFC8DD', '#06D6A0', '#FFD166', '#EF476F', '#118AB2'];
             return colors[Math.floor(Math.random() * colors.length)];
-        }
-
-        // 播放音效
-        function playSound(type) {
-            // 这里可以添加音效播放逻辑
-            console.log(`Playing sound: ${type}`);
         }
 
         // 数组洗牌
@@ -1208,8 +2304,20 @@
             return array;
         }
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', init);
+        // 播放语音
+        function playVoice(type) {
+            // 这里可以添加实际的语音播放逻辑
+            console.log(`Playing voice: ${type}`);
+            
+            // 添加语音按钮动画
+            const voiceBtn = event.target.closest('.voice-btn');
+            if (voiceBtn) {
+                voiceBtn.classList.add('speaking');
+                setTimeout(() => {
+                    voiceBtn.classList.remove('speaking');
+                }, 1000);
+            }
+        }
     </script>
 </body>
 </html>
