@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学城堡 - 6岁女孩数学学习应用</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF6B9D',
+                        secondary: '#FFD1DC',
+                        accent: '#FFC8DD',
+                        success: '#CDB4DB',
+                        info: '#A2D2FF',
+                        warning: '#FFAFCC',
+                        danger: '#FF8fab',
+                        light: '#FFE5EC',
+                        dark: '#8338EC'
+                    },
+                    fontFamily: {
+                        sans: ['Comic Sans MS', 'Arial', 'sans-serif'],
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 2s infinite',
+                        'spin-slow': 'spin 3s linear infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            .text-shadow-lg {
+                text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.3);
+            }
+            .block-shadow {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .block-shadow-lg {
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+            .glass {
+                background: rgba(255, 255, 255, 0.25);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+        }
+    </style>
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFE5EC 0%, #FFC8DD 50%, #CDB4DB 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .block {
+            width: 60px;
+            height: 60px;
+            margin: 2px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .block:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .block:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+        
+        .drop-zone {
+            min-height: 200px;
+            border: 3px dashed #FF6B9D;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .drop-zone.active {
+            border-color: #8338EC;
+            background-color: rgba(131, 56, 236, 0.1);
+        }
+        
+        .doll {
+            width: 60px;
+            height: 80px;
+            cursor: grab;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        
+        .doll:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .doll:active {
+            cursor: grabbing;
+        }
+        
+        .hand {
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .hand:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .star {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: float 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes celebrate {
+            0% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.2) rotate(10deg); }
+            50% { transform: scale(1.1) rotate(-10deg); }
+            75% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        
+        .celebrate {
+            animation: celebrate 0.6s ease-in-out;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #FF6B9D;
+            border-radius: 50%;
+            animation: fall 3s linear forwards;
+            pointer-events: none;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .number-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FF6B9D, #FF8fab);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(90deg, #FF6B9D 0%, #8338EC 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #FF6B9D, #FF8fab);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #CDB4DB, #A2D2FF);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-800">
+    <!-- 顶部导航 -->
+    <nav class="bg-white bg-opacity-80 backdrop-blur-md shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D" alt="Logo" class="w-10 h-10">
+                <h1 class="text-2xl font-bold text-primary text-shadow">数学城堡</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="bg-light rounded-full px-4 py-2 flex items-center space-x-2">
+                    <i class="fa fa-star text-yellow-400"></i>
+                    <span id="score" class="font-bold">0</span>
+                </div>
+                <button id="helpBtn" class="btn-secondary">
+                    <i class="fa fa-question-circle mr-2"></i>帮助
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- 欢迎页面 -->
+        <div id="welcome" class="text-center mb-8 animate-float">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/68215caad47a4602b577677a4e017130~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398217&x-signature=TcfE%2BRTGf8%2BAa7oK9WduzdRT1DY%3D" alt="城堡" class="w-64 h-64 mx-auto mb-6 block-shadow-lg rounded-2xl">
+            <h2 class="text-3xl font-bold text-primary mb-4 text-shadow-lg">欢迎来到数学城堡！</h2>
+            <p class="text-lg text-gray-700 mb-6 max-w-md mx-auto">亲爱的小朋友，准备好开始有趣的数学冒险了吗？在这里，你可以学习正方体计数、左右认知和序数间隔哦！</p>
+            <button id="startBtn" class="btn-primary text-xl px-8 py-4">
+                <i class="fa fa-play-circle mr-2"></i>开始游戏
+            </button>
+        </div>
+
+        <!-- 游戏选择标签页 -->
+        <div id="gameTabs" class="hidden">
+            <div class="bg-white rounded-xl p-6 shadow-lg mb-8">
+                <div class="flex flex-wrap justify-center gap-4 mb-6">
+                    <button class="tab-btn active px-6 py-3 rounded-full bg-primary text-white font-bold text-lg" data-tab="blockGame">
+                        <i class="fa fa-cubes mr-2"></i>正方体计数
+                    </button>
+                    <button class="tab-btn px-6 py-3 rounded-full bg-secondary text-gray-700 font-bold text-lg" data-tab="leftRightGame">
+                        <i class="fa fa-hand-paper-o mr-2"></i>左右认知
+                    </button>
+                    <button class="tab-btn px-6 py-3 rounded-full bg-secondary text-gray-700 font-bold text-lg" data-tab="orderGame">
+                        <i class="fa fa-sort-numeric-asc mr-2"></i>序数间隔
+                    </button>
+                </div>
+
+                <!-- 正方体计数游戏 -->
+                <div id="blockGame" class="tab-content active">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary mb-2">公主城堡搭建</h3>
+                        <p class="text-gray-600">把彩色积木拖到城堡上，数一数有多少层吧！</p>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-8">
+                        <!-- 积木选择区 -->
+                        <div class="bg-light rounded-xl p-4 block-shadow">
+                            <h4 class="font-bold mb-3 text-center">选择积木</h4>
+                            <div class="flex flex-wrap justify-center gap-2" id="blockContainer">
+                                <div class="block" style="background: linear-gradient(135deg, #FF6B9D, #FF8fab);" data-color="pink"></div>
+                                <div class="block" style="background: linear-gradient(135deg, #A2D2FF, #BDE0FE);" data-color="blue"></div>
+                                <div class="block" style="background: linear-gradient(135deg, #CDB4DB, #E0AAFF);" data-color="purple"></div>
+                                <div class="block" style="background: linear-gradient(135deg, #FFAFCC, #FFC8DD);" data-color="lightpink"></div>
+                                <div class="block" style="background: linear-gradient(135deg, #BDE0FE, #A2D2FF);" data-color="lightblue"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 城堡搭建区 -->
+                        <div class="flex-1">
+                            <div class="relative">
+                                <div id="castle" class="drop-zone bg-white rounded-xl p-4 min-h-[300px] flex items-end justify-center">
+                                    <div class="text-center text-gray-400" id="castlePlaceholder">
+                                        <p>把积木拖到这里搭建城堡吧！</p>
+                                    </div>
+                                </div>
+                                <div id="castleBase" class="w-32 h-20 bg-yellow-100 rounded-t-full mx-auto mt-2 relative">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="text-sm font-bold">城堡底座</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 计数显示 -->
+                            <div class="mt-4 bg-light rounded-xl p-4 block-shadow">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-bold">当前层数：</span>
+                                    <span id="currentLayers" class="text-xl font-bold text-primary">0</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="font-bold">总积木数：</span>
+                                    <span id="totalBlocks" class="text-xl font-bold text-primary">0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题区域 -->
+                    <div class="mt-6 bg-white rounded-xl p-4 block-shadow">
+                        <div id="blockQuestion" class="hidden">
+                            <h4 class="font-bold mb-3 text-center">回答问题</h4>
+                            <p id="blockQuestionText" class="text-lg text-center mb-4"></p>
+                            <div class="flex justify-center gap-4">
+                                <button class="btn-secondary" id="blockAnswer1"></button>
+                                <button class="btn-secondary" id="blockAnswer2"></button>
+                                <button class="btn-secondary" id="blockAnswer3"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 左右认知游戏 -->
+                <div id="leftRightGame" class="tab-content">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary mb-2">左右手游戏</h3>
+                        <p class="text-gray-600">根据提示点击正确的手，看看你能得多少分！</p>
+                    </div>
+                    
+                    <div class="flex justify-center mb-8">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/569bd97718044666aaff8479fd8c6f3d~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398231&x-signature=FmbEznajlnrXqO1p45eUJ1UJECE%3D" alt="左右认知" class="w-64 h-64 block-shadow-lg rounded-2xl">
+                    </div>
+                    
+                    <!-- 游戏区域 -->
+                    <div class="bg-light rounded-xl p-6 block-shadow">
+                        <div class="text-center mb-6">
+                            <h4 id="lrInstruction" class="text-xl font-bold text-primary mb-2">请点击左手！</h4>
+                            <p id="lrFeedback" class="text-lg hidden"></p>
+                        </div>
+                        
+                        <div class="flex justify-center gap-12 mb-6">
+                            <div class="relative">
+                                <div id="leftHand" class="hand bg-blue-100 p-4 rounded-full block-shadow" data-hand="left">
+                                    <span class="block text-center font-bold">左手</span>
+                                </div>
+                            </div>
+                            <div class="relative">
+                                <div id="rightHand" class="hand bg-pink-100 p-4 rounded-full block-shadow" data-hand="right">
+                                    <span class="block text-center font-bold">右手</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-bold">得分：</span>
+                                <span id="lrScore" class="text-xl font-bold text-primary">0</span>
+                            </div>
+                            <div>
+                                <span class="font-bold">回合：</span>
+                                <span id="lrRound" class="text-xl font-bold text-primary">1/10</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 序数间隔游戏 -->
+                <div id="orderGame" class="tab-content">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-primary mb-2">娃娃排队</h3>
+                        <p class="text-gray-600">帮助娃娃们排队，学习序数和间隔的概念！</p>
+                    </div>
+                    
+                    <div class="flex justify-center mb-8">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/25f0ac59a1ec4914a044b6836bca71af~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398242&x-signature=m22PrB8lrA9m4knUF7kERmr%2FEPo%3D" alt="娃娃排队" class="w-64 h-64 block-shadow-lg rounded-2xl">
+                    </div>
+                    
+                    <!-- 游戏区域 -->
+                    <div class="bg-light rounded-xl p-6 block-shadow">
+                        <!-- 排队区域 -->
+                        <div class="mb-6">
+                            <h4 class="font-bold mb-3 text-center">娃娃排队区</h4>
+                            <div id="queueArea" class="flex justify-center items-end gap-4 min-h-[120px] p-4 border-2 border-dashed border-primary rounded-xl">
+                                <!-- 娃娃会被拖到这里 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 娃娃选择区 -->
+                        <div class="mb-6">
+                            <h4 class="font-bold mb-3 text-center">选择娃娃</h4>
+                            <div id="dollContainer" class="flex flex-wrap justify-center gap-4">
+                                <div class="doll bg-pink-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="1">
+                                    <div class="text-center">
+                                        <div class="w-12 h-16 bg-pink-200 rounded-full mx-auto mb-1"></div>
+                                        <span class="text-sm font-bold">娃娃1</span>
+                                    </div>
+                                </div>
+                                <div class="doll bg-blue-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="2">
+                                    <div class="text-center">
+                                        <div class="w-12 h-16 bg-blue-200 rounded-full mx-auto mb-1"></div>
+                                        <span class="text-sm font-bold">娃娃2</span>
+                                    </div>
+                                </div>
+                                <div class="doll bg-purple-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="3">
+                                    <div class="text-center">
+                                        <div class="w-12 h-16 bg-purple-200 rounded-full mx-auto mb-1"></div>
+                                        <span class="text-sm font-bold">娃娃3</span>
+                                    </div>
+                                </div>
+                                <div class="doll bg-yellow-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="4">
+                                    <div class="text-center">
+                                        <div class="w-12 h-16 bg-yellow-200 rounded-full mx-auto mb-1"></div>
+                                        <span class="text-sm font-bold">娃娃4</span>
+                                    </div>
+                                </div>
+                                <div class="doll bg-green-100 p-2 rounded-lg block-shadow cursor-grab" data-doll="5">
+                                    <div class="text-center">
+                                        <div class="w-12 h-16 bg-green-200 rounded-full mx-auto mb-1"></div>
+                                        <span class="text-sm font-bold">娃娃5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题区域 -->
+                        <div id="orderQuestion" class="hidden">
+                            <h4 class="font-bold mb-3 text-center">回答问题</h4>
+                            <p id="orderQuestionText" class="text-lg text-center mb-4"></p>
+                            <div class="flex justify-center gap-4">
+                                <button class="btn-secondary" id="orderAnswer1"></button>
+                                <button class="btn-secondary" id="orderAnswer2"></button>
+                                <button class="btn-secondary" id="orderAnswer3"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 成就展示 -->
+        <div id="achievements" class="bg-white rounded-xl p-6 shadow-lg hidden">
+            <h3 class="text-2xl font-bold text-primary mb-4 text-center">我的成就</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-light rounded-xl p-4 block-shadow text-center">
+                    <h4 class="font-bold mb-2">正方体大师</h4>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                        <div id="blockProgress" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <span id="blockLevel" class="text-sm">等级 1</span>
+                </div>
+                <div class="bg-light rounded-xl p-4 block-shadow text-center">
+                    <h4 class="font-bold mb-2">左右小能手</h4>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                        <div id="lrProgress" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <span id="lrLevel" class="text-sm">等级 1</span>
+                </div>
+                <div class="bg-light rounded-xl p-4 block-shadow text-center">
+                    <h4 class="font-bold mb-2">序数达人</h4>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mb-2">
+                        <div id="orderProgress" class="progress-bar" style="width: 0%"></div>
+                    </div>
+                    <span id="orderLevel" class="text-sm">等级 1</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 帮助模态框 -->
+    <div id="helpModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 block-shadow-lg">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold text-primary">游戏帮助</h3>
+                <button id="closeHelp" class="text-gray-500 hover:text-gray-700">
+                    <i class="fa fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-bold text-lg">正方体计数</h4>
+                    <p>把积木拖到城堡上，搭建漂亮的城堡！完成后会有有趣的数学问题哦。</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">左右认知</h4>
+                    <p>根据提示点击正确的手，锻炼你的左右认知能力！</p>
+                </div>
+                <div>
+                    <h4 class="font-bold text-lg">序数间隔</h4>
+                    <p>帮助娃娃们排队，然后回答关于序数和间隔的问题。</p>
+                </div>
+                <div class="bg-light rounded-lg p-3">
+                    <p class="font-bold text-center">完成游戏可以获得星星奖励哦！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 成功模态框 -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4 block-shadow-lg text-center">
+            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/110b0053bdfe4bf8b9d71ee4c7de5003~tplv-a9rns2rl98-image.image?rcl=2025121521432503D6D945BB3BDC4CF0E4&rk3s=8e244e95&rrcfp=f06b921b&x-expires=1768398254&x-signature=d%2F%2BmOMLeexGESSQN41GitUb0u5Q%3D" alt="成功" class="w-20 h-20 mx-auto mb-4 animate-bounce-slow">
+            <h3 class="text-2xl font-bold text-primary mb-2">太棒了！</h3>
+            <p id="successMessage" class="text-lg mb-4"></p>
+            <div class="flex justify-center items-center space-x-2 mb-4">
+                <i class="fa fa-star text-yellow-400 text-xl"></i>
+                <span id="starsEarned" class="text-xl font-bold text-primary">+3</span>
+            </div>
+            <button id="continueBtn" class="btn-primary">
+                继续游戏
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let totalScore = 0;
+        let draggedItem = null;
+        let placedBlocks = [];
+        let placedDolls = [];
+        let lrCurrentRound = 1;
+        let lrCurrentScore = 0;
+        let lrCurrentAnswer = '';
+        
+        // 游戏进度
+        let gameProgress = {
+            block: { score: 0, level: 1, progress: 0 },
+            leftRight: { score: 0, level: 1, progress: 0 },
+            order: { score: 0, level: 1, progress: 0 }
+        };
+
+        // DOM 元素
+        const startBtn = document.getElementById('startBtn');
+        const welcome = document.getElementById('welcome');
+        const gameTabs = document.getElementById('gameTabs');
+        const achievements = document.getElementById('achievements');
+        const scoreDisplay = document.getElementById('score');
+        const helpBtn = document.getElementById('helpBtn');
+        const helpModal = document.getElementById('helpModal');
+        const closeHelp = document.getElementById('closeHelp');
+        const successModal = document.getElementById('successModal');
+        const successMessage = document.getElementById('successMessage');
+        const starsEarned = document.getElementById('starsEarned');
+        const continueBtn = document.getElementById('continueBtn');
+
+        // 初始化游戏
+        function init() {
+            // 开始按钮
+            startBtn.addEventListener('click', startGame);
+            
+            // 帮助按钮
+            helpBtn.addEventListener('click', () => helpModal.classList.remove('hidden'));
+            closeHelp.addEventListener('click', () => helpModal.classList.add('hidden'));
+            
+            // 继续按钮
+            continueBtn.addEventListener('click', () => {
+                successModal.classList.add('hidden');
+                resetCurrentGame();
+            });
+            
+            // 标签页切换
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.dataset.tab;
+                    switchTab(tabId);
+                });
+            });
+            
+            // 初始化拖拽功能
+            initDragAndDrop();
+            
+            // 初始化左右认知游戏
+            initLeftRightGame();
+            
+            // 初始化序数间隔游戏
+            initOrderGame();
+        }
+
+        // 开始游戏
+        function startGame() {
+            welcome.classList.add('hidden');
+            gameTabs.classList.remove('hidden');
+            achievements.classList.remove('hidden');
+            playSound('start');
+        }
+
+        // 切换标签页
+        function switchTab(tabId) {
+            // 更新标签按钮状态
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('bg-secondary', 'text-gray-700');
+            });
+            
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active', 'bg-primary', 'text-white');
+            document.querySelector(`[data-tab="${tabId}"]`).classList.remove('bg-secondary', 'text-gray-700');
+            
+            // 更新内容显示
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // 初始化拖拽功能
+        function initDragAndDrop() {
+            // 积木拖拽
+            document.querySelectorAll('.block').forEach(block => {
+                block.addEventListener('dragstart', handleDragStart);
+                block.addEventListener('dragend', handleDragEnd);
+                block.setAttribute('draggable', true);
+            });
+            
+            // 城堡放置区
+            const castle = document.getElementById('castle');
+            castle.addEventListener('dragover', handleDragOver);
+            castle.addEventListener('dragenter', handleDragEnter);
+            castle.addEventListener('dragleave', handleDragLeave);
+            castle.addEventListener('drop', handleBlockDrop);
+            
+            // 娃娃拖拽
+            document.querySelectorAll('.doll').forEach(doll => {
+                doll.addEventListener('dragstart', handleDragStart);
+                doll.addEventListener('dragend', handleDragEnd);
+                doll.setAttribute('draggable', true);
+            });
+            
+            // 排队区域
+            const queueArea = document.getElementById('queueArea');
+            queueArea.addEventListener('dragover', handleDragOver);
+            queueArea.addEventListener('dragenter', handleDragEnter);
+            queueArea.addEventListener('dragleave', handleDragLeave);
+            queueArea.addEventListener('drop', handleDollDrop);
+        }
+
+        // 拖拽开始
+        function handleDragStart(e) {
+            draggedItem = this;
+            setTimeout(() => this.style.opacity = '0.5', 0);
+        }
+
+        // 拖拽结束
+        function handleDragEnd() {
+            this.style.opacity = '1';
+            draggedItem = null;
+        }
+
+        // 拖拽经过
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        // 拖拽进入
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        }
+
+        // 拖拽离开
+        function handleDragLeave() {
+            this.classList.remove('active');
+        }
+
+        // 积木放置
+        function handleBlockDrop(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            if (draggedItem && draggedItem.classList.contains('block')) {
+                const blockColor = draggedItem.dataset.color;
+                const newBlock = document.createElement('div');
+                newBlock.className = 'block absolute';
+                newBlock.style.background = draggedItem.style.background;
+                newBlock.style.left = `${e.offsetX - 30}px`;
+                newBlock.style.top = `${e.offsetY - 30}px`;
+                newBlock.dataset.color = blockColor;
+                
+                this.appendChild(newBlock);
+                placedBlocks.push({
+                    element: newBlock,
+                    color: blockColor,
+                    x: e.offsetX,
+                    y: e.offsetY
+                });
+                
+                // 更新计数
+                updateBlockCount();
+                
+                // 播放音效
+                playSound('drop');
+                
+                // 检查是否可以出题
+                if (placedBlocks.length >= 3) {
+                    setTimeout(() => showBlockQuestion(), 1000);
+                }
+            }
+        }
+
+        // 娃娃放置
+        function handleDollDrop(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+            
+            if (draggedItem && draggedItem.classList.contains('doll')) {
+                const dollNumber = draggedItem.dataset.doll;
+                
+                // 检查是否已经放置了这个娃娃
+                if (placedDolls.some(doll => doll.number === dollNumber)) {
+                    return;
+                }
+                
+                const newDoll = draggedItem.cloneNode(true);
+                newDoll.classList.remove('cursor-grab');
+                newDoll.style.position = 'relative';
+                
+                // 添加数字标签
+                const numberCircle = document.createElement('div');
+                numberCircle.className = 'number-circle';
+                numberCircle.textContent = placedDolls.length + 1;
+                newDoll.appendChild(numberCircle);
+                
+                this.appendChild(newDoll);
+                placedDolls.push({
+                    element: newDoll,
+                    number: dollNumber,
+                    position: placedDolls.length + 1
+                });
+                
+                // 播放音效
+                playSound('drop');
+                
+                // 检查是否可以出题
+                if (placedDolls.length >= 4) {
+                    setTimeout(() => showOrderQuestion(), 1000);
+                }
+            }
+        }
+
+        // 更新积木计数
+        function updateBlockCount() {
+            const totalBlocks = placedBlocks.length;
+            const uniqueLayers = new Set();
+            
+            // 简单计算层数（基于Y坐标分组）
+            placedBlocks.forEach(block => {
+                const layer = Math.floor(block.y / 70); // 假设每层高度为70px
+                uniqueLayers.add(layer);
+            });
+            
+            document.getElementById('currentLayers').textContent = uniqueLayers.size;
+            document.getElementById('totalBlocks').textContent = totalBlocks;
+        }
+
+        // 显示积木问题
+        function showBlockQuestion() {
+            const questionArea = document.getElementById('blockQuestion');
+            const questionText = document.getElementById('blockQuestionText');
+            const answer1 = document.getElementById('blockAnswer1');
+            const answer2 = document.getElementById('blockAnswer2');
+            const answer3 = document.getElementById('blockAnswer3');
+            
+            // 隐藏占位符
+            document.getElementById('castlePlaceholder').style.display = 'none';
+            
+            // 生成问题
+            const totalBlocks = placedBlocks.length;
+            const uniqueLayers = new Set();
+            placedBlocks.forEach(block => {
+                const layer = Math.floor(block.y / 70);
+                uniqueLayers.add(layer);
+            });
+            const totalLayers = uniqueLayers.size;
+            
+            // 随机选择问题类型
+            const questionTypes = [
+                {
+                    text: `城堡一共有多少层？`,
+                    correct: totalLayers,
+                    options: generateOptions(totalLayers, 5)
+                },
+                {
+                    text: `城堡一共有多少个积木？`,
+                    correct: totalBlocks,
+                    options: generateOptions(totalBlocks, 8)
+                },
+                {
+                    text: `如果再加上2个积木，总共有多少个？`,
+                    correct: totalBlocks + 2,
+                    options: generateOptions(totalBlocks + 2, 8)
+                }
+            ];
+            
+            const question = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+            
+            // 设置问题内容
+            questionText.textContent = question.text;
+            const shuffledOptions = shuffleArray([question.correct, ...question.options]);
+            
+            answer1.textContent = shuffledOptions[0];
+            answer2.textContent = shuffledOptions[1];
+            answer3.textContent = shuffledOptions[2];
+            
+            // 添加点击事件
+            const answers = [answer1, answer2, answer3];
+            answers.forEach(btn => {
+                btn.onclick = () => {
+                    const selectedAnswer = parseInt(btn.textContent);
+                    checkBlockAnswer(selectedAnswer, question.correct);
+                    
+                    // 移除点击事件
+                    answers.forEach(b => b.onclick = null);
+                };
+            });
+            
+            questionArea.classList.remove('hidden');
+        }
+
+        // 检查积木答案
+        function checkBlockAnswer(selected, correct) {
+            if (selected === correct) {
+                showSuccess('回答正确！', 3);
+                updateProgress('block', 3);
+                playSound('correct');
+                createConfetti();
+            } else {
+                showSuccess('再试一次吧！', 0);
+                playSound('wrong');
+            }
+        }
+
+        // 初始化左右认知游戏
+        function initLeftRightGame() {
+            const leftHand = document.getElementById('leftHand');
+            const rightHand = document.getElementById('rightHand');
+            const instruction = document.getElementById('lrInstruction');
+            
+            // 生成第一个问题
+            generateLRQuestion();
+            
+            // 手部点击事件
+            leftHand.addEventListener('click', () => checkLRAnswer('left'));
+            rightHand.addEventListener('click', () => checkLRAnswer('right'));
+        }
+
+        // 生成左右认知问题
+        function generateLRQuestion() {
+            const instructions = [
+                { text: '请点击左手！', answer: 'left' },
+                { text: '请点击右手！', answer: 'right' },
+                { text: '吃饭时用哪只手拿勺子？', answer: 'right' },
+                { text: '写字时用哪只手？', answer: 'right' },
+                { text: '敬礼时用哪只手？', answer: 'right' }
+            ];
+            
+            const randomInstruction = instructions[Math.floor(Math.random() * instructions.length)];
+            
+            document.getElementById('lrInstruction').textContent = randomInstruction.text;
+            document.getElementById('lrFeedback').classList.add('hidden');
+            lrCurrentAnswer = randomInstruction.answer;
+        }
+
+        // 检查左右认知答案
+        function checkLRAnswer(selected) {
+            const feedback = document.getElementById('lrFeedback');
+            
+            if (selected === lrCurrentAnswer) {
+                feedback.textContent = '太棒了！';
+                feedback.className = 'text-lg text-green-600';
+                lrCurrentScore += 1;
+                playSound('correct');
+                
+                // 添加庆祝动画
+                document.getElementById(selected === 'left' ? 'leftHand' : 'rightHand').classList.add('celebrate');
+                setTimeout(() => {
+                    document.getElementById(selected === 'left' ? 'leftHand' : 'rightHand').classList.remove('celebrate');
+                }, 600);
+            } else {
+                feedback.textContent = '不对哦，再试试！';
+                feedback.className = 'text-lg text-red-600';
+                playSound('wrong');
+            }
+            
+            feedback.classList.remove('hidden');
+            document.getElementById('lrScore').textContent = lrCurrentScore;
+            
+            // 检查是否完成所有回合
+            if (lrCurrentRound >= 10) {
+                setTimeout(() => {
+                    const stars = Math.floor(lrCurrentScore / 3);
+                    showSuccess(`完成了10个回合！得分：${lrCurrentScore}`, stars);
+                    updateProgress('leftRight', stars);
+                    resetLRGame();
+                }, 1500);
+            } else {
+                lrCurrentRound++;
+                document.getElementById('lrRound').textContent = `${lrCurrentRound}/10`;
+                
+                setTimeout(() => {
+                    generateLRQuestion();
+                }, 1500);
+            }
+        }
+
+        // 重置左右认知游戏
+        function resetLRGame() {
+            lrCurrentRound = 1;
+            lrCurrentScore = 0;
+            document.getElementById('lrRound').textContent = '1/10';
+            document.getElementById('lrScore').textContent = '0';
+            generateLRQuestion();
+        }
+
+        // 初始化序数间隔游戏
+        function initOrderGame() {
+            // 娃娃点击事件（用于重新排序）
+            document.getElementById('queueArea').addEventListener('click', (e) => {
+                const doll = e.target.closest('.doll');
+                if (doll && doll.parentElement.id === 'queueArea') {
+                    // 移除娃娃
+                    const index = placedDolls.findIndex(d => d.element === doll);
+                    if (index !== -1) {
+                        placedDolls.splice(index, 1);
+                        doll.remove();
+                        
+                        // 重新编号
+                        updateDollNumbers();
+                    }
+                }
+            });
+        }
+
+        // 更新娃娃编号
+        function updateDollNumbers() {
+            placedDolls.forEach((doll, index) => {
+                const numberCircle = doll.element.querySelector('.number-circle');
+                if (numberCircle) {
+                    numberCircle.textContent = index + 1;
+                }
+                doll.position = index + 1;
+            });
+        }
+
+        // 显示序数间隔问题
+        function showOrderQuestion() {
+            const questionArea = document.getElementById('orderQuestion');
+            const questionText = document.getElementById('orderQuestionText');
+            const answer1 = document.getElementById('orderAnswer1');
+            const answer2 = document.getElementById('orderAnswer2');
+            const answer3 = document.getElementById('orderAnswer3');
+            
+            // 生成问题
+            const questions = [];
+            
+            // 如果有足够的娃娃，生成序数问题
+            if (placedDolls.length >= 3) {
+                // 随机选择两个娃娃
+                const doll1 = placedDolls[Math.floor(Math.random() * placedDolls.length)];
+                let doll2;
+                do {
+                    doll2 = placedDolls[Math.floor(Math.random() * placedDolls.length)];
+                } while (doll1 === doll2);
+                
+                const pos1 = Math.min(doll1.position, doll2.position);
+                const pos2 = Math.max(doll1.position, doll2.position);
+                const between = pos2 - pos1 - 1;
+                
+                questions.push({
+                    text: `娃娃${doll1.number}排在第${pos1}，娃娃${doll2.number}排在第${pos2}，它们之间有几个娃娃？`,
+                    correct: between,
+                    options: generateOptions(between, 3)
+                });
+            }
+            
+            // 生成序数问题
+            if (placedDolls.length >= 2) {
+                const randomDoll = placedDolls[Math.floor(Math.random() * placedDolls.length)];
+                const position = randomDoll.position;
+                
+                questions.push({
+                    text: `娃娃${randomDoll.number}排在第几位？`,
+                    correct: position,
+                    options: generateOptions(position, placedDolls.length)
+                });
+            }
+            
+            // 生成间隔问题
+            questions.push({
+                text: `从第2个娃娃到第5个娃娃，中间有几个娃娃？`,
+                correct: 2,
+                options: generateOptions(2, 4)
+            });
+            
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            
+            // 设置问题内容
+            questionText.textContent = question.text;
+            const shuffledOptions = shuffleArray([question.correct, ...question.options]);
+            
+            answer1.textContent = shuffledOptions[0];
+            answer2.textContent = shuffledOptions[1];
+            answer3.textContent = shuffledOptions[2];
+            
+            // 添加点击事件
+            const answers = [answer1, answer2, answer3];
+            answers.forEach(btn => {
+                btn.onclick = () => {
+                    const selectedAnswer = parseInt(btn.textContent);
+                    checkOrderAnswer(selectedAnswer, question.correct);
+                    
+                    // 移除点击事件
+                    answers.forEach(b => b.onclick = null);
+                };
+            });
+            
+            questionArea.classList.remove('hidden');
+        }
+
+        // 检查序数间隔答案
+        function checkOrderAnswer(selected, correct) {
+            if (selected === correct) {
+                showSuccess('回答正确！', 3);
+                updateProgress('order', 3);
+                playSound('correct');
+                createConfetti();
+            } else {
+                showSuccess('再试一次吧！', 0);
+                playSound('wrong');
+            }
+        }
+
+        // 生成选项
+        function generateOptions(correct, range) {
+            const options = [];
+            let attempts = 0;
+            
+            while (options.length < 2 && attempts < 10) {
+                const option = correct + Math.floor(Math.random() * range) - Math.floor(range / 2);
+                if (option !== correct && option > 0 && !options.includes(option)) {
+                    options.push(option);
+                }
+                attempts++;
+            }
+            
+            // 如果无法生成足够的选项，使用默认值
+            while (options.length < 2) {
+                const defaultOption = correct + (options.length === 0 ? 1 : -1);
+                if (defaultOption > 0) {
+                    options.push(defaultOption);
+                } else {
+                    options.push(correct + 2);
+                }
+            }
+            
+            return options;
+        }
+
+        // 显示成功消息
+        function showSuccess(message, stars) {
+            successMessage.textContent = message;
+            starsEarned.textContent = stars > 0 ? `+${stars}` : '0';
+            
+            // 更新总分
+            if (stars > 0) {
+                totalScore += stars;
+                scoreDisplay.textContent = totalScore;
+            }
+            
+            successModal.classList.remove('hidden');
+        }
+
+        // 更新游戏进度
+        function updateProgress(gameType, stars) {
+            const progress = gameProgress[gameType];
+            progress.score += stars;
+            progress.progress = Math.min(100, (progress.score % 10) * 10);
+            
+            if (progress.score >= 10) {
+                progress.level = Math.floor(progress.score / 10) + 1;
+            }
+            
+            // 更新UI
+            document.getElementById(`${gameType}Progress`).style.width = `${progress.progress}%`;
+            document.getElementById(`${gameType}Level`).textContent = `等级 ${progress.level}`;
+        }
+
+        // 重置当前游戏
+        function resetCurrentGame() {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            
+            switch (activeTab) {
+                case 'blockGame':
+                    // 清空城堡
+                    const castle = document.getElementById('castle');
+                    placedBlocks.forEach(block => block.element.remove());
+                    placedBlocks = [];
+                    document.getElementById('blockQuestion').classList.add('hidden');
+                    document.getElementById('castlePlaceholder').style.display = 'block';
+                    document.getElementById('currentLayers').textContent = '0';
+                    document.getElementById('totalBlocks').textContent = '0';
+                    break;
+                    
+                case 'leftRightGame':
+                    resetLRGame();
+                    break;
+                    
+                case 'orderGame':
+                    // 清空排队区
+                    const queueArea = document.getElementById('queueArea');
+                    placedDolls.forEach(doll => doll.element.remove());
+                    placedDolls = [];
+                    document.getElementById('orderQuestion').classList.add('hidden');
+                    break;
+            }
+        }
+
+        // 创建星星动画
+        function createStars(x, y, count = 5) {
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = `${x + Math.random() * 100 - 50}px`;
+                star.style.top = `${y + Math.random() * 100 - 50}px`;
+                star.style.animationDelay = `${Math.random() * 0.5}s`;
+                
+                document.body.appendChild(star);
+                
+                setTimeout(() => star.remove(), 2000);
+            }
+        }
+
+        // 创建五彩纸屑
+        function createConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * window.innerWidth}px`;
+                confetti.style.backgroundColor = getRandomColor();
+                confetti.style.animationDelay = `${Math.random() * 2}s`;
+                
+                document.body.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 3000);
+            }
+        }
+
+        // 获取随机颜色
+        function getRandomColor() {
+            const colors = ['#FF6B9D', '#A2D2FF', '#CDB4DB', '#FFAFCC', '#BDE0FE', '#FFC8DD'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        // 播放音效
+        function playSound(type) {
+            // 这里可以添加音效播放逻辑
+            console.log(`Playing sound: ${type}`);
+        }
+
+        // 数组洗牌
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
