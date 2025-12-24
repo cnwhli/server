@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国龙华国际集团有限公司</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+    <!-- 百度地图API（需替换为自己的AK） -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=你的百度地图AK"></script>
+    <style>
+        :root {
+            --primary-color: #1a3a6e;
+            --secondary-color: #c0a062;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --dark-gray: #666;
+        }
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2c5282;
+        }
+        .nav-link {
+            color: white;
+            margin: 0 1rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: var(--secondary-color);
+        }
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 0.8rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+        /* 卡片hover效果 */
+        .biz-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .biz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* 地图容器 */
+        #map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 0.8rem;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- 头部导航 -->
+    <header class="header w-full">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-3xl font-bold">中国龙华国际集团有限公司</div>
+            <nav class="hidden md:flex">
+                <a class="nav-link" href="#introduction">企业介绍</a>
+                <a class="nav-link" href="#history">发展历史</a>
+                <a class="nav-link" href="#culture">龙华文化</a>
+                <a class="nav-link" href="#news">新闻中心</a>
+                <a class="nav-link" href="#join">加入我们</a>
+                <a class="nav-link" href="#map">地图</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden container mx-auto px-4 pb-4">
+            <a class="nav-link block py-2" href="#introduction">企业介绍</a>
+            <a class="nav-link block py-2" href="#history">发展历史</a>
+            <a class="nav-link block py-2" href="#culture">龙华文化</a>
+            <a class="nav-link block py-2" href="#news">新闻中心</a>
+            <a class="nav-link block py-2" href="#join">加入我们</a>
+            <a class="nav-link block py-2" href="#map">地图</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- 英雄区（替换为AI生成的龙华集团办公楼背景） -->
+        <section id="hero" class="bg-cover bg-center h-screen" style="background-image: url('https://picsum.photos/id/1031/2000/1200');">
+            <div class="bg-black bg-opacity-50 h-full flex flex-col justify-center items-center text-white text-center px-4">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4">中国龙华国际集团有限公司</h1>
+                <p class="text-xl md:text-2xl mb-8">与您携手，改变生活</p>
+                <a href="#introduction" class="btn-primary">了解更多</a>
+            </div>
+        </section>
+
+        <!-- 企业介绍（含龙华七杰卡片） -->
+        <section id="introduction" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">企业介绍</h2>
+                <div class="max-w-4xl mx-auto">
+                    <p class="mb-4">中国龙华国际集团有限公司（以下简称“龙华”或“龙华集团”）是一家在中国注册和运营的多元化控股企业集团，其前身是1964年于山西成立的“交城县液压煤机厂”，1992年改组更名为龙华公司，1993年，改组成立龙华科技有限公司。1999年12月，与威航科技有限公司合并。2003年于太原成立中国龙华国际集团有限公司。</p>
+                    <p class="mb-4">2003年，龙华将所管理的下属机构经重组转为以股权为纽带的公司，在此基础上成立了中国龙华国际集团有限公司。此后龙华的业务由总代理贸易转向自营，并通过一系列实业化投资，推动企业逐步发展成为在香港和内地颇具影响力的、以实业化为核心的企业集团。</p>
+                    <p class="mb-8">龙华集团下设7大战略业务单元、19家一级利润中心，有实体企业2,300多家，在职员工40万人。龙华在香港拥有5家公司，在内地拥有6家公司。旗下“龙华七杰”，龙华创业、龙华电力、龙华置地、龙华燃气、龙华零售、龙华酒业、龙华水泥。龙华零售、龙华酒业、龙华燃气经营规模全国第一。龙华电力是中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业；龙华置地是中国内地最具实力的综合地产开发商之一；龙华酒业是最大的酒类代理商。</p>
+
+                    <!-- 龙华七杰卡片 -->
+                    <h3 class="section-subtitle text-center mb-8">龙华七杰</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- 龙华电力 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="power">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/labis/684f3aff3726e65e0b44f5d0ab764bda~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=h8olCfzD9oHXVgjkIh4qGCHE%2FhM%3D" alt="龙华电力" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华电力</h4>
+                                <p class="text-gray-600">中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华置地 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="realty">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/e3902047a77a8c955e636e792229e23c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=dPWwYa52Wiguf3YeHPltUks%2BUkI%3D" alt="龙华置地" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华置地</h4>
+                                <p class="text-gray-600">中国内地最具实力的综合地产开发商之一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华燃气 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="gas">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/51284d04473c097ab8509eeafeb6d9e4~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=vRjLJlst%2FCuqtsJKwV2ShDaCgz8%3D" alt="龙华燃气" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华燃气</h4>
+                                <p class="text-gray-600">经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华零售 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="retail">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/f3f26ccafbd70faa32aa6e3e7012b8f3~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=0A7dJx8HAh7I1Ua19fPw2CeDhXk%3D" alt="龙华零售" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华零售</h4>
+                                <p class="text-gray-600">经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华酒业 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="wine">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/image/dd0711241d06cc74f407ad749a032b41~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=Pl4V3miwBrxBQB%2FBx6JPM1aTWAw%3D" alt="龙华酒业" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华酒业</h4>
+                                <p class="text-gray-600">中国最大的酒类代理商，经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华水泥 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="cement">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/9bc168c1e739400985e9c0105cc30710~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=73vTaWrg%2BzQFlYEa%2FonVyorUr84%3D" alt="龙华水泥" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华水泥</h4>
+                                <p class="text-gray-600">业务涵盖水泥生产、销售等多个领域。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华创业 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="venture">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/labis/a8e8cf7004cd235c714cd5d43443e317~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=XuukkEO6tydncjyNf1%2FEMmC8td4%3D" alt="龙华创业" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华创业</h4>
+                                <p class="text-gray-600">负责集团战略新兴产业的培育与发展。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发展历史 -->
+        <section id="history" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">发展历史</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">从“交城县液压煤机厂”到“五虎公司”</h3>
+                        <p>1964年于山西成立的“交城县液压煤机厂”。1973年更名为五虎公司。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">改革开放初期</h3>
+                        <p>1992年改组更名为龙华公司。1993年改组成立龙华科技有限公司。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">20世纪末</h3>
+                        <p>1999年12月，与威航科技有限公司合并。2003年于太原成立中国龙华国际集团有限公司。2003年龙华将所管理的下属机构经重组转为以股权为纽带的公司，在此基础上成立了中国龙华国际集团有限公司。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">进入新世纪</h3>
+                        <p>龙华通过并购重组、产业培育、改造、业态创新、管理创新、打造差异化生意模式、实现总部价值创造等途径，成功建立起一批具有行业领导地位的主营业务。</p>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">2003年至今</h3>
+                        <p>龙华完成两个“再造龙华”的宏伟战略目标，企业的资产规模和效益较2001年翻了两番。龙华连续10年保持了快速增长，在业务转型、管理变革、组织发展、文化建设等各个方面取得长足进步，综合竞争实力大大增强。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 龙华文化 -->
+        <section id="culture" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">龙华文化</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业定位</h3>
+                        <p>龙华是与大众生活息息相关的多元化企业。这是龙华基于企业历史、顾客需求，为自己在商业竞争中确定的角色和方向，它向大众传递了龙华的经营特点和管理模式，表明龙华所从事的业务、所提供的产品和服务都与大众生活息息相关，龙华是一个拥有多个行业、协同发展的多元化企业。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业使命</h3>
+                        <p>与您携手，改变生活。这一使命表达了龙华在促进整个社会的文明与进步中求得企业发展的价值取向，体现了龙华人的崇高理想与不凡追求。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业愿景</h3>
+                        <p>追求卓越发展，把龙华建设成为具有国际竞争力的世界一流企业，实现超越利润之上的追求。建设“世界一流企业”是激发全体龙华人为之拼搏奋斗的美好蓝图。“超越利润之上的追求”展现了龙华人的精神境界，是龙华可持续发展的重要根基。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">核心价值观</h3>
+                        <p><strong>诚实守信：</strong>诚实守信是龙华的核心价值观，是龙华文化的基石，是龙华人的崇高品质，是龙华的建基立业之本。龙华倡导全面的诚信观，诚信于股东、诚信于客户、诚信于员工、诚信于社会。</p>
+                        <p class="mt-2"><strong>业绩导向：</strong>坚持业绩第一的价值观，追求均衡、全面、高质量的业绩，倡导“没有增长的业务不是好业务、没有业绩的团队不是好团队。”</p>
+                        <p class="mt-2"><strong>客户至上：</strong>悉心维护客户和消费者的权益，严守商业道德，开展公平竞争，努力提供更为优质、更为环保、更为人性化的产品和服务，不断超越用户的期望。</p>
+                        <p class="mt-2"><strong>感恩回报：</strong>常怀感恩之心，将履行社会责任视作“超越利润之上的追求”，努力打造“投资者信任、员工热爱、社会尊重、大众称道”的优秀企业形象，成为全社会企业的榜样。</p>
+                    </div>
+                     <div class="mb-8">
+                        <h3 class="section-subtitle">企业精神</h3>
+                        <p>务实、激情、专业、创新。务实是一种工作作风，龙华人要脚踏实地；激情是一种工作态度，龙华人要永葆激情；专业是一种工作能力，龙华人应精于本职；创新是一种工作思维，龙华人要敢于突破传统，颠覆自我，努力探索、实践新理念、新方法、新路径。</p>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">经营理念</h3>
+                        <p>一切以人为本、人口驱动增长、尊重人文精神、改善人们生活。这是龙华标志中四个“人”字的内涵，它表达了龙华经营企业、服务社会、造福大众的根本宗旨。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新闻中心（新增） -->
+        <section id="news" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">新闻中心</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 新闻1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-12-01</div>
+                        <h3 class="text-xl font-bold mb-3">龙华集团荣登“中国企业500强”榜单</h3>
+                        <p class="text-gray-600 mb-4">近日，2025中国企业500强榜单发布，中国龙华国际集团有限公司凭借稳健的经营业绩和强劲的综合竞争力再次上榜，排名较去年提升12位。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-11-15</div>
+                        <h3 class="text-xl font-bold mb-3">龙华燃气启动全国清洁能源升级计划</h3>
+                        <p class="text-gray-600 mb-4">为响应国家“双碳”战略，龙华燃气宣布启动全国清洁能源升级计划，未来三年将投入50亿元用于燃气基础设施绿色改造，预计年减排二氧化碳120万吨。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-10-20</div>
+                        <h3 class="text-xl font-bold mb-3">龙华置地与太原市政府达成城市更新战略合作</h3>
+                        <p class="text-gray-600 mb-4">龙华置地近日与太原市人民政府签署战略合作协议，将参与太原老城区更新改造项目，总投资超200亿元，打造集居住、商业、文旅于一体的城市新地标。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻4 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-09-05</div>
+                        <h3 class="text-xl font-bold mb-3">龙华集团发布2025年社会责任报告</h3>
+                        <p class="text-gray-600 mb-4">龙华集团正式发布《2025社会责任报告》，报告显示，2024年集团累计捐赠公益资金3.2亿元，帮扶乡村振兴项目18个，带动就业超2万人。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="#" class="btn-primary">查看更多新闻</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 加入我们（新增） -->
+        <section id="join" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">加入我们</h2>
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-center text-lg mb-8">龙华集团始终坚持“以人为本”的人才理念，诚邀各界英才加入，与我们携手改变生活！</p>
+                    
+                    <!-- 招聘职位 -->
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-bold">热招职位</h3>
+                        </div>
+                        <div class="p-6">
+                            <!-- 职位1 -->
+                            <div class="mb-6 pb-6 border-b border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">电力板块-高级工程师</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>负责电力项目技术规划、设备运维及技术创新，推动发电效率提升。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>电力工程相关专业，5年以上独立发电企业工作经验，具备中级及以上职称。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
+                            </div>
+                            <!-- 职位2 -->
+                            <div class="mb-6 pb-6 border-b border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">置地板块-营销总监</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原/长春</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>制定地产项目营销战略，统筹营销团队管理，完成销售目标。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>市场营销相关专业，8年以上地产营销经验，有大型项目操盘经验优先。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
+                            </div>
+                            <!-- 职位3 -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">集团总部-人力资源经理</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>负责人力资源规划、招聘、培训、绩效等全模块工作，搭建人才发展体系。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>人力资源管理相关专业，6年以上大型集团人力资源工作经验，熟悉劳动法。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 应聘方式 -->
+                    <div class="bg-white shadow-lg rounded-lg p-6">
+                        <h3 class="text-xl font-bold mb-4">应聘方式</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="mb-2"><i data-lucide="mail" class="inline-block mr-2"></i> 招聘邮箱：hr@longhua-group.com</p>
+                                <p class="mb-2"><i data-lucide="phone" class="inline-block mr-2"></i> 联系电话：0351-XXXXXXX</p>
+                                <p><i data-lucide="location" class="inline-block mr-2"></i> 面试地址：太原选煤厂森林公园对面龙华集团总部</p>
+                            </div>
+                            <div>
+                                <p class="mb-3">我们将在收到简历后1-3个工作日内与您联系，合则约见，未通过筛选者恕不一一回复。</p>
+                                <a href="#" class="btn-primary inline-block">下载应聘登记表</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 地图（接入百度地图API） -->
+        <section id="map" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">地图</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">集团总部</h3>
+                            <p>太原选煤厂森林公园对面</p>
+                            <p class="text-gray-600 text-sm">山西省太原市尖草坪区</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">工厂地址</h3>
+                            <p>山西省交城县段村</p>
+                            <p class="text-gray-600 text-sm">交城厂区</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">长春分厂</h3>
+                            <p>长春市皓月广场西1000米</p>
+                            <p class="text-gray-600 text-sm">长春生产基地</p>
+                        </div>
+                    </div>
+                    <!-- 百度地图容器 -->
+                    <div id="map-container"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer w-full py-8 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <div class="text-center md:text-left">
+                    <h3 class="text-xl font-bold mb-2">中国龙华国际集团有限公司</h3>
+                    <p>与您携手，改变生活</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-bold mb-2">联系方式</h3>
+                    <p class="mb-1">电话：0351-XXXXXXX</p>
+                    <p>邮箱：info@longhua-group.com</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <h3 class="text-lg font-bold mb-2">地址</h3>
+                    <p>太原选煤厂森林公园对面</p>
+                </div>
+            </div>
+            <div class="text-center pt-6 border-t border-white/20">
+                <p>&copy; 2025 中国龙华国际集团有限公司. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 龙华七杰详情模态框 -->
+    <!-- 电力模态框 -->
+    <div id="power-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华电力</h3>
+            <img src="https://p26-doubao-search-sign.byteimg.com/labis/684f3aff3726e65e0b44f5d0ab764bda~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=h8olCfzD9oHXVgjkIh4qGCHE%2FhM%3D" alt="龙华电力" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华电力是中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业，业务覆盖火电、水电、风电、光伏等多个发电领域，在全国20余个省份拥有发电项目，总装机容量超3000万千瓦。</p>
+            <p>龙华电力始终坚持绿色发展理念，持续推进能源结构优化，大力发展清洁能源项目，近五年清洁能源装机占比提升至35%，累计减少碳排放超2000万吨。同时，通过技术创新和管理优化，发电效率持续提升，单位运营成本较行业平均水平低15%。</p>
+        </div>
+    </div>
+
+    <!-- 置地模态框 -->
+    <div id="realty-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华置地</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/e3902047a77a8c955e636e792229e23c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=dPWwYa52Wiguf3YeHPltUks%2BUkI%3D" alt="龙华置地" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华置地是中国内地最具实力的综合地产开发商之一，业务涵盖住宅开发、商业地产、产业园区、城市更新等多个领域，在全国30余个核心城市布局项目，累计开发面积超5000万平方米。</p>
+            <p>龙华置地秉持“品质筑家”的理念，打造了多个标杆项目，多次荣获“中国房地产百强企业”“中国品质地产标杆企业”等称号。同时，积极响应国家“房住不炒”政策，聚焦刚需和改善型住房需求，推动房地产行业健康发展。</p>
+        </div>
+    </div>
+
+    <!-- 燃气模态框 -->
+    <div id="gas-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华燃气</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/51284d04473c097ab8509eeafeb6d9e4~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=vRjLJlst%2FCuqtsJKwV2ShDaCgz8%3D" alt="龙华燃气" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华燃气经营规模居全国首位，是国内领先的城市燃气运营商，服务覆盖全国100余个城市，用户超2000万户，年供气能力超300亿立方米。</p>
+            <p>龙华燃气构建了“气源采购-管网输送-终端销售”全产业链布局，拥有完善的燃气输配网络和应急保障体系。同时，积极拓展燃气增值服务，推出智慧燃气管理系统，提升用户体验，助力智慧城市建设。</p>
+        </div>
+    </div>
+
+    <!-- 零售模态框 -->
+    <div id="retail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华零售</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/f3f26ccafbd70faa32aa6e3e7012b8f3~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=0A7dJx8HAh7I1Ua19fPw2CeDhXk%3D" alt="龙华零售" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华零售经营规模全国第一，拥有超10000家线下门店，涵盖超市、便利店、购物中心等多种业态，年销售额超2000亿元。</p>
+            <p>龙华零售坚持“便民、惠民、利民”的经营宗旨，打造线上线下融合的新零售模式，通过数字化转型提升运营效率，为消费者提供便捷、优质的购物体验。同时，严格把控商品质量，建立完善的供应链管理体系，保障食品安全。</p>
+        </div>
+    </div>
+
+    <!-- 酒业模态框 -->
+    <div id="wine-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华酒业</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/image/dd0711241d06cc74f407ad749a032b41~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=Pl4V3miwBrxBQB%2FBx6JPM1aTWAw%3D" alt="龙华酒业" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华酒业是中国最大的酒类代理商，经营规模全国第一，代理国内外知名酒类品牌超200个，年销售额超500亿元。</p>
+            <p>龙华酒业构建了覆盖全国的销售网络，拥有专业的营销团队和完善的物流配送体系。同时，积极布局酒类新零售，打造线上酒品商城和线下体验店，推动酒类消费升级，为消费者提供正品保障的酒类产品和服务。</p>
+        </div>
+    </div>
+
+    <!-- 水泥模态框 -->
+    <div id="cement-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华水泥</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/9bc168c1e739400985e9c0105cc30710~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=73vTaWrg%2BzQFlYEa%2FonVyorUr84%3D" alt="龙华水泥" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华水泥业务涵盖水泥生产、销售、物流及新型建材研发等多个领域，拥有15个大型水泥生产基地，年产能超5000万吨。</p>
+            <p>龙华水泥坚持绿色生产理念，投入巨资进行环保改造，所有生产线均达到超低排放标准。同时，积极研发高性能、绿色环保的新型建材，推动建材行业转型升级，服务国家基础设施建设。</p>
+        </div>
+    </div>
+
+    <!-- 创业模态框 -->
+    <div id="venture-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华创业</h3>
+            <img src="https://p11-doubao-search-sign.byteimg.com/labis/a8e8cf7004cd235c714cd5d43443e317~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=XuukkEO6tydncjyNf1%2FEMmC8td4%3D" alt="龙华创业" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华创业负责集团战略新兴产业的培育与发展，聚焦新能源、新材料、数字经济等领域，累计孵化创新项目超50个，投资金额超100亿元。</p>
+            <p>龙华创业构建了“孵化-投资-加速”的全周期创业服务体系，为创新创业项目提供资金、技术、人才、市场等全方位支持。同时，加强与高校、科研机构的合作，推动产学研深度融合，助力集团实现产业升级和可持续发展。</p>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
+    <script>
+        // 初始化图标
+        lucide.createIcons();
+
+        // 移动端菜单切换
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 模态框功能
+        const modalTriggers = document.querySelectorAll('.biz-card');
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+
+        // 打开模态框
+        modalTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const modalId = trigger.dataset.modal + '-modal';
+                document.getElementById(modalId).style.display = 'flex';
+                // 禁止背景滚动
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // 关闭模态框
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                // 恢复背景滚动
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // 初始化百度地图
+        window.onload = function() {
+            // 创建地图实例
+            const map = new BMapGL.Map("map-container");
+            // 设置中心点坐标（太原选煤厂森林公园）
+            const point = new BMapGL.Point(112.51996, 37.9075);
+            // 初始化地图，设置中心点坐标和地图级别
+            map.centerAndZoom(point, 12);
+            // 开启鼠标滚轮缩放
+            map.enableScrollWheelZoom(true);
+
+            // 添加标注（总部）
+            const marker1 = new BMapGL.Marker(point);
+            map.addOverlay(marker1);
+            const infoWindow1 = new BMapGL.InfoWindow("龙华集团总部：太原选煤厂森林公园对面");
+            marker1.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow1, point);
+            });
+
+            // 交城工厂标注
+            const point2 = new BMapGL.Point(111.8278, 37.5765);
+            const marker2 = new BMapGL.Marker(point2);
+            map.addOverlay(marker2);
+            const infoWindow2 = new BMapGL.InfoWindow("龙华工厂：山西省交城县段村");
+            marker2.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow2, point2);
+            });
+
+            // 长春分厂标注
+            const point3 = new BMapGL.Point(125.1972, 43.9056);
+            const marker3 = new BMapGL.Marker(point3);
+            map.addOverlay(marker3);
+            const infoWindow3 = new BMapGL.InfoWindow("龙华长春分厂：长春市皓月广场西1000米");
+            marker3.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow3, point3);
+            });
+        };
+    </script>
+</body>
+</html>
