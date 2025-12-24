@@ -3,1468 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>诺诺的数学城堡 - 修复版</title>
+    <title>中国龙华国际集团有限公司</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#FF6B98',
-                        secondary: '#9C6AFF',
-                        accent: '#FFD166',
-                        ocean: '#4ECDC4',
-                        castle: '#8A7090',
-                        background: '#FFF9F5'
-                    },
-                    fontFamily: {
-                        sans: ['Comic Sans MS', 'Arial', 'sans-serif'],
-                    },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'bounce-slow': 'bounce 2s infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        }
-                    }
-                }
-            }
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.544.0/dist/umd/lucide.min.js"></script>
+    <!-- 百度地图API（需替换为自己的AK） -->
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=你的百度地图AK"></script>
+    <style>
+        :root {
+            --primary-color: #1a3a6e;
+            --secondary-color: #c0a062;
+            --background-color: #f9f9f9;
+            --text-color: #333;
+            --light-gray: #e0e0e0;
+            --dark-gray: #666;
         }
-    </script>
-    <style type="text/tailwindcss">
-        @layer utilities {
-            .text-shadow {
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            }
-            .btn-primary {
-                @apply bg-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
-            }
-            .btn-secondary {
-                @apply bg-secondary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
-            }
-            .btn-accent {
-                @apply bg-accent text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
-            }
-            .btn-ocean {
-                @apply bg-ocean text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
-            }
-            .game-card {
-                @apply bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:translate-y-[-10px] hover:shadow-xl;
-            }
-            .progress-bar {
-                @apply h-4 bg-gray-200 rounded-full overflow-hidden;
-            }
-            .progress-value {
-                @apply h-full bg-primary rounded-full transition-all duration-500;
-            }
+        body {
+            font-family: 'Microsoft YaHei', 'SimSun', sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .section-subtitle {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2c5282;
+        }
+        .nav-link {
+            color: white;
+            margin: 0 1rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: var(--secondary-color);
+        }
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 0.8rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark-gray);
+        }
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+        /* 卡片hover效果 */
+        .biz-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .biz-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* 地图容器 */
+        #map-container {
+            width: 100%;
+            height: 400px;
+            border-radius: 0.8rem;
+            overflow: hidden;
         }
     </style>
 </head>
-<body class="bg-background font-sans min-h-screen">
-    <!-- 主容器 -->
-    <div id="app" class="container mx-auto px-4 py-8">
-        <!-- 顶部导航栏 -->
-        <header class="flex justify-between items-center mb-8">
-            <div class="flex items-center">
-                <img src="https://p3-doubao-search-sign.byteimg.com/labis/c0623af31231800e088e0c8fa3151137~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=Qhx%2FY4%2BEk1wfyHVg46MF9bA3GfM%3D" alt="公主诺诺" class="w-12 h-12 object-contain rounded-full border-2 border-primary">
-                <h1 class="text-2xl font-bold text-primary ml-2">诺诺的数学城堡</h1>
+<body class="flex flex-col min-h-screen">
+
+    <!-- 头部导航 -->
+    <header class="header w-full">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-3xl font-bold">中国龙华国际集团有限公司</div>
+            <nav class="hidden md:flex">
+                <a class="nav-link" href="#introduction">企业介绍</a>
+                <a class="nav-link" href="#history">发展历史</a>
+                <a class="nav-link" href="#culture">龙华文化</a>
+                <a class="nav-link" href="#news">新闻中心</a>
+                <a class="nav-link" href="#join">加入我们</a>
+                <a class="nav-link" href="#map">地图</a>
+            </nav>
+            <button id="mobile-menu-button" class="md:hidden">
+                <i data-lucide="menu"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden container mx-auto px-4 pb-4">
+            <a class="nav-link block py-2" href="#introduction">企业介绍</a>
+            <a class="nav-link block py-2" href="#history">发展历史</a>
+            <a class="nav-link block py-2" href="#culture">龙华文化</a>
+            <a class="nav-link block py-2" href="#news">新闻中心</a>
+            <a class="nav-link block py-2" href="#join">加入我们</a>
+            <a class="nav-link block py-2" href="#map">地图</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- 英雄区 -->
+        <section id="hero" class="bg-cover bg-center h-screen" style="background-image: url('https://p26-doubao-search-sign.byteimg.com/isp-i18n-media/img/7f5a27c46b0c06e9de13622e6fc205e9~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=43et9WBwO%2FVM2iIjHvhmN67SvsA%3D');">
+            <div class="bg-black bg-opacity-50 h-full flex flex-col justify-center items-center text-white text-center px-4">
+                <h1 class="text-5xl md:text-7xl font-bold mb-4">中国龙华国际集团有限公司</h1>
+                <p class="text-xl md:text-2xl mb-8">与您携手，改变生活</p>
+                <a href="#introduction" class="btn-primary">了解更多</a>
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-                    <i class="fa fa-star text-accent mr-2"></i>
-                    <span id="user-score" class="font-bold">0</span>
-                </div>
-                <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-                    <i class="fa fa-puzzle-piece text-secondary mr-2"></i>
-                    <span id="user-pieces" class="font-bold">0</span>
+        </section>
+
+        <!-- 企业介绍（含龙华七杰卡片） -->
+        <section id="introduction" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">企业介绍</h2>
+                <div class="max-w-4xl mx-auto">
+                    <p class="mb-4">中国龙华国际集团有限公司（以下简称“龙华”或“龙华集团”）是一家在中国注册和运营的多元化控股企业集团，其前身是1964年于山西成立的“交城县液压煤机厂”，1992年改组更名为龙华公司，1993年，改组成立龙华科技有限公司。1999年12月，与威航科技有限公司合并。2003年于太原成立中国龙华国际集团有限公司。</p>
+                    <p class="mb-4">2003年，龙华将所管理的下属机构经重组转为以股权为纽带的公司，在此基础上成立了中国龙华国际集团有限公司。此后龙华的业务由总代理贸易转向自营，并通过一系列实业化投资，推动企业逐步发展成为在香港和内地颇具影响力的、以实业化为核心的企业集团。</p>
+                    <p class="mb-8">龙华集团下设7大战略业务单元、19家一级利润中心，有实体企业2,300多家，在职员工40万人。龙华在香港拥有5家公司，在内地拥有6家公司。旗下“龙华七杰”，龙华创业、龙华电力、龙华置地、龙华燃气、龙华零售、龙华酒业、龙华水泥。龙华零售、龙华酒业、龙华燃气经营规模全国第一。龙华电力是中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业；龙华置地是中国内地最具实力的综合地产开发商之一；龙华酒业是最大的酒类代理商。</p>
+
+                    <!-- 龙华七杰卡片 -->
+                    <h3 class="section-subtitle text-center mb-8">龙华七杰</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- 龙华电力 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="power">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/labis/684f3aff3726e65e0b44f5d0ab764bda~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=h8olCfzD9oHXVgjkIh4qGCHE%2FhM%3D" alt="龙华电力" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华电力</h4>
+                                <p class="text-gray-600">中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华置地 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="realty">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/e3902047a77a8c955e636e792229e23c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=dPWwYa52Wiguf3YeHPltUks%2BUkI%3D" alt="龙华置地" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华置地</h4>
+                                <p class="text-gray-600">中国内地最具实力的综合地产开发商之一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华燃气 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="gas">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/51284d04473c097ab8509eeafeb6d9e4~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=vRjLJlst%2FCuqtsJKwV2ShDaCgz8%3D" alt="龙华燃气" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华燃气</h4>
+                                <p class="text-gray-600">经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华零售 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="retail">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/f3f26ccafbd70faa32aa6e3e7012b8f3~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=0A7dJx8HAh7I1Ua19fPw2CeDhXk%3D" alt="龙华零售" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华零售</h4>
+                                <p class="text-gray-600">经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华酒业 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="wine">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/labis/image/dd0711241d06cc74f407ad749a032b41~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=Pl4V3miwBrxBQB%2FBx6JPM1aTWAw%3D" alt="龙华酒业" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华酒业</h4>
+                                <p class="text-gray-600">中国最大的酒类代理商，经营规模全国第一。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华水泥 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="cement">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/9bc168c1e739400985e9c0105cc30710~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=73vTaWrg%2BzQFlYEa%2FonVyorUr84%3D" alt="龙华水泥" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华水泥</h4>
+                                <p class="text-gray-600">业务涵盖水泥生产、销售等多个领域。</p>
+                            </div>
+                        </div>
+                        <!-- 龙华创业 -->
+                        <div class="biz-card bg-white shadow-lg rounded-lg overflow-hidden" data-modal="venture">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/labis/a8e8cf7004cd235c714cd5d43443e317~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=XuukkEO6tydncjyNf1%2FEMmC8td4%3D" alt="龙华创业" class="w-full h-48 object-cover">
+                            <div class="p-4">
+                                <h4 class="text-lg font-bold">龙华创业</h4>
+                                <p class="text-gray-600">负责集团战略新兴产业的培育与发展。</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <!-- 主要内容区域 -->
-        <main>
-            <!-- 欢迎页面 -->
-            <section id="welcome-screen" class="flex flex-col items-center justify-center py-8">
-                <div class="text-center mb-8">
-                    <h2 class="text-4xl font-bold text-primary mb-4 text-shadow">欢迎来到数学城堡！</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        亲爱的诺诺，准备好开始一场奇妙的数学冒险了吗？在这个魔法世界里，你将通过解决数学问题，收集城堡碎片，建造属于自己的梦幻城堡！
-                    </p>
-                </div>
-                
-                <div class="flex flex-wrap justify-center gap-6 mb-12">
-                    <div class="game-card w-72">
-                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/c622ddd52c6befb982cc23c51d6f5842~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=XzeHf7j9RDVL8rPu%2BTY4FpxWJkM%3D" alt="数学城堡" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="text-xl font-bold text-primary mb-2">开始冒险</h3>
-                        <p class="text-gray-600 mb-4">探索数学城堡，挑战各种数学游戏</p>
-                        <button id="start-adventure-btn" class="btn-primary w-full">
-                            <i class="fa fa-play mr-2"></i>开始冒险
-                        </button>
+        <!-- 发展历史 -->
+        <section id="history" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">发展历史</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">从“交城县液压煤机厂”到“五虎公司”</h3>
+                        <p>1964年于山西成立的“交城县液压煤机厂”。1973年更名为五虎公司。</p>
                     </div>
-                    
-                    <div class="game-card w-72">
-                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/image/1abe9097263448ce6b280ef2e45f5a15~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature&x-signature=573PT1p2uB8emGaXxC68mD86KtU%3D" alt="我的城堡" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="text-xl font-bold text-secondary mb-2">我的城堡</h3>
-                        <p class="text-gray-600 mb-4">查看你收集的碎片和建造的城堡</p>
-                        <button id="my-castle-btn" class="btn-secondary w-full">
-                            <i class="fa fa-castle mr-2"></i>我的城堡
-                        </button>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">改革开放初期</h3>
+                        <p>1992年改组更名为龙华公司。1993年改组成立龙华科技有限公司。</p>
                     </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl w-full">
-                    <h3 class="text-xl font-bold text-primary mb-4">学习进度</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="text-sm font-medium">一年级数学</span>
-                                <span class="text-sm font-medium" id="grade1-progress">0%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div id="grade1-bar" class="progress-value" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="text-sm font-medium">二年级数学</span>
-                                <span class="text-sm font-medium">0%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: 0%"></div>
-                            </div>
-                        </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">20世纪末</h3>
+                        <p>1999年12月，与威航科技有限公司合并。2003年于太原成立中国龙华国际集团有限公司。2003年龙华将所管理的下属机构经重组转为以股权为纽带的公司，在此基础上成立了中国龙华国际集团有限公司。</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- 地图页面 -->
-            <section id="map-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-welcome-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">数学城堡地图</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div class="relative bg-blue-100 rounded-2xl overflow-hidden p-4 mb-8">
-                    <div class="relative z-10 flex flex-wrap justify-center gap-6 py-8">
-                        <!-- 数字王国 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="number-kingdom">
-                            <div class="w-24 h-24 mx-auto bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-primary">123</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-primary mb-2">数字王国</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习数字认知和计数</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 计算森林 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="calculation-forest">
-                            <div class="w-24 h-24 mx-auto bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-secondary">+−</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-secondary mb-2">计算森林</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习加减法运算</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 几何城堡 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="geometry-castle">
-                            <div class="w-24 h-24 mx-auto bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-square-o text-4xl text-accent"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-accent mb-2">几何城堡</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习图形认知</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 时间之塔 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="time-tower">
-                            <div class="w-24 h-24 mx-auto bg-ocean bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-clock-o text-4xl text-ocean"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-ocean mb-2">时间之塔</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习认识时间</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">进入新世纪</h3>
+                        <p>龙华通过并购重组、产业培育、改造、业态创新、管理创新、打造差异化生意模式、实现总部价值创造等途径，成功建立起一批具有行业领导地位的主营业务。</p>
                     </div>
-                </div>
-            </section>
-
-            <!-- 游戏区域页面 -->
-            <section id="game-area-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-map-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回地图
-                    </button>
-                    <h2 id="game-area-title" class="text-2xl font-bold text-primary">数字王国</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div id="game-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <!-- 游戏卡片将通过JavaScript动态生成 -->
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 数字配对 -->
-            <section id="number-matching-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">数字配对游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="game-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <p class="text-gray-600 mb-6 text-center">将数字与对应的数量匹配起来吧！</p>
-                    
-                    <div id="matching-game-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <!-- 游戏卡片将通过JavaScript动态生成 -->
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-matching-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="matching-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 加法运算 -->
-            <section id="addition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">加法冒险</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="addition-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div id="addition-question" class="text-center mb-8">
-                        <div class="flex justify-center items-center mb-4">
-                            <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold text-primary mr-4">
-                                <span id="addition-num1">3</span>
-                            </div>
-                            <div class="text-3xl font-bold text-gray-600 mr-4">+</div>
-                            <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold text-primary mr-4">
-                                <span id="addition-num2">2</span>
-                            </div>
-                            <div class="text-3xl font-bold text-gray-600 mr-4">=</div>
-                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-2xl font-bold text-gray-400">
-                                <input type="number" id="addition-answer" class="w-full h-full text-center text-2xl font-bold border-none focus:outline-none" placeholder="?">
-                            </div>
-                        </div>
-                        <p class="text-gray-600">请输入正确的答案</p>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-addition-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="addition-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="addition-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="addition-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="addition-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="addition-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="addition-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 图形认知 -->
-            <section id="shape-recognition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">图形认知游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="shape-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div class="text-center mb-6">
-                        <p class="text-gray-600 mb-2">请选择正确的图形：</p>
-                        <h3 id="shape-question" class="text-2xl font-bold text-accent mb-6">正方形-6">正方形</h3>
-                        
-                        <div id="shape-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <!-- 图形选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-shape-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="shape-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="shape-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="shape-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="shape-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="shape-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="shape-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 时间认识 -->
-            <section id="time-recognition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">时间认识游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="time-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div class="text-center mb-6">
-                        <p class="text-gray-600 mb-2">请选择正确的时间：</p>
-                        
-                        <div id="clock-container" class="w-48 h-48 mx-auto relative mb-6">
-                            <div class="w-full h-full rounded-full border-8 border-ocean bg-white"></div>
-                            <div class="absolute inset-0">
-                                <div class="h-1 w-1 bg-gray-400 absolute top-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute bottom-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute left-0 top-1/2 transform -translate-y-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute right-0 top-1/2 transform -translate-y-1/2"></div>
-                            </div>
-                            <div id="hour-hand" class="absolute top-1/2 left-1/2 w-1 h-1/3 bg-gray-800 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <div id="minute-hand" class="absolute top-1/2 left-1/2 w-1 h-2/5 bg-gray-600 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-ocean rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-                        </div>
-                        
-                        <div id="time-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <!-- 时间选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-time-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="time-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="time-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="time-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="time-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="time-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="time-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 我的城堡页面 -->
-            <section id="my-castle-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-welcome-from-castle-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">我的城堡</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="md:col-span-2">
-                        <div class="bg-white rounded-xl shadow-lg p-6 h-full">
-                            <h3 class="text-xl font-bold text-primary mb-4">已建造的城堡</h3>
-                            
-                            <div id="castle-display" class="relative h-64 md:h-80 bg-blue-50 rounded-lg overflow-hidden mb-4">
-                                <div id="castle-image" class="absolute inset-0 flex items-center justify-center">
-                                    <p class="text-gray-500">收集足够的碎片来建造你的第一座城堡吧！</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-home text-2xl text-primary"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">城堡数量</p>
-                                    <p class="font-bold text-primary" id="castle-count">0</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-puzzle-piece text-2xl text-secondary"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">已收集碎片</p>
-                                    <p class="font-bold text-secondary" id="pieces-count">0/10</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-star text-2xl text-accent"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">完成游戏</p>
-                                    <p class="font-bold text-accent" id="games-count">0</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                     <div>
-                        <div class="bg-white rounded-xl shadow-lg p-6 h-full">
-                            <h3 class="text-xl font-bold text-secondary mb-4">收集的碎片</h3>
-                            
-                            <div id="collected-pieces" class="grid grid-cols-3 gap-4 mb-6">
-                                <!-- 碎片将通过JavaScript动态生成 -->
+                        <h3 class="section-subtitle">2003年至今</h3>
+                        <p>龙华完成两个“再造龙华”的宏伟战略目标，企业的资产规模和效益较2001年翻了两番。龙华连续10年保持了快速增长，在业务转型、管理变革、组织发展、文化建设等各个方面取得长足进步，综合竞争实力大大增强。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 龙华文化 -->
+        <section id="culture" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">龙华文化</h2>
+                <div class="max-w-3xl mx-auto">
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业定位</h3>
+                        <p>龙华是与大众生活息息相关的多元化企业。这是龙华基于企业历史、顾客需求，为自己在商业竞争中确定的角色和方向，它向大众传递了龙华的经营特点和管理模式，表明龙华所从事的业务、所提供的产品和服务都与大众生活息息相关，龙华是一个拥有多个行业、协同发展的多元化企业。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业使命</h3>
+                        <p>与您携手，改变生活。这一使命表达了龙华在促进整个社会的文明与进步中求得企业发展的价值取向，体现了龙华人的崇高理想与不凡追求。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">企业愿景</h3>
+                        <p>追求卓越发展，把龙华建设成为具有国际竞争力的世界一流企业，实现超越利润之上的追求。建设“世界一流企业”是激发全体龙华人为之拼搏奋斗的美好蓝图。“超越利润之上的追求”展现了龙华人的精神境界，是龙华可持续发展的重要根基。</p>
+                    </div>
+                    <div class="mb-8">
+                        <h3 class="section-subtitle">核心价值观</h3>
+                        <p><strong>诚实守信：</strong>诚实守信是龙华的核心价值观，是龙华文化的基石，是龙华人的崇高品质，是龙华的建基立业之本。龙华倡导全面的诚信观，诚信于股东、诚信于客户、诚信于员工、诚信于社会。</p>
+                        <p class="mt-2"><strong>业绩导向：</strong>坚持业绩第一的价值观，追求均衡、全面、高质量的业绩，倡导“没有增长的业务不是好业务、没有业绩的团队不是好团队。”</p>
+                        <p class="mt-2"><strong>客户至上：</strong>悉心维护客户和消费者的权益，严守商业道德，开展公平竞争，努力提供更为优质、更为环保、更为人性化的产品和服务，不断超越用户的期望。</p>
+                        <p class="mt-2"><strong>感恩回报：</strong>常怀感恩之心，将履行社会责任视作“超越利润之上的追求”，努力打造“投资者信任、员工热爱、社会尊重、大众称道”的优秀企业形象，成为全社会企业的榜样。</p>
+                    </div>
+                     <div class="mb-8">
+                        <h3 class="section-subtitle">企业精神</h3>
+                        <p>务实、激情、专业、创新。务实是一种工作作风，龙华人要脚踏实地；激情是一种工作态度，龙华人要永葆激情；专业是一种工作能力，龙华人应精于本职；创新是一种工作思维，龙华人要敢于突破传统，颠覆自我，努力探索、实践新理念、新方法、新路径。</p>
+                    </div>
+                    <div>
+                        <h3 class="section-subtitle">经营理念</h3>
+                        <p>一切以人为本、人口驱动增长、尊重人文精神、改善人们生活。这是龙华标志中四个“人”字的内涵，它表达了龙华经营企业、服务社会、造福大众的根本宗旨。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新闻中心（新增） -->
+        <section id="news" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">新闻中心</h2>
+                <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- 新闻1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-12-01</div>
+                        <h3 class="text-xl font-bold mb-3">龙华集团荣登“中国企业500强”榜单</h3>
+                        <p class="text-gray-600 mb-4">近日，2025中国企业500强榜单发布，中国龙华国际集团有限公司凭借稳健的经营业绩和强劲的综合竞争力再次上榜，排名较去年提升12位。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-11-15</div>
+                        <h3 class="text-xl font-bold mb-3">龙华燃气启动全国清洁能源升级计划</h3>
+                        <p class="text-gray-600 mb-4">为响应国家“双碳”战略，龙华燃气宣布启动全国清洁能源升级计划，未来三年将投入50亿元用于燃气基础设施绿色改造，预计年减排二氧化碳120万吨。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-10-20</div>
+                        <h3 class="text-xl font-bold mb-3">龙华置地与太原市政府达成城市更新战略合作</h3>
+                        <p class="text-gray-600 mb-4">龙华置地近日与太原市人民政府签署战略合作协议，将参与太原老城区更新改造项目，总投资超200亿元，打造集居住、商业、文旅于一体的城市新地标。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                    <!-- 新闻4 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <div class="text-sm text-gray-500 mb-2">2025-09-05</div>
+                        <h3 class="text-xl font-bold mb-3">龙华集团发布2025年社会责任报告</h3>
+                        <p class="text-gray-600 mb-4">龙华集团正式发布《2025社会责任报告》，报告显示，2024年集团累计捐赠公益资金3.2亿元，帮扶乡村振兴项目18个，带动就业超2万人。</p>
+                        <a href="#" class="text-primary-color font-bold hover:text-secondary-color">查看详情 →</a>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="#" class="btn-primary">查看更多新闻</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 加入我们（新增） -->
+        <section id="join" class="py-16 px-4">
+            <div class="container mx-auto">
+                <h2 class="section-title">加入我们</h2>
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-center text-lg mb-8">龙华集团始终坚持“以人为本”的人才理念，诚邀各界英才加入，与我们携手改变生活！</p>
+                    
+                    <!-- 招聘职位 -->
+                    <div class="bg-white shadow-lg rounded-lg overflow-hidden mb-8">
+                        <div class="p-6 border-b border-gray-200">
+                            <h3 class="text-xl font-bold">热招职位</h3>
+                        </div>
+                        <div class="p-6">
+                            <!-- 职位1 -->
+                            <div class="mb-6 pb-6 border-b border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">电力板块-高级工程师</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>负责电力项目技术规划、设备运维及技术创新，推动发电效率提升。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>电力工程相关专业，5年以上独立发电企业工作经验，具备中级及以上职称。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
                             </div>
-                            
-                            <div class="flex justify-center">
-                                <button id="build-castle-btn" class="btn-secondary w-full" disabled>
-                                    <i class="fa fa-cogs mr-2"></i>建造城堡
-                                </button>
+                            <!-- 职位2 -->
+                            <div class="mb-6 pb-6 border-b border-gray-100">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">置地板块-营销总监</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原/长春</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>制定地产项目营销战略，统筹营销团队管理，完成销售目标。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>市场营销相关专业，8年以上地产营销经验，有大型项目操盘经验优先。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
+                            </div>
+                            <!-- 职位3 -->
+                            <div>
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="text-lg font-bold">集团总部-人力资源经理</h4>
+                                    <span class="bg-secondary-color/10 text-secondary-color px-3 py-1 rounded-full text-sm">太原</span>
+                                </div>
+                                <p class="text-gray-600 mb-2"><strong>岗位职责：</strong>负责人力资源规划、招聘、培训、绩效等全模块工作，搭建人才发展体系。</p>
+                                <p class="text-gray-600 mb-3"><strong>任职要求：</strong>人力资源管理相关专业，6年以上大型集团人力资源工作经验，熟悉劳动法。</p>
+                                <a href="#" class="text-primary-color font-bold">立即应聘</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 应聘方式 -->
+                    <div class="bg-white shadow-lg rounded-lg p-6">
+                        <h3 class="text-xl font-bold mb-4">应聘方式</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="mb-2"><i data-lucide="mail" class="inline-block mr-2"></i> 招聘邮箱：hr@longhua-group.com</p>
+                                <p class="mb-2"><i data-lucide="phone" class="inline-block mr-2"></i> 联系电话：0351-XXXXXXX</p>
+                                <p><i data-lucide="location" class="inline-block mr-2"></i> 面试地址：太原选煤厂森林公园对面龙华集团总部</p>
+                            </div>
+                            <div>
+                                <p class="mb-3">我们将在收到简历后1-3个工作日内与您联系，合则约见，未通过筛选者恕不一一回复。</p>
+                                <a href="#" class="btn-primary inline-block">下载应聘登记表</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
-
-        <!-- 底部导航栏 -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-3xl py-3 px-6">
-            <div class="flex justify-around">
-                <button id="nav-home-btn" class="flex flex-col items-center text-primary">
-                    <i class="fa fa-home text-2xl"></i>
-                    <span class="text-xs mt-1">首页</span>
-                </button>
-                <button id="nav-map-btn" class="flex flex-col items-center text-gray-400">
-                    <i class="fa fa-map text-2xl"></i>
-                    <span class="text-xs mt-1">地图</span>
-                </button>
-                <button id="nav-castle-btn" class="flex flex-col items-center text-gray-400">
-                    <i class="fa fa-castle text-2xl"></i>
-                    <span class="text-xs mt-1">城堡</span>
-                </button>
             </div>
-        </nav>
-    </div>
-
-    <!-- 消息提示 -->
-    <div id="message-toast" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 z-50 max-w-xs">
-        <div class="flex items-center">
-            <div id="message-icon" class="w-8 h-8 rounded-full flex items-center justify-center mr-3"></div>
-            <div>
-                <h4 id="message-title" class="font-bold text-sm"></h4>
-                <p id="message-text" class="text-xs text-gray-600"></p>
+        </section>
+        
+        <!-- 地图（接入百度地图API） -->
+        <section id="map" class="py-16 px-4 bg-gray-100">
+            <div class="container mx-auto">
+                <h2 class="section-title">地图</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">集团总部</h3>
+                            <p>太原选煤厂森林公园对面</p>
+                            <p class="text-gray-600 text-sm">山西省太原市尖草坪区</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">工厂地址</h3>
+                            <p>山西省交城县段村</p>
+                            <p class="text-gray-600 text-sm">交城厂区</p>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg shadow">
+                            <h3 class="font-bold mb-2">长春分厂</h3>
+                            <p>长春市皓月广场西1000米</p>
+                            <p class="text-gray-600 text-sm">长春生产基地</p>
+                        </div>
+                    </div>
+                    <!-- 百度地图容器 -->
+                    <div id="map-container"></div>
+                </div>
             </div>
+        </section>
+
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer w-full py-8 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
+                <div class="text-center md:text-left">
+                    <h3 class="text-xl font-bold mb-2">中国龙华国际集团有限公司</h3>
+                    <p>与您携手，改变生活</p>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-bold mb-2">联系方式</h3>
+                    <p class="mb-1">电话：0351-XXXXXXX</p>
+                    <p>邮箱：info@longhua-group.com</p>
+                </div>
+                <div class="text-center md:text-right">
+                    <h3 class="text-lg font-bold mb-2">地址</h3>
+                    <p>太原选煤厂森林公园对面</p>
+                </div>
+            </div>
+            <div class="text-center pt-6 border-t border-white/20">
+                <p>&copy; 2025 中国龙华国际集团有限公司. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 龙华七杰详情模态框 -->
+    <!-- 电力模态框 -->
+    <div id="power-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华电力</h3>
+            <img src="https://p26-doubao-search-sign.byteimg.com/labis/684f3aff3726e65e0b44f5d0ab764bda~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=h8olCfzD9oHXVgjkIh4qGCHE%2FhM%3D" alt="龙华电力" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华电力是中国业绩增长最快、运营成本最低、经营效率最好的独立发电企业，业务覆盖火电、水电、风电、光伏等多个发电领域，在全国20余个省份拥有发电项目，总装机容量超3000万千瓦。</p>
+            <p>龙华电力始终坚持绿色发展理念，持续推进能源结构优化，大力发展清洁能源项目，近五年清洁能源装机占比提升至35%，累计减少碳排放超2000万吨。同时，通过技术创新和管理优化，发电效率持续提升，单位运营成本较行业平均水平低15%。</p>
         </div>
     </div>
 
+    <!-- 置地模态框 -->
+    <div id="realty-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华置地</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/e3902047a77a8c955e636e792229e23c~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=dPWwYa52Wiguf3YeHPltUks%2BUkI%3D" alt="龙华置地" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华置地是中国内地最具实力的综合地产开发商之一，业务涵盖住宅开发、商业地产、产业园区、城市更新等多个领域，在全国30余个核心城市布局项目，累计开发面积超5000万平方米。</p>
+            <p>龙华置地秉持“品质筑家”的理念，打造了多个标杆项目，多次荣获“中国房地产百强企业”“中国品质地产标杆企业”等称号。同时，积极响应国家“房住不炒”政策，聚焦刚需和改善型住房需求，推动房地产行业健康发展。</p>
+        </div>
+    </div>
+
+    <!-- 燃气模态框 -->
+    <div id="gas-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华燃气</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/51284d04473c097ab8509eeafeb6d9e4~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=vRjLJlst%2FCuqtsJKwV2ShDaCgz8%3D" alt="龙华燃气" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华燃气经营规模居全国首位，是国内领先的城市燃气运营商，服务覆盖全国100余个城市，用户超2000万户，年供气能力超300亿立方米。</p>
+            <p>龙华燃气构建了“气源采购-管网输送-终端销售”全产业链布局，拥有完善的燃气输配网络和应急保障体系。同时，积极拓展燃气增值服务，推出智慧燃气管理系统，提升用户体验，助力智慧城市建设。</p>
+        </div>
+    </div>
+
+    <!-- 零售模态框 -->
+    <div id="retail-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华零售</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/f3f26ccafbd70faa32aa6e3e7012b8f3~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=0A7dJx8HAh7I1Ua19fPw2CeDhXk%3D" alt="龙华零售" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华零售经营规模全国第一，拥有超10000家线下门店，涵盖超市、便利店、购物中心等多种业态，年销售额超2000亿元。</p>
+            <p>龙华零售坚持“便民、惠民、利民”的经营宗旨，打造线上线下融合的新零售模式，通过数字化转型提升运营效率，为消费者提供便捷、优质的购物体验。同时，严格把控商品质量，建立完善的供应链管理体系，保障食品安全。</p>
+        </div>
+    </div>
+
+    <!-- 酒业模态框 -->
+    <div id="wine-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华酒业</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/labis/image/dd0711241d06cc74f407ad749a032b41~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=Pl4V3miwBrxBQB%2FBx6JPM1aTWAw%3D" alt="龙华酒业" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华酒业是中国最大的酒类代理商，经营规模全国第一，代理国内外知名酒类品牌超200个，年销售额超500亿元。</p>
+            <p>龙华酒业构建了覆盖全国的销售网络，拥有专业的营销团队和完善的物流配送体系。同时，积极布局酒类新零售，打造线上酒品商城和线下体验店，推动酒类消费升级，为消费者提供正品保障的酒类产品和服务。</p>
+        </div>
+    </div>
+
+    <!-- 水泥模态框 -->
+    <div id="cement-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华水泥</h3>
+            <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-qvj2lq49k0/9bc168c1e739400985e9c0105cc30710~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=73vTaWrg%2BzQFlYEa%2FonVyorUr84%3D" alt="龙华水泥" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华水泥业务涵盖水泥生产、销售、物流及新型建材研发等多个领域，拥有15个大型水泥生产基地，年产能超5000万吨。</p>
+            <p>龙华水泥坚持绿色生产理念，投入巨资进行环保改造，所有生产线均达到超低排放标准。同时，积极研发高性能、绿色环保的新型建材，推动建材行业转型升级，服务国家基础设施建设。</p>
+        </div>
+    </div>
+
+    <!-- 创业模态框 -->
+    <div id="venture-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="section-subtitle mb-4">龙华创业</h3>
+            <img src="https://p11-doubao-search-sign.byteimg.com/labis/a8e8cf7004cd235c714cd5d43443e317~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1782053761&x-signature=XuukkEO6tydncjyNf1%2FEMmC8td4%3D" alt="龙华创业" class="w-full h-64 object-cover rounded-lg mb-4">
+            <p class="mb-4">龙华创业负责集团战略新兴产业的培育与发展，聚焦新能源、新材料、数字经济等领域，累计孵化创新项目超50个，投资金额超100亿元。</p>
+            <p>龙华创业构建了“孵化-投资-加速”的全周期创业服务体系，为创新创业项目提供资金、技术、人才、市场等全方位支持。同时，加强与高校、科研机构的合作，推动产学研深度融合，助力集团实现产业升级和可持续发展。</p>
+        </div>
+    </div>
+
+    <!-- 脚本 -->
     <script>
-        // 游戏数据
-        const gameData = {
-            player: {
-                name: "诺诺",
-                score: 0,
-                pieces: 0,
-                completedGames: 0,
-                builtCastles: 0
-            },
-            gameProgress: {
-                numberKingdom: { level: 1, completed: 0 },
-                calculationForest: { level: 1, completed: 0 },
-                geometryCastle: { level: 1, completed: 1, completed: 0 },
-                timeTower: { level: 1, completed: 0 }
-            }
+        // 初始化图标
+        lucide.createIcons();
+
+        // 移动端菜单切换
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 模态框功能
+        const modalTriggers = document.querySelectorAll('.biz-card');
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+
+        // 打开模态框
+        modalTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const modalId = trigger.dataset.modal + '-modal';
+                document.getElementById(modalId).style.display = 'flex';
+                // 禁止背景滚动
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        // 关闭模态框
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
+                // 恢复背景滚动
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', (e) => {
+            modals.forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // 初始化百度地图
+        window.onload = function() {
+            // 创建地图实例
+            const map = new BMapGL.Map("map-container");
+            // 设置中心点坐标（太原选煤厂森林公园）
+            const point = new BMapGL.Point(112.51996, 37.9075);
+            // 初始化地图，设置中心点坐标和地图级别
+            map.centerAndZoom(point, 12);
+            // 开启鼠标滚轮缩放
+            map.enableScrollWheelZoom(true);
+
+            // 添加标注（总部）
+            const marker1 = new BMapGL.Marker(point);
+            map.addOverlay(marker1);
+            const infoWindow1 = new BMapGL.InfoWindow("龙华集团总部：太原选煤厂森林公园对面");
+            marker1.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow1, point);
+            });
+
+            // 交城工厂标注
+            const point2 = new BMapGL.Point(111.8278, 37.5765);
+            const marker2 = new BMapGL.Marker(point2);
+            map.addOverlay(marker2);
+            const infoWindow2 = new BMapGL.InfoWindow("龙华工厂：山西省交城县段村");
+            marker2.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow2, point2);
+            });
+
+            // 长春分厂标注
+            const point3 = new BMapGL.Point(125.1972, 43.9056);
+            const marker3 = new BMapGL.Marker(point3);
+            map.addOverlay(marker3);
+            const infoWindow3 = new BMapGL.InfoWindow("龙华长春分厂：长春市皓月广场西1000米");
+            marker3.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow3, point3);
+            });
         };
-
-        // 游戏内容配置
-        const gameContent = {
-            areas: {
-                "number-kingdom": {
-                    title: "数字王国",
-                    color: "primary",
-                    description: "学习数字认知和计数",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "number-matching",
-                            name: "数字配对",
-                            description: "将数字与数量匹配起来",
-                            icon: "🔢",
-                            gameScreen: "number-matching-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "calculation-forest": {
-                    title: "计算森林",
-                    color: "secondary",
-                    description: "学习加减法运算",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "addition-game",
-                            name: "加法冒险",
-                            description: "学习10以内的加法",
-                            icon: "➕",
-                            gameScreen: "addition-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "geometry-castle": {
-                    title: "几何城堡",
-                    color: "accent",
-                    description: "学习图形认知",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "shape-recognition",
-                            name: "图形认知",
-                            description: "认识各种几何图形",
-                            icon: "◻️",
-                            gameScreen: "shape-recognition-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "time-tower": {
-                    title: "时间之塔",
-                    color: "ocean",
-                    description: "学习认识时间",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "time-recognition",
-                            name: "时间认识",
-                            description: "认识钟表上的时间",
-                            icon: "🕐",
-                            gameScreen: "time-recognition-game",
-                            difficulty: 1
-                        }
-                    ]
-                }
-            },
-            // 游戏数据配置
-            numberMatching: {
-                level1: { numbers: [1, 2, 3, 4, 5, 6], timeLimit: 30 },
-                level2: { numbers: [7, 8, 9, 10, 11, 12], timeLimit: 40 }
-            },
-            addition: {
-                level1: { minNum: 1, maxNum: 5, questions: 5, timeLimit: 30 },
-                level2: { minNum: 1, maxNum: 10, questions: 5, timeLimit: 40 }
-            },
-            shapeRecognition: {
-                level1: { shapes: ["正方形", "圆形", "三角形", "长方形"], timeLimit: 30 },
-                level2: { shapes: ["正方形", "圆形", "三角形", "长方形", "平行四边形", "梯形"], timeLimit: 40 }
-            },
-            timeRecognition: {
-                level1: { 
-                    times: [
-                        { hour: 1, minute: 0 }, { hour: 3, minute: 0 }, 
-                        { hour: 6, minute: 0 }, { hour: 9, minute: 0 }, { hour: 12, minute: 0 }
-                    ], 
-                    timeLimit: 30 
-                }
-            }
-        };
-
-        // 当前游戏状态
-        let currentState = {
-            screen: "welcome-screen",
-            currentArea: null,
-            currentGame: null,
-            currentLevel: 1,
-            gameTimer: null,
-            remainingTime: 0,
-            selectedCards: [],
-            matchedPairs: 0
-        };
-
-        // DOM 元素引用
-        const screens = {
-            welcome: document.getElementById('welcome-screen'),
-            map: document.getElementById('map-screen'),
-            gameArea: document.getElementById('game-area-screen'),
-            numberMatching: document.getElementById('number-matching-game'),
-            addition: document.getElementById('addition-game'),
-            shapeRecognition: document.getElementById('shape-recognition-game'),
-            timeRecognition: document.getElementById('time-recognition-game'),
-            myCastle: document.getElementById('my-castle-screen')
-        };
-
-        // 初始化游戏
-        function initGame() {
-            console.log('🎮 诺诺的数学城堡 - 开始初始化...');
-            
-            // 加载保存的游戏数据
-            loadGameData();
-            
-            // 绑定事件监听器
-            bindEventListeners();
-            
-            // 更新UI显示
-            updateUI();
-            
-            console.log('✅ 游戏初始化完成！');
-        }
-
-        // 加载保存的游戏数据
-        function loadGameData() {
-            const savedData = localStorage.getItem('mathCastleData');
-            if (savedData) {
-                try {
-                    const parsedData = JSON.parse(savedData);
-                    gameData.player = parsedData.player || gameData.player;
-                    gameData.gameProgress = parsedData.gameProgress || gameData.gameProgress;
-                    console.log('📥 已加载保存的游戏数据');
-                } catch (error) {
-                    console.error('❌ 加载游戏数据失败:', error);
-                }
-            }
-        }
-
-        // 保存游戏数据
-        function saveGameData() {
-            try {
-                const dataToSave = { player: gameData.player, gameProgress: gameData.gameProgress };
-                localStorage.setItem('mathCastleData', JSON.stringify(dataToSave));
-                console.log('💾 游戏数据已保存');
-            } catch (error) {
-                console.error('❌ 保存游戏数据失败:', error);
-            }
-        }
-
-        // 更新UI
-        function updateUI() {
-            // 更新玩家信息
-            document.getElementById('user-score').textContent = gameData.player.score;
-            document.getElementById('user-pieces').textContent = gameData.player.pieces;
-            
-            // 更新进度显示
-            updateProgressDisplay();
-            
-            // 更新城堡页面
-            updateCastlePage();
-            
-            // 更新底部导航
-            updateNavigation(currentState.screen);
-        }
-
-        // 更新进度显示
-        function updateProgressDisplay() {
-            const totalGames = 4; // 四个主要游戏
-            const completedGames = gameData.player.completedGames;
-            const progress = Math.min(Math.round((completedGames / totalGames) * 100), 100);
-            
-            document.getElementById('grade1-progress').textContent = `${progress}%`;
-            document.getElementById('grade1-bar').style.width = `${progress}%`;
-        }
-
-        // 绑定事件监听器
-        function bindEventListeners() {
-            console.log('🔗 开始绑定事件监听器...');
-            
-            // 欢迎页面按钮
-            document.getElementById('start-adventure-btn').addEventListener('click', () => showScreen('map'));
-            document.getElementById('my-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            
-            // 地图页面按钮
-            document.getElementById('back-to-welcome-btn').addEventListener('click', () => showScreen('welcome'));
-            
-            // 区域点击事件
-            document.querySelectorAll('.castle-area').forEach(area => {
-                area.addEventListener('click', () => {
-                    const areaId = area.dataset.area;
-                    console.log('🗺️ 点击区域:', areaId);
-                    showGameArea(areaId);
-                });
-            });
-            
-            // 返回地图按钮
-            document.getElementById('back-to-map-btn').addEventListener('click', () => showScreen('map'));
-            
-            // 返回区域按钮
-            document.querySelectorAll('.back-to-area-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    stopGameTimer();
-                    showScreen('gameArea');
-                });
-            });
-            
-            // 我的城堡页面按钮
-            document.getElementById('back-to-welcome-from-castle-btn').addEventListener('click', () => showScreen('welcome'));
-            document.getElementById('build-castle-btn').addEventListener('click', buildCastle);
-            
-            // 底部导航按钮
-            document.getElementById('nav-home-btn').addEventListener('click', () => showScreen('welcome'));
-            document.getElementById('nav-map-btn').addEventListener('click', () => showScreen('map'));
-            document.getElementById('nav-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            
-            // 游戏相关按钮
-            bindGameEventListeners();
-            
-            console.log('✅ 事件监听器绑定完成！');
-        }
-
-        // 绑定游戏相关事件监听器
-        function bindGameEventListeners() {
-            // 数字配对游戏按钮
-            document.getElementById('check-matching-btn')?.addEventListener('click', checkNumberMatching);
-            document.getElementById('play-again-btn')?.addEventListener('click', playNumberMatchingAgain);
-            document.getElementById('next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 加法游戏按钮
-            document.getElementById('check-addition-btn')?.addEventListener('click', checkAddition);
-            document.getElementById('addition-play-again-btn')?.addEventListener('click', playAdditionAgain);
-            document.getElementById('addition-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 图形认知游戏按钮
-            document.getElementById('check-shape-btn')?.addEventListener('click', checkShapeRecognition);
-            document.getElementById('shape-play-again-btn')?.addEventListener('click', playShapeRecognitionAgain);
-            document.getElementById('shape-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 时间认识游戏按钮
-            document.getElementById('check-time-btn')?.addEventListener('click', checkTimeRecognition);
-            document.getElementById('time-play-again-btn')?.addEventListener('click', playTimeRecognitionAgain);
-            document.getElementById('time-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-        }
-
-        // 显示指定屏幕
-        function showScreen(screenName) {
-            console.log('📺 切换到屏幕:', screenName);
-            
-            // 隐藏所有屏幕
-            Object.values(screens).forEach(screen => {
-                if (screen) screen.classList.add('hidden');
-            });
-            
-            // 显示指定屏幕
-            if (screens[screenName]) {
-                screens[screenName].classList.remove('hidden');
-                currentState.screen = screenName;
-                
-                // 更新底部导航栏
-                updateNavigation(screenName);
-            } else {
-                console.error('❌ 屏幕不存在:', screenName);
-            }
-        }
-
-        // 更新底部导航栏
-        function updateNavigation(screenName) {
-            const navButtons = {
-                home: document.getElementById('nav-home-btn'),
-                map: document.getElementById('nav-map-btn'),
-                castle: document.getElementById('nav-castle-btn')
-            };
-            
-            // 重置所有按钮样式
-            Object.values(navButtons).forEach(btn => {
-                btn.classList.remove('text-primary');
-                btn.classList.add('text-gray-400');
-            });
-            
-            // 设置当前页面按钮样式
-            switch (screenName) {
-                case 'welcome':
-                    navButtons.home.classList.remove('text-gray-400');
-                    navButtons.home.classList.add('text-primary');
-                    break;
-                case 'map':
-                case 'gameArea':
-                case 'numberMatching':
-                case 'addition':
-                case 'shapeRecognition':
-                case 'timeRecognition':
-                    navButtons.map.classList.remove('text-gray-400');
-                    navButtons.map.classList.add('text-primary');
-                    break;
-                case 'myCastle':
-                    navButtons.castle.classList.remove('text-gray-400');
-                    navButtons.castle.classList.add('text-primary');
-                    break;
-            }
-        }
-
-        // 显示游戏区域
-        function showGameArea(areaId) {
-            console.log('🎮 显示游戏区域:', areaId);
-            
-            const area = gameContent.areas[areaId];
-            if (!area) {
-                console.error('❌ 区域数据不存在:', areaId);
-                showMessage('区域加载失败', 'error');
-                return;
-            }
-            
-            currentState.currentArea = areaId;
-            document.getElementById('game-area-title').textContent = area.title;
-            
-            // 生成游戏列表
-            const gameList = document.getElementById('game-list');
-            if (!gameList) {
-                console.error('❌ 游戏列表元素不存在');
-                return;
-            }
-            
-            gameList.innerHTML = '';
-            
-            area.games.forEach((game, index) => {
-                console.log('🎲 生成游戏:', game.name, '索引:', index);
-                
-                const gameCard = document.createElement('div');
-                gameCard.className = 'game-card';
-                
-                const colorClass = area.color || 'primary';
-                
-                gameCard.innerHTML = `
-                    <div class="w-24 h-24 mx-auto bg-${colorClass} bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                        <span class="text-4xl font-bold text-${colorClass}">${game.icon || '?'}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-${colorClass} mb-2">${game.name || '未知游戏'}</h3>
-                    <p class="text-gray-600 text-sm mb-4">${game.description || '暂无描述'}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs text-gray-500">难度: ${'★'.repeat(game.difficulty || 1)}</span>
-                        <button class="play-game-btn btn-${colorClass} w-full" data-game="${game.id}">
-                            开始游戏
-                        </button>
-                    </div>
-                `;
-                
-                gameList.appendChild(gameCard);
-                
-                // 绑定游戏按钮点击事件
-                const playBtn = gameCard.querySelector('.play-game-btn');
-                if (playBtn) {
-                    playBtn.addEventListener('click', () => {
-                        console.log('🚀 开始游戏:', game.id, '目标屏幕:', game.gameScreen);
-                        startGame(game.id, game.gameScreen);
-                    });
-                }
-            });
-            
-            showScreen('gameArea');
-        }
-
-        // 开始游戏
-        function startGame(gameId, gameScreen) {
-            console.log('🎯 启动游戏:', gameId);
-            
-            currentState.currentGame = gameId;
-            
-            try {
-                switch (gameId) {
-                    case 'number-matching':
-                        initNumberMatchingGame();
-                        break;
-                    case 'addition-game':
-                        initAdditionGame();
-                        break;
-                    case 'shape-recognition':
-                        initShapeRecognitionGame();
-                        break;
-                    case 'time-recognition':
-                        initTimeRecognitionGame();
-                        break;
-                    default:
-                        console.error('❌ 未知游戏ID:', gameId);
-                        showMessage('游戏加载失败', 'error');
-                        return;
-                }
-                
-                showScreen(gameScreen);
-            } catch (error) {
-                console.error('❌ 游戏启动失败:', error);
-                showMessage('游戏启动失败', 'error');
-            }
-        }
-
-        // ==================== 数字配对游戏 ====================
-        function initNumberMatchingGame() {
-            console.log('🔢 初始化数字配对游戏');
-            
-            const gameLevel = gameContent.numberMatching.level1;
-            
-            // 设置时间限制
-            document.getElementById('game-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成游戏卡片
-            const container = document.getElementById('matching-game-container');
-            container.innerHTML = '';
-            
-            const cards = [];
-            
-            // 添加数字卡片
-            gameLevel.numbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'bg-primary bg-opacity-20 rounded-xl p-4 text-center cursor-pointer matching-card';
-                card.dataset.type = 'number';
-                card.dataset.value = num;
-                card.innerHTML = `<span class="text-3xl font-bold text-primary">${num}</span>`;
-                cards.push(card);
-            });
-            
-            // 添加数量卡片
-            gameLevel.numbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'bg-secondary bg-opacity-20 rounded-xl p-4 text-center cursor-pointer matching-card';
-                card.dataset.type = 'count';
-                card.dataset.value = num;
-                
-                let icons = '';
-                for (let i = 0; i < num; i++) {
-                    icons += '<i class="fa fa-star text-accent mx-1"></i>';
-                }
-                
-                card.innerHTML = icons;
-                cards.push(card);
-            });
-            
-            // 随机排序卡片
-            shuffleArray(cards);
-            
-            // 添加卡片到容器
-            cards.forEach(card => {
-                card.addEventListener('click', () => selectMatchingCard(card));
-                container.appendChild(card);
-            });
-            
-            // 隐藏结果区域
-            document.getElementById('matching-result').classList.add('hidden');
-            
-            // 重置游戏状态
-            currentState.selectedCards = [];
-            currentState.matchedPairs = 0;
-            
-            //
-            
-            // 开始计时器
-            startGameTimer('game-timer', () => {
-                checkNumberMatching();
-            });
-        }
-
-        function selectMatchingCard(card) {
-            // 如果卡片已经匹配，不做任何操作
-            if (card.classList.contains('matched')) return;
-            
-            // 切换选中状态
-            card.classList.toggle('ring-4');
-            card.classList.toggle('ring-primary');
-            
-            // 检查是否有两张卡片被选中
-            const selectedCards = document.querySelectorAll('.matching-card.ring-4');
-            if (selectedCards.length === 2) {
-                const card1 = selectedCards[0];
-                const card2 = selectedCards[1];
-                
-                // 防止快速点击
-                document.querySelectorAll('.matching-card').forEach(c => {
-                    c.style.pointerEvents = 'none';
-                });
-                
-                // 检查是否匹配
-                if (card1.dataset.value === card2.dataset.value && card1.dataset.type !== card2.dataset.type) {
-                    // 匹配成功
-                    setTimeout(() => {
-                        card1.classList.remove('ring-4', 'ring-primary');
-                        card2.classList.remove('ring-4', 'ring-primary');
-                        card1.classList.add('matched', 'bg-green-100');
-                        card2.classList.add('matched', 'bg-green-100');
-                        
-                        currentState.matchedPairs++;
-                        
-                        // 恢复点击事件
-                        document.querySelectorAll('.matching-card').forEach(c => {
-                            c.style.pointerEvents = 'auto';
-                        });
-                        
-                        // 检查是否所有卡片都匹配
-                        const totalPairs = gameContent.numberMatching.level1.numbers.length;
-                        if (currentState.matchedPairs === totalPairs) {
-                            setTimeout(() => {
-                                checkNumberMatching(true);
-                            }, 500);
-                        }
-                    }, 500);
-                } else {
-                    // 匹配失败
-                    setTimeout(() => {
-                        card1.classList.remove('ring-4', 'ring-primary');
-                        card2.classList.remove('ring-4', 'ring-primary');
-                        
-                        // 恢复点击事件
-                        document.querySelectorAll('.matching-card').forEach(c => {
-                            c.style.pointerEvents = 'auto';
-                        });
-                    }, 500);
-                }
-            }
-        }
-
-        function checkNumberMatching(allMatching(allMatched = false) {
-            stopGameTimer();
-            
-            const matchedCards = document.querySelectorAll('.matching-card.matched');
-            const totalCards = document.querySelectorAll('.matching-card').length;
-            const totalPairs = totalCards / 2;
-            
-            const resultArea = document.getElementById('matching-result');
-            const resultIcon = document.getElementById('result-icon');
-            const resultTitle = document.getElementById('result-title');
-            const resultMessage = document.getElementById('result-message');
-            
-            if (matchedCards.length === totalCards || allMatched) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = '你成功完成了数字配对游戏！';
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.numberKingdom.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = '再试一次，你一定可以的！';
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playNumberMatchingAgain() {
-            initNumberMatchingGame();
-        }
-
-        // ==================== 加法游戏 ====================
-        function initAdditionGame() {
-            console.log('➕ 初始化加法游戏');
-            
-            const gameLevel = gameContent.addition.level1;
-            
-            // 设置时间限制
-            document.getElementById('addition-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成加法题目
-            generateAdditionQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('addition-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('addition-timer', () => {
-                checkAddition();
-            });
-        }
-
-        function generateAdditionQuestion(gameLevel) {
-            const num1 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
-            const num2 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
-            
-            document.getElementById('addition-num1').textContent = num1;
-            document.getElementById('addition-num2').textContent = num2;
-            document.getElementById('addition-answer').value = '';
-            document.getElementById('addition-answer').focus();
-            
-            // 存储正确答案
-            document.getElementById('addition-question').dataset.answer = num1 + num2;
-        }
-
-        function checkAddition() {
-            stopGameTimer();
-            
-            const userAnswer = parseInt(document.getElementById('addition-answer').value);
-            const correctAnswer = parseInt(document.getElementById('addition-question').dataset.answer);
-            
-            const resultArea = document.getElementById('addition-result');
-            const resultIcon = document.getElementById('addition-result-icon');
-            const resultTitle = document.getElementById('addition-result-title');
-            const resultMessage = document.getElementById('addition-result-message');
-            
-            if (userAnswer === correctAnswer) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确答案是 ${correctAnswer}！你答对了！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.calculationForest.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = `正确答案是 ${correctAnswer}，再试一次吧！`;
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playAdditionAgain() {
-            initAdditionGame();
-        }
-
-        // ==================== 图形认知游戏 ====================
-        function initShapeRecognitionGame() {
-            console.log('🔶 初始化图形认知游戏');
-            
-            const gameLevel = gameContent.shapeRecognition.level1;
-            
-            // 设置时间限制
-            document.getElementById('shape-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成图形题目
-            generateShapeQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('shape-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('shape-timer', () => {
-                checkShapeRecognition();
-            });
-        }
-
-        function generateShapeQuestion(gameLevel) {
-            // 随机选择一个图形
-            const shapes = gameLevel.shapes;
-            const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
-            
-            document.getElementById('shape-question').textContent = randomShape;
-            
-            // 生成选项
-            const options = document.getElementById('shape-options');
-            options.innerHTML = '';
-            
-            // 添加正确答案
-            const correctOption = createShapeOption(randomShape, true);
-            options.appendChild(correctOption);
-            
-            // 添加干扰选项
-            const usedShapes = [randomShape];
-            while (usedShapes.length < 4) {
-                const shape = shapes[Math.floor(Math.random() * shapes.length)];
-                if (!usedShapes.includes(shape)) {
-                    usedShapes.push(shape);
-                    const option = createShapeOption(shape, false);
-                    options.appendChild(option);
-                }
-            }
-            
-            // 随机排序选项
-            shuffleChildren(options);
-        }
-
-        function createShapeOption(shapeName, isCorrect) {
-            const option = document.createElement('div');
-            option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-accent transition-colors';
-            option.dataset.shape = shapeName;
-            option.dataset.correct = isCorrect;
-            
-            let shapeIcon = '';
-            switch (shapeName) {
-                case '正方形':
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-accent bg-opacity-20"></div>';
-                    break;
-                case '圆形':
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 rounded-full"></div>';
-                    break;
-                case '三角形':
-                    shapeIcon = '<div class="w-0 h-0 border-l-[40px] border-l-transparent border-b-[80px] border-b-accent border-r-[40px] border-r-transparent mx-auto"></div>';
-                    break;
-                case '长方形':
-                    shapeIcon = '<div class="w-20 h-12 mx-auto bg-accent bg-opacity-20"></div>';
-                    break;
-                default:
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-gray-200 rounded-lg"></div>';
-            }
-            
-            option.innerHTML = shapeIcon;
-            
-            option.addEventListener('click', () => {
-                // 移除其他选项的选中状态
-                document.querySelectorAll('#shape-options > div').forEach(opt => {
-                    opt.classList.remove('border-4', 'border-accent');
-                });
-                
-                // 添加选中状态
-                option.classList.add('border-4', 'border-accent');
-            });
-            
-            return option;
-        }
-
-        function checkShapeRecognition() {
-            stopGameTimer();
-            
-            const selectedOption = document.querySelector('#shape-options > div.border-4');
-            const resultArea = document.getElementById('shape-result');
-            const resultIcon = document.getElementById('shape-result-icon');
-            const resultTitle = document.getElementById('shape-result-title');
-            const resultMessage = document.getElementById('shape-result-message');
-            
-            if (!selectedOption) {
-                showMessage('请选择一个图形', 'warning');
-                return;
-            }
-            
-            const isCorrect = selectedOption.dataset.correct === 'true';
-            const selectedShape = selectedOption.dataset.shape;
-            const correctShape = document.getElementById('shape-question').textContent;
-            
-            if (isCorrect) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确！这是 ${correctShape}！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.geometryCastle.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = `这是 ${selectedShape}，不是 ${correctShape}。再试一次吧！`;
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playShapeRecognitionAgain() {
-            initShapeRecognitionGame();
-        }
-
-        // ==================== 时间认识游戏 ====================
-        function initTimeRecognitionGame() {
-            console.log('🕐 初始化时间认识游戏');
-            
-            const gameLevel = gameContent.timeRecognition.level1;
-            
-            // 设置时间限制
-            document.getElementById('time-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成时间题目
-            generateTimeQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('time-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('time-timer', () => {
-                checkTimeRecognition();
-            });
-        }
-
-        function generateTimeQuestion(gameLevel) {
-            // 随机选择一个时间
-            const times = gameLevel.times;
-            const randomTime = times[Math.floor(Math.random() * times.length)];
-            
-            // 设置时钟显示
-            setClockTime(randomTime.hour, randomTime.minute);
-            
-            // 生成选项
-            const options = document.getElementById('time-options');
-            options.innerHTML = '';
-            
-            // 添加正确答案
-            const correctOption = createTimeOption(randomTime.hour, randomTime.minute, true);
-            options.appendChild(correctOption);
-            
-            // 添加干扰选项
-            const usedTimes = [`${randomTime.hour}:${randomTime.minute.toString().padStart(2, '0')}`];
-            while (usedTimes.length < 4) {
-                const time = times[Math.floor(Math.random() * times.length)];
-                const timeStr = `${time.hour}:${time.minute.toString().padStart(2, '0')}`;
-                if (!usedTimes.includes(timeStr)) {
-                    usedTimes.push(timeStr);
-                    const option = createTimeOption(time.hour, time.minute, false);
-                    options.appendChild(option);
-                }
-            }
-            
-            // 随机排序选项
-            shuffleChildren(options);
-        }
-
-        function setClockTime(hour, minute) {
-            const hourHand = document.getElementById('hour-hand');
-            const minuteHand = document.getElementById('minute-hand');
-            
-            const hourAngle = (hour % 12) * 30 + (minute / 60) * 30;
-            const minuteAngle = minute * 6;
-            
-            hourHand.style.transform = `translate(-50%, -100%) rotate(${hourAngle}deg)`;
-            minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteAngle}deg)`;
-        }
-
-        function createTimeOption(hour, minute, isCorrect) {
-            const option = document.createElement('div');
-            option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-ocean transition-colors';
-            option.dataset.hour = hour;
-            option.dataset.minute = minute;
-            option.dataset.correct = isCorrect;
-            
-            const timeStr = `${hour}:${minute.toString().padStart(2, '0')}`;
-            
-            option.innerHTML = `
-                <div class="text-xl font-bold text-ocean">${timeStr}</div>
-                <div class="text-sm text-gray-500">${hour}点${minute}分</div>
-            `;
-            
-            option.addEventListener('click', () => {
-                // 移除其他选项的选中状态
-                document.querySelectorAll('#time-options > div').forEach(opt => {
-                    opt.classList.remove('border-4', 'border-ocean');
-                });
-                
-                // 添加选中状态
-                option.classList.add('border-4', 'border-ocean');
-            });
-            
-            return option;
-        }
-
-        function checkTimeRecognition() {
-            stopGameTimer();
-            
-            const selectedOption = document.querySelector('#time-options > div.border-4');
-            const resultArea = document.getElementById('time-result');
-            const resultIcon = document.getElementById('time-result-icon');
-            const resultTitle = document.getElementById('time-result-title');
-            const resultMessage = document.getElementById('time-result-message');
-            
-            if (!selectedOption) {
-                showMessage('请选择一个时间', 'warning');
-                return;
-            }
-            
-            const isCorrect = selectedOption.dataset.correct === 'true';
-            const selectedHour = selectedOption.dataset.hour;
-            const selectedMinute = selectedOption.dataset.minute;
-            
-            if (isCorrect) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确！时间是 ${selectedHour}点${selectedMinute}分！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.timeTower.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML
+    </script>
+</body>
+</html>
