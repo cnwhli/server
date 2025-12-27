@@ -657,6 +657,40 @@
       "customProxy": ""
     },
     {
+      "id": "8f871502-8ccb-4435-8fb1-06c742874340",
+      "key": "xinba",
+      "name": "xinba",
+      "api": "https://xingba111.com/api.php/provide/vod/?ac=list",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+      ],
+      "priority": 0,
+      "proxyMode": "none",
+      "customProxy": ""
+    },
+     {
+      "id": "8f871502-8ccb-4435-8fb1-06c742874340",
+      "key": "yutu",
+      "name": "yutu",
+      "api": "https://apiyutu.com/api.php/providedao/vod/?ac=list",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+      ],
+      "priority": 0,
+      "proxyMode": "none",
+      "customProxy": ""
+    },
+    {
       "id": "9fe61825-ed0f-4965-9d30-57fb2d147aea",
       "key": "非凡影视",
       "name": "非凡影视",
