@@ -690,7 +690,10 @@
       "proxyMode": "none",
       "customProxy": ""
     },
-    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "sl","name": "sl","api": "https://slapibf.com/api.php/provide/vod/",
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340",
+      "key": "sl",
+      "name": "sl",
+      "api": "https://slapibf.com/api.php/provide/vod/",
       "type": 2,
       "isActive": 0,
       "time": "2025-08-08T23:42:50.8818559+08:00",
@@ -703,7 +706,10 @@
       "proxyMode": "none",
       "customProxy": ""
     }, 
-    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "ls","name": "ls","api": "https://apilsbzy1.com/api.php/provide/vod/",
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340",
+      "key": "ls",
+      "name": "ls",
+      "api": "https://apilsbzy1.com/api.php/provide/vod/",
       "type": 2,
       "isActive": 0,
       "time": "2025-08-08T23:42:50.8818559+08:00",
@@ -809,18 +815,6 @@
     },
     {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "替换","name": "替换","api": "http://caiji.dyttzyapi.com/api.php/provide/vod/at/xml/",
       "type": 2,
-      "isActive": 0,
-      "time": "2025-08-08T23:42:50.8818559+08:00",
-      "isDefault": 0,
-      "remark": "",
-      "tags": [
-        "代理"
-    ],
-      "priority": 0,
-      "proxyMode": "none",
-      "customProxy": ""
-    },
-    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key":"Dm84","name":"🚌巴士┃动漫","api":"csp_Dm84Guard", "type": 2,
       "isActive": 0,
       "time": "2025-08-08T23:42:50.8818559+08:00",
       "isDefault": 0,
