@@ -690,6 +690,97 @@
       "proxyMode": "none",
       "customProxy": ""
     },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "sl","name": "sl","api": "https://slapibf.com/api.php/provide/vod/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    }, 
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "ls","name": "ls","api": "https://apilsbzy1.com/api.php/provide/vod/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "nx","name": "nx","api": "https://Naixxzy.com/api.php/provide/vod/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "hc","name": "hc","api": "https://hsckzy888.com/api.php/provide/vod/at/json/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "kb","name": "kb","api": "https://gayapi.com/api.php/provide/vod/at/json",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "sav","name": "sav","api": "https://api.souavzy.vip/api.php/provide/vod/at/json",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "xxb","name": "xxb","api": "https://www.xxibaozyw.com/api.php/provide/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "xj","name": "xj","api": "https://api.xiaojizy.live/provide/vod?ac=list",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "替换","name": "替换","api": "https://hsckzy888.com/api.php/provide/vod/at/json/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key": "替换","name": "替换","api": "http://caiji.dyttzyapi.com/api.php/provide/vod/at/xml/",
+      "type": 2,
+      "isActive": 0,
+      "time": "2025-08-08T23:42:50.8818559+08:00",
+      "isDefault": 0,
+      "remark": "",
+      "tags": [
+        "代理"
+    },
+    {"id": "8f871502-8ccb-4435-8fb1-06c742874340","key":"Dm84","name":"🚌巴士┃动漫","type":3,"api":"csp_Dm84Guard","timeout":15,"searchable":1,"quickSearch":1,"changeable":1},
     {
       "id": "9fe61825-ed0f-4965-9d30-57fb2d147aea",
       "key": "非凡影视",
