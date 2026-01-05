@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoHack Terminal</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'matrix-green': '#00ff41',
+                        'terminal-green': '#39ff14',
+                        'neon-blue': '#00f0ff',
+                        'warning-red': '#ff073a',
+                        'dark-bg': '#0a0a0a',
+                        'darker-bg': '#050505',
+                        'panel-bg': 'rgba(10, 10, 10, 0.85)'
+                    },
+                    fontFamily: {
+                        'mono': ['Consolas', 'Monaco', 'Courier New', 'monospace'],
+                        'cyber': ['Rajdhani', 'Orbitron', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                        'scan': 'scan 8s linear infinite',
+                        'typing': 'typing 1.5s steps(20, end)',
+                        'blink': 'blink .7s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'data-flow': 'dataFlow 15s linear infinite',
+                        'progress': 'progress 3s ease-out forwards'
+                    },
+                    keyframes: {
+                        glitch: {
+                            '0%, 100%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' }
+                        },
+                        scan: {
+                            '0%': { backgroundPosition: '0 -100vh' },
+                            '100%': { backgroundPosition: '0 100vh' }
+                        },
+                        typing: {
+                            'from': { width: '0' },
+                            'to': { width: '100%' }
+                        },
+                        blink: {
+                            'from, to': { borderColor: 'transparent' },
+                            '50%': { borderColor: '#39ff14' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        slideIn: {
+                            'from': { transform: 'translateY(20px)', opacity: '0' },
+                            'to': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        dataFlow: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        },
+                        progress: {
+                            '0%': { width: '0%' },
+                            '100%': { width: '100%' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 0 5px currentColor;
+            }
+            .text-glow {
+                text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+            }
+            .border-glow {
+                box-shadow: 0 0 5px currentColor, inset 0 0 5px currentColor;
+            }
+            .bg-scan {
+                background: linear-gradient(to bottom, 
+                    rgba(0, 255, 65, 0) 0%, 
+                    rgba(0, 255, 65, 0.03) 50%, 
+                    rgba(0, 255, 65, 0) 100%);
+                background-size: 100% 100%;
+                animation: scan 8s linear infinite;
+                pointer-events: none;
+            }
+            .matrix-rain {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 0;
+            }
+            .terminal-cursor::after {
+                content: '|';
+                animation: blink .7s infinite;
+                margin-left: 2px;
+            }
+            .glass-effect {
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+            .noise-bg {
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            }
+            .data-stream {
+                animation: dataFlow 15s linear infinite;
+            }
+            .progress-bar {
+                position: relative;
+                overflow: hidden;
+            }
+            .progress-bar::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: rgba(57, 255, 20, 0.7);
+                animation: progress 3s ease-out forwards;
+            }
+            .window-drag {
+                cursor: move;
+                user-select: none;
+            }
+            .window-content {
+                overflow: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #39ff14 #0a0a0a;
+            }
+            .window-content::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            .window-content::-webkit-scrollbar-track {
+                background: #0a0a0a;
+            }
+            .window-content::-webkit-scrollbar-thumb {
+                background-color: #39ff14;
+                border-radius: 20px;
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark-bg text-terminal-green font-mono overflow-hidden h-screen noise-bg relative">
+    <!-- Matrix Rain Background -->
+    <div id="matrixRain" class="matrix-rain opacity-20"></div>
+    
+    <!-- Scanline Effect -->
+    <div class="fixed inset-0 bg-scan z-50"></div>
+    
+    <!-- Main Container -->
+    <div class="relative z-10 h-screen flex flex-col">
+        <!-- Header/Taskbar -->
+        <header class="bg-darker-bg border-b border-terminal-green/30 py-1 px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-warning-red"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-terminal-green"></div>
+            </div>
+            <div class="text-center flex-1">
+                <span class="text-xs tracking-wider text-terminal-green/80">SYSTEM: NEOHACK v3.1.4 // USER: NEOPHYTE // STATUS: ACTIVE</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="systemTime" class="text-xs text-terminal-green/80">00:00:00</span>
+                <span class="text-xs text-terminal-green/80">CPU: 00%</span>
+                <span class="text-xs text-terminal-green/80">MEM: 00%</span>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-hidden relative">
+            <!-- Desktop Icons -->
+            <div class="absolute top-4 left-4 z-10 flex flex-col space-y-6">
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-terminal text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Terminal</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-shield text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Firewall</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-key text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Cracker</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-globe text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Scanner</span>
+                </div>
+            </div>
+            
+            <!-- Floating Windows -->
+            <!-- Terminal Window -->
+            <div id="terminalWindow" class="absolute top-1/4 left-1/4 w-3/4 h-2/3 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-20 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                    </div>
+                    <div class="text-xs font-cyber tracking-wider">NEOHACK TERMINAL v3.1.4</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
+                        </button>
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
+                        </button>
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-content h-[calc(100%-22px)] p-3 font-mono text-sm overflow-y-auto">
+                    <div class="mb-2">
+                        <span class="text-neon-blue">Initializing NeoHack Terminal...</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Loading system modules...</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Establishing secure connection...</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Connection established. Welcome back, <span class="text-neon-blue">NEOPHYTE</span></span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-warning-red">[WARNING] System detected unauthorized access attempts</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-warning-red">[WARNING] Activating defensive protocols</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-terminal-green">Defensive protocols activated successfully</span>
+                    </div>
+                    
+                    <div class="terminal-line mb-1">
+                        <span class="text-neon-blue">neohack@system:~$</span>
+                        <span id="terminalInput" class="terminal-cursor ml-2"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hacking Tools Window -->
+            <div id="toolsWindow" class="absolute top-1/3 right-1/4 w-1/4 h-1/2 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-10 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                    </div>
+                    <div class="text-xs font-cyber tracking-wider">HACKING TOOLS</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
+                        </button>
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
+                        </button>
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-content h-[calc(100%-22px)] p-3">
+                    <div class="grid grid-cols-1 gap-3">
+                        <button id="ipScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>IP Scanner</span>
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <button id="passCrackBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Password Cracker</span>
+                            <i class="fa fa-key"></i>
+                        </button>
+                        <button id="portScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Port Scanner</span>
+                            <i class="fa fa-plug"></i>
+                        </button>
+                        <button id="vulnScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Vulnerability Scan</span>
+                            <i class="fa fa-shield"></i>
+                        </button>
+                        <button id="ddosBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>DDoS Attack</span>
+                            <i class="fa fa-bolt"></i>
+                        </button>
+                        <button id="dataExtractBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Data Extraction</span>
+                            <i class="fa fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Status Window -->
+            <div id="statusWindow" class="absolute bottom-1/4 right-4 w-1/5 h-1/3 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-10 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                    </div>
+                    <div class="text-xs font-cyber tracking-wider">SYSTEM STATUS</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
+                        </button>
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
+                        </button>
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="window-content h-[calc(100%-22px)] p-3">
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>CPU Usage</span>
+                            <span id="cpuUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="cpuBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>Memory Usage</span>
+                            <span id="memUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="memBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>Network Activity</span>
+                            <span id="netUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="netBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs space-y-1">
+                        <div class="flex justify-between">
+                            <span>System Temp:</span>
+                            <span id="sysTemp">32°C</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Processes:</span>
+                            <span id="processes">142</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Uptime:</span>
+                            <span id="uptime">00:00:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Connections:</span>
+                            <span id="connections">12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer/Status Bar -->
+        <footer class="bg-darker-bg border-t border-terminal-green/30 py-1 px-4 text-xs flex justify-between items-center">
+            <div>
+                <span class="text-terminal-green/80">NEOHACK v3.1.4</span>
+            </div>
+            <div>
+                <span class="text-terminal-green/80">SECURITY STATUS: <span class="text-terminal-green">SAFE</span></span>
+            </div>
+            <div>
+                <span class="text-terminal-green/80">CONNECTION: <span class="text-terminal-green">ONLINE</span></span>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Modal for Hacking Actions -->
+    <div id="hackModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden">
+        <div class="bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg w-1/2 max-w-2xl animate-fade-in glass-effect">
+            <div class="bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                </div>
+                <div id="modalTitle" class="text-xs font-cyber tracking-wider">HACKING OPERATION</div>
+                <button id="closeModal" class="text-xs hover:text-warning-red transition-colors duration-300">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="p-4 h-64 overflow-y-auto">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+            <div class="bg-darker-bg border-t border-terminal-green/30 py-2 px-3 flex justify-end">
+                <button id="cancelHack" class="px-3 py-1 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-xs mr-2">
+                    Cancel
+                </button>
+                <button id="executeHack" class="px-3 py-1 bg-warning-red/20 hover:bg-warning-red/30 border border-warning-red/50 hover:border-warning-red transition-all duration-300 text-xs">
+                    Execute
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Warning Modal -->
+    <div id="warningModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden">
+        <div class="bg-panel-bg border border-warning-red/50 rounded-sm shadow-lg w-1/3 max-w-md animate-fade-in glass-effect">
+            <div class="bg-darker-bg border-b border-warning-red/50 py-1 px-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                </div>
+                <div class="text-xs font-cyber tracking-wider text-warning-red">SECURITY ALERT</div>
+                <button id="closeWarning" class="text-xs hover:text-warning-red transition-colors duration-300">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="text-warning-red text-center mb-4">
+                    <i class="fa fa-exclamation-triangle text-2xl"></i>
+                </div>
+                <p id="warningMessage" class="text-sm mb-4">Unauthorized access detected! This action may trigger security protocols.</p>
+                <div class="flex justify-center">
+                    <button id="continueAction" class="px-3 py-1 bg-warning-red/20 hover:bg-warning-red/30 border border-warning-red/50 hover:border-warning-red transition-all duration-300 text-xs mr-2">
+                        Continue
+                    </button>
+                    <button id="abortAction" class="px-3 py-1 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-xs">
+                        Abort
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'absolute top-0 text-[10px] text-terminal-green/30 data-stream';
+                column.style.left = `${i * 20}px`;
+                column.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
+                
+                let text = '';
+                const length = Math.floor(Math.random() * 50) + 20;
+                for (let j = 0; j < length; j++) {
+                    text += characters[Math.floor(Math.random() * characters.length)] + '<br>';
+                }
+                column.innerHTML = text;
+                
+                matrixRain.appendChild(column);
+            }
+        }
+        
+        // Update system time
+        function updateSystemTime() {
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0];
+            document.getElementById('systemTime').textContent = timeString;
+            
+            // Update uptime (simulated)
+            const uptimeElement = document.getElementById('uptime');
+            if (uptimeElement) {
+                const [hours, minutes, seconds] = uptimeElement.textContent.split(':').map(Number);
+                let newSeconds = seconds + 1;
+                let newMinutes = minutes;
+                let newHours = hours;
+                
+                if (newSeconds >= 60) {
+                    newSeconds = 0;
+                    newMinutes++;
+                }
+                
+                if (newMinutes >= 60) {
+                    newMinutes = 0;
+                    newHours++;
+                }
+                
+                uptimeElement.textContent = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`;
+            }
+        }
+        
+        // Simulate system metrics
+        function updateSystemMetrics() {
+            // CPU Usage
+            const cpuUsage = Math.floor(Math.random() * 30) + 10;
+            document.getElementById('cpuUsage').textContent = `${cpuUsage}%`;
+            document.getElementById('cpuBar').style.width = `${cpuUsage}%`;
+            
+            // Memory Usage
+            const memUsage = Math.floor(Math.random() * 40) + 30;
+            document.getElementById('memUsage').textContent = `${memUsage}%`;
+            document.getElementById('memBar').style.width = `${memUsage}%`;
+            
+            // Network Activity
+            const netUsage = Math.floor(Math.random() * 60) + 5;
+            document.getElementById('netUsage').textContent = `${netUsage}%`;
+            document.getElementById('netBar').style.width = `${netUsage}%`;
+            
+            // System Temp (simulated fluctuation)
+            const baseTemp = 32;
+            const tempVariation = Math.floor(Math.random() * 6) - 2; // -2 to +3
+            document.getElementById('sysTemp').textContent = `${baseTemp + tempVariation}°C`;
+            
+            // Processes (slight variation)
+            const baseProcesses = 142;
+            const processVariation = Math.floor(Math.random() * 10) - 4; // -4 to +5
+            document.getElementById('processes').textContent = `${baseProcesses + processVariation}`;
+            
+            // Connections (more variation)
+            const baseConnections = 12;
+            const connVariation = Math.floor(Math.random() * 10) - 3; // -3 to +6
+            const newConnections = Math.max(1, baseConnections + connVariation);
+            document.getElementById('connections').textContent = `${newConnections}`;
+            
+            // Update taskbar metrics
+            document.querySelector('header .flex-1 + div span:nth-child(2)').textContent = `CPU: ${cpuUsage}%`;
+            document.querySelector('header .flex-1 + div span:nth-child(3)').textContent = `MEM: ${memUsage}%`;
+        }
+        
+        // Terminal input handling
+        function setupTerminal() {
+            const terminalInput = document.getElementById('terminalInput');
+            const terminalWindow = document.querySelector('#terminalWindow .window-content');
+            let currentInput = '';
+            let isCommandExecuting = false;
+            
+            // Command responses
+            const commandResponses = {
+                'help': `
+                    <div class="mb-2"><span class="text-neon-blue">Available commands:</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">help</span> - Display this help message</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">scan</span> - Scan for vulnerable systems</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">crack [target]</span> - Attempt password cracking</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">status</span> - Show system status</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">clear</span> - Clear terminal</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">exit</span> - Exit terminal</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">hack [system]</span> - Initiate system hack</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">trace [ip]</span> - Trace IP address</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">firewall</span> - Manage firewall settings</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">encrypt [message]</span> - Encrypt message</div>
+                `,
+                'scan': `
+                    <div class="mb-2"><span class="text-neon-blue">Initiating network scan...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Scanning subnet 192.168.1.0/24...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Found 24 active hosts</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.1</span> - <span class="text-yellow-500">Router</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.5</span> - <span class="text-warning-red">Vulnerable Server</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.12</span> - <span class="text-terminal-green">Workstation</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.27</span> - <span class="text-warning-red">Unsecured Database</span></div>
+                    <div class="mb-2"><span class="text-neon-blue">Scan complete. 2 vulnerabilities detected.</span></div>
+                `,
+                'status': `
+                    <div class="mb-2"><span class="text-neon-blue">System Status:</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">CPU Usage:</span> ${Math.floor(Math.random() * 30) + 10}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Memory Usage:</span> ${Math.floor(Math.random() * 40) + 30}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Network Activity:</span> ${Math.floor(Math.random() * 60) + 5}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">System Temperature:</span> ${Math.floor(Math.random() * 6) + 30}°C</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Processes Running:</span> ${Math.floor(Math.random() * 20) + 130}</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Network Connections:</span> ${Math.floor(Math.random() * 15) + 5}</div>
+                    <div class="mb-2"><span class="text-terminal-green">System uptime:</span> ${document.getElementById('uptime').textContent}</div>
+                `,
+                'clear': function() {
+                    // Clear terminal content except for the prompt
+                    const terminalLines = terminalWindow.querySelectorAll('.terminal-line');
+                    const lastLine = terminalLines[terminalLines.length - 1];
+                    
+                    while (terminalWindow.firstChild) {
+                        terminalWindow.removeChild(terminalWindow.firstChild);
+                    }
+                    
+                    terminalWindow.appendChild(lastLine);
+                    return '';
+                },
+                'exit': `
+                    <div class="mb-2"><span class="text-neon-blue">Closing terminal session...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Session closed. Goodbye, NEOPHYTE.</span></div>
+                `,
+                'default': `
+                    <div class="mb-2"><span class="text-warning-red">Command not recognized: ${currentInput}</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Type 'help' for available commands</span></div>
+                `
+            };
+            
+            // Handle keydown events
+            document.addEventListener('keydown', function(e) {
+                if (isCommandExecuting) return;
+                
+                // Only process if terminal window is focused or we're typing
+                const isTerminalFocused = document.activeElement === document.body && 
+                                          !document.querySelector('input, textarea:focus');
+                
+                if (!isTerminalFocused && currentInput === '') return;
+                
+                if (e.key === 'Enter') {
+                    // Execute command
+                    if (currentInput.trim() !== '') {
+                        isCommandExecuting = true;
+                        
+                        // Create new line for response
+                        const responseLine = document.createElement('div');
+                        responseLine.className = 'mb-2';
+                        terminalWindow.appendChild(responseLine);
+                        
+                        // Get command (ignoring parameters for simplicity)
+                        const command = currentInput.split(' ')[0].toLowerCase();
+                        
+                        // Process command
+                        setTimeout(() => {
+                            let response = '';
+                            
+                            if (commandResponses[command]) {
+                                if (typeof commandResponses[command] === 'function') {
+                                    response = commandResponses[command]();
+                                } else {
+                                    response = commandResponses[command];
+                                }
+                            } else {
+                                response = commandResponses['default'].replace('${currentInput}', currentInput);
+                            }
+                            
+                            responseLine.innerHTML = response;
+                            
+                            // Create new prompt line
+                            const newPromptLine = document.createElement('div');
+                            newPromptLine.className = 'terminal-line mb-1';
+                            newPromptLine.innerHTML = `
+                                <span class="text-neon-blue">neohack@system:~$</span>
+                                <span id="terminalInput" class="terminal-cursor ml-2"></span>
+                            `;
+                            
+                            terminalWindow.appendChild(newPromptLine);
+                            terminalInput = document.getElementById('terminalInput');
+                            currentInput = '';
+                            isCommandExecuting = false;
+                            
+                            // Scroll to bottom
+                            terminalWindow.scrollTop = terminalWindow.scrollHeight;
+                        }, 500);
+                    }
+                    
+                    // Clear input
+                    currentInput = '';
+                    terminalInput.textContent = '';
+                } else if (e.key === 'Backspace') {
+                    // Handle backspace
+                    if (currentInput.length > 0) {
+                        currentInput = currentInput.slice(0, -1);
+                        terminalInput.textContent = currentInput;
+                    }
+                } else if (e.key.length === 1) {
+                    // Handle regular key input
+                    currentInput += e.key;
+                    terminalInput.textContent = currentInput;
+                }
+                
+                // Scroll to bottom
+                terminalWindow.scrollTop = terminalWindow.scrollHeight;
+            });
+        }
+        
+        // Window management
+        function setupWindowManagement() {
+            const windows = document.querySelectorAll('#terminalWindow, #toolsWindow, #statusWindow');
+            
+            windows.forEach(window => {
+                const dragHandle = window.querySelector('.window-drag');
+                let isDragging = false;
+                let offsetX, offsetY;
+                
+                // Make windows draggable
+                dragHandle.addEventListener('mousedown', (e) => {
+                    if (e.target.tagName === 'BUTTON' || e.target.parentElement.tagName === 'BUTTON') return;
+                    
+                    isDragging = true;
+                    offsetX = e.clientX - window.getBoundingClientRect().left;
+                    offsetY = e.clientY - window.getBoundingClientRect().top;
+                    
+                    // Bring window to front
+                    windows.forEach(w => w.style.zIndex = '10');
+                    window.style.zIndex = '20';
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    
+                    // Constrain to viewport
+                    const maxX = window.innerWidth - window.offsetWidth;
+                    const maxY = window.innerHeight - window.offsetHeight;
+                    
+                    window.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+                    window.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+                
+                // Window actions (minimize, maximize, close)
+                const actionButtons = window.querySelectorAll('.window-action');
+                actionButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const action = button.getAttribute('data-action');
+                        
+                        if (action === 'close') {
+                            window.classList.add('hidden');
+                        } else if (action === 'minimize') {
+                            // Simple minimize effect
+                            window.style.transform = 'translateY(100vh)';
+                            setTimeout(() => {
+                                window.classList.add('hidden');
+                                window.style.transform = '';
+                            }, 300);
+                        } else if (action === 'maximize') {
+                            // Toggle maximize
+                            if (window.style.width === '100%' && window.style.height === 'calc(100vh - 44px)') {
+                                // Restore original size and position
+                                window.style.width = '';
+                                window.style.height = '';
+                                window.style.left = '';
+                                window.style.top = '';
+                            } else {
+                                // Maximize
+                                window.style.width = '100%';
+                                window.style.height = 'calc(100vh - 44px)';
+                                window.style.left = '0';
+                                window.style.top = '22px';
+                            }
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Hacking tools functionality
+        function setupHackingTools() {
+            const hackModal = document.getElementById('hackModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const closeModal = document.getElementById('closeModal');
+            const cancelHack = document.getElementById('cancelHack');
+            const executeHack = document.getElementById('executeHack');
+            const warningModal = document.getElementById('warningModal');
+            const warningMessage = document.getElementById('warningMessage');
+            const closeWarning = document.getElementById('closeWarning');
+            const continueAction = document.getElementById('continueAction');
+            const abortAction = document.getElementById('abortAction');
+            
+            let currentHackType = '';
+            
+            // Tool button click handlers
+            document.getElementById('ipScanBtn').addEventListener('click', () => showWarning('IP Scanner', 'This will scan for active IP addresses on the network. This may trigger IDS systems.'));
+            document.getElementById('passCrackBtn').addEventListener('click', () => showWarning('Password Cracker', 'This will attempt to brute force passwords. This is illegal in most jurisdictions.'));
+            document.getElementById('portScanBtn').addEventListener('click', () => showWarning('Port Scanner', 'This will scan for open ports. Some systems may block your IP for suspicious activity.'));
+            document.getElementById('vulnScanBtn').addEventListener('click', () => showWarning('Vulnerability Scan', 'This will scan for system vulnerabilities. Results may be inaccurate.'));
+            document.getElementById('ddosBtn').addEventListener('click', () => showWarning('DDoS Attack', 'This will simulate a distributed denial of service attack. This is for educational purposes only.'));
+            document.getElementById('dataExtractBtn').addEventListener('click', () => showWarning('Data Extraction', 'This will attempt to extract data from the target system. This may corrupt files.'));
+            
+            // Show warning before hacking
+            function showWarning(hackType, message) {
+                currentHackType = hackType;
+                warningMessage.textContent = message;
+                warningModal.classList.remove('hidden');
+            }
+            
+            // Continue with hack after warning
+            continueAction.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+                showHackModal(currentHackType);
+            });
+            
+            // Abort hack
+            abortAction.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+            });
+            
+            // Close warning
+            closeWarning.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+            });
+            
+            // Show hack modal
+            function showHackModal(hackType) {
+                modalTitle.textContent = hackType.toUpperCase();
+                hackModal.classList.remove('hidden');
+                
+                // Generate appropriate content based on hack type
+                let content = '';
+                
+                switch(hackType) {
+                    case 'IP Scanner':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target Range: <span class="text-neon-blue">192.168.1.0/24</span></div>
+                                <div class="text-sm mb-2">Scan Type: <span class="text-neon-blue">Comprehensive</span></div>
+                                <div class="text-sm mb-2">Timeout: <span class="text-neon-blue">5000ms</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="scanResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Password Cracker':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">admin@target.com</span></div>
+                                <div class="text-sm mb-2">Method: <span class="text-neon-blue">Dictionary + Brute Force</span></div>
+                                <div class="text-sm mb-2">Speed: <span class="text-neon-blue">10,000 attempts/sec</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Cracking...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="crackResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Port Scanner':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target IP: <span class="text-neon-blue">192.168.1.5</span></div>
+                                <div class="text-sm mb-2">Port Range: <span class="text-neon-blue">1-65535</span></div>
+                                <div class="text-sm mb-2">Scan Speed: <span class="text-neon-blue">Fast</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning ports...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="portResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Vulnerability Scan':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">server.target.com</span></div>
+                                <div class="text-sm mb-2">Scan Depth: <span class="text-neon-blue">Deep</span></div>
+                                <div class="text-sm mb-2">Database: <span class="text-neon-blue">Latest</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning for vulnerabilities...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="vulnResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'DDoS Attack':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">target-server.com</span></div>
+                                <div class="text-sm mb-2">Method: <span class="text-neon-blue">SYN Flood</span></div>
+                                <div class="text-sm mb-2">Intensity: <span class="text-neon-blue">High</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Launching attack...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-warning-red progress-bar"></div>
+                                </div>
+                                <div id="ddosResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Data Extraction':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">database.target.com</span></div>
+                                <div class="text-sm mb-2">Data Type: <span class="text-neon-blue">User Records</span></div>
+                                <div class="text-sm mb-2">Encryption: <span class="text-neon-blue">AES-256</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Extracting data...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="extractResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                }
+                
+                modalContent.innerHTML = content;
+            }
+            
+            // Execute hack
+            executeHack.addEventListener('click', () => {
+                const hackType = modalTitle.textContent;
+                let resultsContainer = null;
+                
+                // Disable execute button during hack
+                executeHack.disabled = true;
+                executeHack.classList.add('opacity-50');
+                
+                // Find results container based on hack type
+                switch(hackType) {
+                    case 'IP SCANNER':
+                        resultsContainer = document.getElementById('scanResults');
+                        simulateIpScan(resultsContainer);
+                        break;
+                    case 'PASSWORD CRACKER':
+                        resultsContainer = document.getElementById('crackResults');
+                        simulatePasswordCrack(resultsContainer);
+                        break;
+                    case 'PORT SCANNER':
+                        resultsContainer = document.getElementById('portResults');
+                        simulatePortScan(resultsContainer);
+                        break;
+                    case 'VULNERABILITY SCAN':
+                        resultsContainer = document.getElementById('vulnResults');
+                        simulateVulnerabilityScan(resultsContainer);
+                        break;
+                    case 'DDOS ATTACK':
+                        resultsContainer = document.getElementById('ddosResults');
+                        simulateDDoSAttack(resultsContainer);
+                        break;
+                    case 'DATA EXTRACTION':
+                        resultsContainer = document.getElementById('extractResults');
+                        simulateDataExtraction(resultsContainer);
+                        break;
+                }
+            });
+            
+            // Cancel hack
+            cancelHack.addEventListener('click', () => {
+                hackModal.classList.add('hidden');
+                resetHackModal();
+            });
+            
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                hackModal.classList.add('hidden');
+                resetHackModal();
+            });
+            
+            // Reset modal state
+            function resetHackModal() {
+                executeHack.disabled = false;
+                executeHack.classList.remove('opacity-50');
+            }
+            
+            // Simulate IP scan
+            function simulateIpScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scan in progress...</div>';
+                
+                const ipAddresses = [
+                    { ip: '192.168.1.1', type: 'Router', status: 'Online' },
+                    { ip: '192.168.1.5', type: 'Server', status: 'Vulnerable' },
+                    { ip: '192.168.1.12', type: 'Workstation', status: 'Online' },
+                    { ip: '192.168.1.27', type: 'Database', status: 'Unsecured' },
+                    { ip: '192.168.1.42', type: 'Printer', status: 'Online' },
+                    { ip: '192.168.1.69', type: 'NAS', status: 'Online' },
+                    { ip: '192.168.1.133', type: 'IoT Device', status: 'Vulnerable' },
+                    { ip: '192.168.1.254', type: 'Gateway', status: 'Online' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < ipAddresses.length) {
+                        const ip = ipAddresses[index];
+                        let statusColor = 'text-terminal-green';
+                        if (ip.status === 'Vulnerable') statusColor = 'text-warning-red';
+                        if (ip.status === 'Unsecured') statusColor = 'text-yellow-500';
+                        
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span>${ip.ip} <span class="text-neon-blue">(${ip.type})</span></span>
+                                <span class="${statusColor}">${ip.status}</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${ipAddresses.length} hosts.</div>
+                            <div class="mt-1 text-warning-red">2 vulnerabilities detected!</div>
+                        `;
+                    }
+                }, 500);
+            }
+            
+            // Simulate password cracking
+            function simulatePasswordCrack(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Cracking in progress...</div>';
+                
+                const attempts = [
+                    'Trying: password123...',
+                    'Trying: admin123...',
+                    'Trying: qwerty...',
+                    'Trying: letmein...',
+                    'Trying: 12345678...',
+                    'Trying: 123456789...',
+                    'Trying: 1234567890...',
+                    'Trying: password...',
+                    'Trying: admin...',
+                    'Trying: welcome...'
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < attempts.length - 1) {
+                        container.innerHTML = `<div class="text-warning-red">${attempts[index]}</div>`;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML = `
+                            <div class="text-warning-red">${attempts[index]}</div>
+                            <div class="mt-2 text-warning-red">Password found!</div>
+                            <div class="mt-1">Username: <span class="text-neon-blue">admin</span></div>
+                            <div class="mt-1">Password: <span class="text-neon-blue">admin@2023</span></div>
+                        `;
+                    }
+                }, 300);
+            }
+            
+            // Simulate port scan
+            function simulatePortScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scanning ports...</div>';
+                
+                const ports = [
+                    { port: 21, service: 'FTP', status: 'Open' },
+                    { port: 22, service: 'SSH', status: 'Open' },
+                    { port: 23, service: 'Telnet', status: 'Open' },
+                    { port: 80, service: 'HTTP', status: 'Open' },
+                    { port: 443, service: 'HTTPS', status: 'Open' },
+                    { port: 3306, service: 'MySQL', status: 'Open' },
+                    { port: 5432, service: 'PostgreSQL', status: 'Filtered' },
+                    { port: 8080, service: 'HTTP-Proxy', status: 'Open' },
+                    { port: 8443, service: 'HTTPS-Alt', status: 'Open' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < ports.length) {
+                        const port = ports[index];
+                        let statusColor = 'text-terminal-green';
+                        if (port.status === 'Filtered') statusColor = 'text-yellow-500';
+                        if (port.status === 'Closed') statusColor = 'text-gray-400';
+                        
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span>${port.port}/tcp <span class="text-neon-blue">(${port.service})</span></span>
+                                <span class="${statusColor}">${port.status}</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${ports.filter(p => p.status === 'Open').length} open ports.</div>
+                            <div class="mt-1 text-warning-red">3 potential vulnerabilities detected!</div>
+                        `;
+                    }
+                }, 200);
+            }
+            
+            // Simulate vulnerability scan
+            function simulateVulnerabilityScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scanning for vulnerabilities...</div>';
+                
+                const vulnerabilities = [
+                    { id: 'CVE-2023-1234', severity: 'High', description: 'SQL Injection in login form' },
+                    { id: 'CVE-2023-5678', severity: 'Critical', description: 'Remote code execution vulnerability' },
+                    { id: 'CVE-2022-9876', severity: 'Medium', description: 'Outdated OpenSSL version' },
+                    { id: 'CVE-2023-4321', severity: 'Low', description: 'Information disclosure vulnerability' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < vulnerabilities.length) {
+                        const vuln = vulnerabilities[index];
+                        let severityColor = 'text-terminal-green';
+                        if (vuln.severity === 'Medium') severityColor = 'text-yellow-500';
+                        if (vuln.severity === 'High') severityColor = 'text-orange-500';
+                        if (vuln.severity === 'Critical') severityColor = 'text-warning-red';
+                        
+                        container.innerHTML += `
+                            <div class="mb-2">
+                                <div class="flex justify-between">
+                                    <span class="text-neon-blue">${vuln.id}</span>
+                                    <span class="${severityColor}">${vuln.severity}</span>
+                                </div>
+                                <div class="text-gray-400">${vuln.description}</div>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${vulnerabilities.length} vulnerabilities.</div>
+                            <div class="mt-1 text-warning-red">1 critical vulnerability requires immediate attention!</div>
+                        `;
+                    }
+                }, 800);
+            }
+            
+            // Simulate DDoS attack
+            function simulateDDoSAttack(container) {
+                container.classList.remove('hidden');
+                
+                let packets = 0;
+                let bandwidth = 0;
+                let connections = 0;
+                
+                container.innerHTML = `
+                    <div class="text-warning-red">Attack in progress...</div>
+                    <div class="mt-2">
+                        <div class="flex justify-between">
+                            <span>Packets sent:</span>
+                            <span id="packetsSent">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Bandwidth used:</span>
+                            <span id="bandwidthUsed">0 GB</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Connections:</span>
+                            <span id="connectionCount">0</span>
+                        </div>
+                    </div>
+                `;
+                
+                const packetsElement = document.getElementById('packetsSent');
+                const bandwidthElement = document.getElementById('bandwidthUsed');
+                const connectionsElement = document.getElementById('connectionCount');
+                
+                const interval = setInterval(() => {
+                    packets += Math.floor(Math.random() * 10000) + 5000;
+                    bandwidth += Math.random() * 5 + 1;
+                    connections += Math.floor(Math.random() * 50) + 10;
+                    
+                    packetsElement.textContent = packets.toLocaleString();
+                    bandwidthElement.textContent = bandwidth.toFixed(2) + ' GB';
+                    connectionsElement.textContent = connections.toLocaleString();
+                    
+                    if (packets > 100000) {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-4 text-warning-red">Target server response time degraded by 95%</div>
+                            <div class="mt-1 text-warning-red">Service disruption detected!</div>
+                            <div class="mt-1 text-terminal-green">Attack successful.</div>
+                        `;
+                    }
+                }, 500);
+            }
+            
+            // Simulate data extraction
+            function simulateDataExtraction(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Extracting data...</div>';
+                
+                const dataTypes = [
+                    { type: 'User Records', count: 1420, size: '2.4 MB' },
+                    { type: 'Password Hashes', count: 1420, size: '0.1 MB' },
+                    { type: 'Credit Card Info', count: 843, size: '0.3 MB' },
+                    { type: 'Personal Details', count: 1420, size: '1.8 MB' },
+                    { type: 'Transaction Logs', count: 12500, size: '15.2 MB' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < dataTypes.length) {
+                        const data = dataTypes[index];
+                        
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span class="text-neon-blue">${data.type}</span>
+                                <span>${data.count} records (${data.size})</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-warning-red">Data extraction complete.</div>
+                            <div class="mt-1 text-neon-blue">Total extracted: 19.8 MB</div>
+                            <div class="mt-1 text-terminal-green">Data saved to encrypted archive.</div>
+                        `;
+                    }
+                }, 700);
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createMatrixRain();
+            updateSystemTime();
+            updateSystemMetrics();
+            setupTerminal();
+            setupWindowManagement();
+            setupHackingTools();
+            
+            // Update system time every second
+            setInterval(updateSystemTime, 1000);
+            
+            // Update system metrics every 3 seconds
+            setInterval(updateSystemMetrics, 3000);
+            
+            // Randomly show security alerts
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance every 10 seconds
+                    const warningModal = document.getElementById('warningModal');
+                    const warningMessage = document.getElementById('warningMessage');
+                    
+                    const alerts = [
+                        'Unauthorized access attempt detected from IP 203.0.113.42',
+                        'Suspicious activity detected in system logs',
+                        'Potential malware signature found in temporary files',
+                        'Unusual network traffic pattern detected',
+                        'Firewall breach attempt detected',
+                        'Password brute force attack in progress'
+                    ];
+                    
+                    warningMessage.textContent = alerts[Math.floor(Math.random() * alerts.length)];
+                    warningModal.classList.remove('hidden');
+                }
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
