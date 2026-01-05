@@ -1,34 +1,77 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>诺诺的数学城堡 - 修复版</title>
+    <title>NeoHack Terminal</title>
+    <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#FF6B98',
-                        secondary: '#9C6AFF',
-                        accent: '#FFD166',
-                        ocean: '#4ECDC4',
-                        castle: '#8A7090',
-                        background: '#FFF9F5'
+                        'matrix-green': '#00ff41',
+                        'terminal-green': '#39ff14',
+                        'neon-blue': '#00f0ff',
+                        'warning-red': '#ff073a',
+                        'dark-bg': '#0a0a0a',
+                        'darker-bg': '#050505',
+                        'panel-bg': 'rgba(10, 10, 10, 0.85)'
                     },
                     fontFamily: {
-                        sans: ['Comic Sans MS', 'Arial', 'sans-serif'],
+                        'mono': ['Consolas', 'Monaco', 'Courier New', 'monospace'],
+                        'cyber': ['Rajdhani', 'Orbitron', 'sans-serif']
                     },
                     animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'bounce-slow': 'bounce 2s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'glitch': 'glitch 1s linear infinite',
+                        'scan': 'scan 8s linear infinite',
+                        'typing': 'typing 1.5s steps(20, end)',
+                        'blink': 'blink .7s infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'data-flow': 'dataFlow 15s linear infinite',
+                        'progress': 'progress 3s ease-out forwards'
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
+                        glitch: {
+                            '0%, 100%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' }
+                        },
+                        scan: {
+                            '0%': { backgroundPosition: '0 -100vh' },
+                            '100%': { backgroundPosition: '0 100vh' }
+                        },
+                        typing: {
+                            'from': { width: '0' },
+                            'to': { width: '100%' }
+                        },
+                        blink: {
+                            'from, to': { borderColor: 'transparent' },
+                            '50%': { borderColor: '#39ff14' }
+                        },
+                        fadeIn: {
+                            'from': { opacity: '0' },
+                            'to': { opacity: '1' }
+                        },
+                        slideIn: {
+                            'from': { transform: 'translateY(20px)', opacity: '0' },
+                            'to': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        dataFlow: {
+                            '0%': { transform: 'translateY(-100%)' },
+                            '100%': { transform: 'translateY(100%)' }
+                        },
+                        progress: {
+                            '0%': { width: '0%' },
+                            '100%': { width: '100%' }
                         }
                     }
                 }
@@ -37,1434 +80,1194 @@
     </script>
     <style type="text/tailwindcss">
         @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
             .text-shadow {
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                text-shadow: 0 0 5px currentColor;
             }
-            .btn-primary {
-                @apply bg-primary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
+            .text-glow {
+                text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
             }
-            .btn-secondary {
-                @apply bg-secondary text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
+            .border-glow {
+                box-shadow: 0 0 5px currentColor, inset 0 0 5px currentColor;
             }
-            .btn-accent {
-                @apply bg-accent text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
+            .bg-scan {
+                background: linear-gradient(to bottom, 
+                    rgba(0, 255, 65, 0) 0%, 
+                    rgba(0, 255, 65, 0.03) 50%, 
+                    rgba(0, 255, 65, 0) 100%);
+                background-size: 100% 100%;
+                animation: scan 8s linear infinite;
+                pointer-events: none;
             }
-            .btn-ocean {
-                @apply bg-ocean text-white font-bold py-3 px-6 rounded-full shadow-lg hover:bg-opacity-90 transform hover:-translate-y-1 transition-all duration-300;
+            .matrix-rain {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: 0;
             }
-            .game-card {
-                @apply bg-white rounded-xl shadow-lg p-6 text-center transition-all duration-300 hover:translate-y-[-10px] hover:shadow-xl;
+            .terminal-cursor::after {
+                content: '|';
+                animation: blink .7s infinite;
+                margin-left: 2px;
+            }
+            .glass-effect {
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+            .noise-bg {
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+            }
+            .data-stream {
+                animation: dataFlow 15s linear infinite;
             }
             .progress-bar {
-                @apply h-4 bg-gray-200 rounded-full overflow-hidden;
+                position: relative;
+                overflow: hidden;
             }
-            .progress-value {
-                @apply h-full bg-primary rounded-full transition-all duration-500;
+            .progress-bar::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                background-color: rgba(57, 255, 20, 0.7);
+                animation: progress 3s ease-out forwards;
+            }
+            .window-drag {
+                cursor: move;
+                user-select: none;
+            }
+            .window-content {
+                overflow: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #39ff14 #0a0a0a;
+            }
+            .window-content::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            .window-content::-webkit-scrollbar-track {
+                background: #0a0a0a;
+            }
+            .window-content::-webkit-scrollbar-thumb {
+                background-color: #39ff14;
+                border-radius: 20px;
             }
         }
     </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-background font-sans min-h-screen">
-    <!-- 主容器 -->
-    <div id="app" class="container mx-auto px-4 py-8">
-        <!-- 顶部导航栏 -->
-        <header class="flex justify-between items-center mb-8">
-            <div class="flex items-center">
-                <img src="https://p3-doubao-search-sign.byteimg.com/labis/c0623af31231800e088e0c8fa3151137~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=Qhx%2FY4%2BEk1wfyHVg46MF9bA3GfM%3D" alt="公主诺诺" class="w-12 h-12 object-contain rounded-full border-2 border-primary">
-                <h1 class="text-2xl font-bold text-primary ml-2">诺诺的数学城堡</h1>
+<body class="bg-dark-bg text-terminal-green font-mono overflow-hidden h-screen noise-bg relative">
+    <!-- Matrix Rain Background -->
+    <div id="matrixRain" class="matrix-rain opacity-20"></div>
+    
+    <!-- Scanline Effect -->
+    <div class="fixed inset-0 bg-scan z-50"></div>
+    
+    <!-- Main Container -->
+    <div class="relative z-10 h-screen flex flex-col">
+        <!-- Header/Taskbar -->
+        <header class="bg-darker-bg border-b border-terminal-green/30 py-1 px-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-warning-red"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-terminal-green"></div>
+            </div>
+            <div class="text-center flex-1">
+                <span class="text-xs tracking-wider text-terminal-green/80">SYSTEM: NEOHACK v3.1.4 // USER: NEOPHYTE // STATUS: ACTIVE</span>
             </div>
             <div class="flex items-center space-x-4">
-                <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-                    <i class="fa fa-star text-accent mr-2"></i>
-                    <span id="user-score" class="font-bold">0</span>
-                </div>
-                <div class="flex items-center bg-white rounded-full px-4 py-2 shadow-md">
-                    <i class="fa fa-puzzle-piece text-secondary mr-2"></i>
-                    <span id="user-pieces" class="font-bold">0</span>
-                </div>
+                <span id="systemTime" class="text-xs text-terminal-green/80">00:00:00</span>
+                <span class="text-xs text-terminal-green/80">CPU: 00%</span>
+                <span class="text-xs text-terminal-green/80">MEM: 00%</span>
             </div>
         </header>
-
-        <!-- 主要内容区域 -->
-        <main>
-            <!-- 欢迎页面 -->
-            <section id="welcome-screen" class="flex flex-col items-center justify-center py-8">
-                <div class="text-center mb-8">
-                    <h2 class="text-4xl font-bold text-primary mb-4 text-shadow">欢迎来到数学城堡！</h2>
-                    <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                        亲爱的诺诺，准备好开始一场奇妙的数学冒险了吗？在这个魔法世界里，你将通过解决数学问题，收集城堡碎片，建造属于自己的梦幻城堡！
-                    </p>
+        
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-hidden relative">
+            <!-- Desktop Icons -->
+            <div class="absolute top-4 left-4 z-10 flex flex-col space-y-6">
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-terminal text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Terminal</span>
                 </div>
-                
-                <div class="flex flex-wrap justify-center gap-6 mb-12">
-                    <div class="game-card w-72">
-                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/c622ddd52c6befb982cc23c51d6f5842~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature=XzeHf7j9RDVL8rPu%2BTY4FpxWJkM%3D" alt="数学城堡" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="text-xl font-bold text-primary mb-2">开始冒险</h3>
-                        <p class="text-gray-600 mb-4">探索数学城堡，挑战各种数学游戏</p>
-                        <button id="start-adventure-btn" class="btn-primary w-full">
-                            <i class="fa fa-play mr-2"></i>开始冒险
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-shield text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Firewall</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-key text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Cracker</span>
+                </div>
+                <div class="flex flex-col items-center cursor-pointer hover:text-neon-blue transition-colors duration-300">
+                    <div class="w-10 h-10 rounded bg-darker-bg border border-terminal-green/30 flex items-center justify-center mb-1">
+                        <i class="fa fa-globe text-terminal-green"></i>
+                    </div>
+                    <span class="text-xs">Scanner</span>
+                </div>
+            </div>
+            
+            <!-- Floating Windows -->
+            <!-- Terminal Window -->
+            <div id="terminalWindow" class="absolute top-1/4 left-1/4 w-3/4 h-2/3 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-20 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                    </div>
+                    <div class="text-xs font-cyber tracking-wider">NEOHACK TERMINAL v3.1.4</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
                         </button>
-                    </div>
-                    
-                    <div class="game-card w-72">
-                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/image/1abe9097263448ce6b280ef2e45f5a15~tplv-be4g95zd3a-image.jpeg?rk3s=542c0f93&x-expires=1781362061&x-signature&x-signature=573PT1p2uB8emGaXxC68mD86KtU%3D" alt="我的城堡" class="w-full h-40 object-cover rounded-lg mb-4">
-                        <h3 class="text-xl font-bold text-secondary mb-2">我的城堡</h3>
-                        <p class="text-gray-600 mb-4">查看你收集的碎片和建造的城堡</p>
-                        <button id="my-castle-btn" class="btn-secondary w-full">
-                            <i class="fa fa-castle mr-2"></i>我的城堡
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
                         </button>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 max-w-2xl w-full">
-                    <h3 class="text-xl font-bold text-primary mb-4">学习进度</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="text-sm font-medium">一年级数学</span>
-                                <span class="text-sm font-medium" id="grade1-progress">0%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div id="grade1-bar" class="progress-value" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="text-sm font-medium">二年级数学</span>
-                                <span class="text-sm font-medium">0%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-value" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 地图页面 -->
-            <section id="map-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-welcome-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">数学城堡地图</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div class="relative bg-blue-100 rounded-2xl overflow-hidden p-4 mb-8">
-                    <div class="relative z-10 flex flex-wrap justify-center gap-6 py-8">
-                        <!-- 数字王国 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="number-kingdom">
-                            <div class="w-24 h-24 mx-auto bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-primary">123</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-primary mb-2">数字王国</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习数字认知和计数</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 计算森林 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="calculation-forest">
-                            <div class="w-24 h-24 mx-auto bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <span class="text-4xl font-bold text-secondary">+−</span>
-                            </div>
-                            <h3 class="text-xl font-bold text-secondary mb-2">计算森林</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习加减法运算</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 几何城堡 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="geometry-castle">
-                            <div class="w-24 h-24 mx-auto bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-square-o text-4xl text-accent"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-accent mb-2">几何城堡</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习图形认知</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                        
-                        <!-- 时间之塔 -->
-                        <div class="castle-area bg-white rounded-xl shadow-lg p-4 w-64 text-center cursor-pointer" data-area="time-tower">
-                            <div class="w-24 h-24 mx-auto bg-ocean bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                                <i class="fa fa-clock-o text-4xl text-ocean"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-ocean mb-2">时间之塔</h3>
-                            <p class="text-gray-600 text-sm mb-4">学习认识时间</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-xs text-gray-500">一年级</span>
-                                <span class="bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full">已解锁</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏区域页面 -->
-            <section id="game-area-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-map-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回地图
-                    </button>
-                    <h2 id="game-area-title" class="text-2xl font-bold text-primary">数字王国</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div id="game-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    <!-- 游戏卡片将通过JavaScript动态生成 -->
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 数字配对 -->
-            <section id="number-matching-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">数字配对游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="game-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <p class="text-gray-600 mb-6 text-center">将数字与对应的数量匹配起来吧！</p>
-                    
-                    <div id="matching-game-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <!-- 游戏卡片将通过JavaScript动态生成 -->
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-matching-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
                         </button>
                     </div>
                 </div>
-                
-                <div id="matching-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
+                <div class="window-content h-[calc(100%-22px)] p-3 font-mono text-sm overflow-y-auto">
+                    <div class="mb-2">
+                        <span class="text-neon-blue">Initializing NeoHack Terminal...</span>
                     </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 加法运算 -->
-            <section id="addition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">加法冒险</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="addition-timer" class="font-bold">00:30</span>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Loading system modules...</span>
                     </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div id="addition-question" class="text-center mb-8">
-                        <div class="flex justify-center items-center mb-4">
-                            <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold text-primary mr-4">
-                                <span id="addition-num1">3</span>
-                            </div>
-                            <div class="text-3xl font-bold text-gray-600 mr-4">+</div>
-                            <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center text-2xl font-bold text-primary mr-4">
-                                <span id="addition-num2">2</span>
-                            </div>
-                            <div class="text-3xl font-bold text-gray-600 mr-4">=</div>
-                            <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center text-2xl font-bold text-gray-400">
-                                <input type="number" id="addition-answer" class="w-full h-full text-center text-2xl font-bold border-none focus:outline-none" placeholder="?">
-                            </div>
-                        </div>
-                        <p class="text-gray-600">请输入正确的答案</p>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Establishing secure connection...</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-terminal-green">Connection established. Welcome back, <span class="text-neon-blue">NEOPHYTE</span></span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-warning-red">[WARNING] System detected unauthorized access attempts</span>
+                    </div>
+                    <div class="mb-2">
+                        <span class="text-warning-red">[WARNING] Activating defensive protocols</span>
+                    </div>
+                    <div class="mb-4">
+                        <span class="text-terminal-green">Defensive protocols activated successfully</span>
                     </div>
                     
-                    <div class="flex justify-center">
-                        <button id="check-addition-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
+                    <div class="terminal-line mb-1">
+                        <span class="text-neon-blue">neohack@system:~$</span>
+                        <span id="terminalInput" class="terminal-cursor ml-2"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hacking Tools Window -->
+            <div id="toolsWindow" class="absolute top-1/3 right-1/4 w-1/4 h-1/2 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-10 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                    </div>
+                    <div class="text-xs font-cyber tracking-wider">HACKING TOOLS</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
+                        </button>
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
+                        </button>
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
                         </button>
                     </div>
                 </div>
-                
-                <div id="addition-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="addition-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="addition-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="addition-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="addition-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="addition-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 图形认知 -->
-            <section id="shape-recognition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">图形认知游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="shape-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div class="text-center mb-6">
-                        <p class="text-gray-600 mb-2">请选择正确的图形：</p>
-                        <h3 id="shape-question" class="text-2xl font-bold text-accent mb-6">正方形-6">正方形</h3>
-                        
-                        <div id="shape-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <!-- 图形选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-shape-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
+                <div class="window-content h-[calc(100%-22px)] p-3">
+                    <div class="grid grid-cols-1 gap-3">
+                        <button id="ipScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>IP Scanner</span>
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <button id="passCrackBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Password Cracker</span>
+                            <i class="fa fa-key"></i>
+                        </button>
+                        <button id="portScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Port Scanner</span>
+                            <i class="fa fa-plug"></i>
+                        </button>
+                        <button id="vulnScanBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Vulnerability Scan</span>
+                            <i class="fa fa-shield"></i>
+                        </button>
+                        <button id="ddosBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>DDoS Attack</span>
+                            <i class="fa fa-bolt"></i>
+                        </button>
+                        <button id="dataExtractBtn" class="w-full py-2 px-3 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-left text-sm flex items-center justify-between">
+                            <span>Data Extraction</span>
+                            <i class="fa fa-download"></i>
                         </button>
                     </div>
                 </div>
-                
-                <div id="shape-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="shape-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="shape-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="shape-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="shape-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="shape-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
-                        </div>
+            </div>
+            
+            <!-- System Status Window -->
+            <div id="statusWindow" class="absolute bottom-1/4 right-4 w-1/5 h-1/3 bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg z-10 animate-fade-in glass-effect">
+                <div class="window-drag bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                        <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                        <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
                     </div>
-                </div>
-            </section>
-
-            <!-- 游戏页面 - 时间认识 -->
-            <section id="time-recognition-game" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button class="back-to-area-btn flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回区域
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">时间认识游戏</h2>
-                    <div class="flex items-center">
-                        <i class="fa fa-clock-o text-secondary mr-2"></i>
-                        <span id="time-timer" class="font-bold">00:30</span>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
-                    <div class="text-center mb-6">
-                        <p class="text-gray-600 mb-2">请选择正确的时间：</p>
-                        
-                        <div id="clock-container" class="w-48 h-48 mx-auto relative mb-6">
-                            <div class="w-full h-full rounded-full border-8 border-ocean bg-white"></div>
-                            <div class="absolute inset-0">
-                                <div class="h-1 w-1 bg-gray-400 absolute top-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute bottom-0 left-1/2 transform -translate-x-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute left-0 top-1/2 transform -translate-y-1/2"></div>
-                                <div class="h-1 w-1 bg-gray-400 absolute right-0 top-1/2 transform -translate-y-1/2"></div>
-                            </div>
-                            <div id="hour-hand" class="absolute top-1/2 left-1/2 w-1 h-1/3 bg-gray-800 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <div id="minute-hand" class="absolute top-1/2 left-1/2 w-1 h-2/5 bg-gray-600 origin-bottom transform -translate-x-1/2 -translate-y-full"></div>
-                            <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-ocean rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-                        </div>
-                        
-                        <div id="time-options" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                            <!-- 时间选项将通过JavaScript动态生成 -->
-                        </div>
-                    </div>
-                    
-                    <div class="flex justify-center">
-                        <button id="check-time-btn" class="btn-primary">
-                            <i class="fa fa-check mr-2"></i>检查答案
+                    <div class="text-xs font-cyber tracking-wider">SYSTEM STATUS</div>
+                    <div class="flex space-x-3">
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="minimize">
+                            <i class="fa fa-window-minimize"></i>
+                        </button>
+                        <button class="text-xs hover:text-neon-blue transition-colors duration-300 window-action" data-action="maximize">
+                            <i class="fa fa-window-maximize"></i>
+                        </button>
+                        <button class="text-xs hover:text-warning-red transition-colors duration-300 window-action" data-action="close">
+                            <i class="fa fa-times"></i>
                         </button>
                     </div>
                 </div>
-                
-                <div id="time-result" class="bg-white rounded-xl shadow-lg p-6 hidden">
-                    <div class="text-center">
-                        <div id="time-result-icon" class="w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4"></div>
-                        <h3 id="time-result-title" class="text-2xl font-bold mb-2"></h3>
-                        <p id="time-result-message" class="text-gray-600 mb-6"></p>
-                        <div class="flex justify-center space-x-4">
-                            <button id="time-play-again-btn" class="btn-secondary">
-                                <i class="fa fa-refresh mr-2"></i>再玩一次
-                            </button>
-                            <button id="time-next-level-btn" class="btn-primary">
-                                <i class="fa fa-arrow-right mr-2"></i>返回区域
-                            </button>
+                <div class="window-content h-[calc(100%-22px)] p-3">
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>CPU Usage</span>
+                            <span id="cpuUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="cpuBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>Memory Usage</span>
+                            <span id="memUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="memBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span>Network Activity</span>
+                            <span id="netUsage">0%</span>
+                        </div>
+                        <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden">
+                            <div id="netBar" class="h-full bg-terminal-green" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-xs space-y-1">
+                        <div class="flex justify-between">
+                            <span>System Temp:</span>
+                            <span id="sysTemp">32°C</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Processes:</span>
+                            <span id="processes">142</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Uptime:</span>
+                            <span id="uptime">00:00:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Connections:</span>
+                            <span id="connections">12</span>
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- 我的城堡页面 -->
-            <section id="my-castle-screen" class="hidden">
-                <div class="flex justify-between items-center mb-6">
-                    <button id="back-to-welcome-from-castle-btn" class="flex items-center text-primary">
-                        <i class="fa fa-arrow-left mr-2"></i>返回
-                    </button>
-                    <h2 class="text-2xl font-bold text-primary">我的城堡</h2>
-                    <div class="w-12"></div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="md:col-span-2">
-                        <div class="bg-white rounded-xl shadow-lg p-6 h-full">
-                            <h3 class="text-xl font-bold text-primary mb-4">已建造的城堡</h3>
-                            
-                            <div id="castle-display" class="relative h-64 md:h-80 bg-blue-50 rounded-lg overflow-hidden mb-4">
-                                <div id="castle-image" class="absolute inset-0 flex items-center justify-center">
-                                    <p class="text-gray-500">收集足够的碎片来建造你的第一座城堡吧！</p>
-                                </div>
-                            </div>
-                            
-                            <div class="grid grid-cols-3 gap-4">
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-primary bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-home text-2xl text-primary"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">城堡数量</p>
-                                    <p class="font-bold text-primary" id="castle-count">0</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-secondary bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-puzzle-piece text-2xl text-secondary"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">已收集碎片</p>
-                                    <p class="font-bold text-secondary" id="pieces-count">0/10</p>
-                                </div>
-                                <div class="text-center">
-                                    <div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 rounded-full flex items-center justify-center mb-2">
-                                        <i class="fa fa-star text-2xl text-accent"></i>
-                                    </div>
-                                    <p class="text-sm text-gray-600">完成游戏</p>
-                                    <p class="font-bold text-accent" id="games-count">0</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <div class="bg-white rounded-xl shadow-lg p-6 h-full">
-                            <h3 class="text-xl font-bold text-secondary mb-4">收集的碎片</h3>
-                            
-                            <div id="collected-pieces" class="grid grid-cols-3 gap-4 mb-6">
-                                <!-- 碎片将通过JavaScript动态生成 -->
-                            </div>
-                            
-                            <div class="flex justify-center">
-                                <button id="build-castle-btn" class="btn-secondary w-full" disabled>
-                                    <i class="fa fa-cogs mr-2"></i>建造城堡
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
-
-        <!-- 底部导航栏 -->
-        <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-3xl py-3 px-6">
-            <div class="flex justify-around">
-                <button id="nav-home-btn" class="flex flex-col items-center text-primary">
-                    <i class="fa fa-home text-2xl"></i>
-                    <span class="text-xs mt-1">首页</span>
-                </button>
-                <button id="nav-map-btn" class="flex flex-col items-center text-gray-400">
-                    <i class="fa fa-map text-2xl"></i>
-                    <span class="text-xs mt-1">地图</span>
-                </button>
-                <button id="nav-castle-btn" class="flex flex-col items-center text-gray-400">
-                    <i class="fa fa-castle text-2xl"></i>
-                    <span class="text-xs mt-1">城堡</span>
+        
+        <!-- Footer/Status Bar -->
+        <footer class="bg-darker-bg border-t border-terminal-green/30 py-1 px-4 text-xs flex justify-between items-center">
+            <div>
+                <span class="text-terminal-green/80">NEOHACK v3.1.4</span>
+            </div>
+            <div>
+                <span class="text-terminal-green/80">SECURITY STATUS: <span class="text-terminal-green">SAFE</span></span>
+            </div>
+            <div>
+                <span class="text-terminal-green/80">CONNECTION: <span class="text-terminal-green">ONLINE</span></span>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Modal for Hacking Actions -->
+    <div id="hackModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden">
+        <div class="bg-panel-bg border border-terminal-green/50 rounded-sm shadow-lg w-1/2 max-w-2xl animate-fade-in glass-effect">
+            <div class="bg-darker-bg border-b border-terminal-green/30 py-1 px-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                </div>
+                <div id="modalTitle" class="text-xs font-cyber tracking-wider">HACKING OPERATION</div>
+                <button id="closeModal" class="text-xs hover:text-warning-red transition-colors duration-300">
+                    <i class="fa fa-times"></i>
                 </button>
             </div>
-        </nav>
+            <div id="modalContent" class="p-4 h-64 overflow-y-auto">
+                <!-- Content will be dynamically inserted here -->
+            </div>
+            <div class="bg-darker-bg border-t border-terminal-green/30 py-2 px-3 flex justify-end">
+                <button id="cancelHack" class="px-3 py-1 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-xs mr-2">
+                    Cancel
+                </button>
+                <button id="executeHack" class="px-3 py-1 bg-warning-red/20 hover:bg-warning-red/30 border border-warning-red/50 hover:border-warning-red transition-all duration-300 text-xs">
+                    Execute
+                </button>
+            </div>
+        </div>
     </div>
-
-    <!-- 消息提示 -->
-    <div id="message-toast" class="fixed top-4 right-4 bg-white rounded-lg shadow-lg p-4 transform translate-x-full transition-transform duration-300 z-50 max-w-xs">
-        <div class="flex items-center">
-            <div id="message-icon" class="w-8 h-8 rounded-full flex items-center justify-center mr-3"></div>
-            <div>
-                <h4 id="message-title" class="font-bold text-sm"></h4>
-                <p id="message-text" class="text-xs text-gray-600"></p>
+    
+    <!-- Warning Modal -->
+    <div id="warningModal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center hidden">
+        <div class="bg-panel-bg border border-warning-red/50 rounded-sm shadow-lg w-1/3 max-w-md animate-fade-in glass-effect">
+            <div class="bg-darker-bg border-b border-warning-red/50 py-1 px-3 flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-2 h-2 rounded-full bg-warning-red"></div>
+                    <div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <div class="w-2 h-2 rounded-full bg-terminal-green"></div>
+                </div>
+                <div class="text-xs font-cyber tracking-wider text-warning-red">SECURITY ALERT</div>
+                <button id="closeWarning" class="text-xs hover:text-warning-red transition-colors duration-300">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="text-warning-red text-center mb-4">
+                    <i class="fa fa-exclamation-triangle text-2xl"></i>
+                </div>
+                <p id="warningMessage" class="text-sm mb-4">Unauthorized access detected! This action may trigger security protocols.</p>
+                <div class="flex justify-center">
+                    <button id="continueAction" class="px-3 py-1 bg-warning-red/20 hover:bg-warning-red/30 border border-warning-red/50 hover:border-warning-red transition-all duration-300 text-xs mr-2">
+                        Continue
+                    </button>
+                    <button id="abortAction" class="px-3 py-1 bg-darker-bg hover:bg-dark-bg border border-terminal-green/50 hover:border-neon-blue transition-all duration-300 text-xs">
+                        Abort
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 游戏数据
-        const gameData = {
-            player: {
-                name: "诺诺",
-                score: 0,
-                pieces: 0,
-                completedGames: 0,
-                builtCastles: 0
-            },
-            gameProgress: {
-                numberKingdom: { level: 1, completed: 0 },
-                calculationForest: { level: 1, completed: 0 },
-                geometryCastle: { level: 1, completed: 1, completed: 0 },
-                timeTower: { level: 1, completed: 0 }
-            }
-        };
-
-        // 游戏内容配置
-        const gameContent = {
-            areas: {
-                "number-kingdom": {
-                    title: "数字王国",
-                    color: "primary",
-                    description: "学习数字认知和计数",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "number-matching",
-                            name: "数字配对",
-                            description: "将数字与数量匹配起来",
-                            icon: "🔢",
-                            gameScreen: "number-matching-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "calculation-forest": {
-                    title: "计算森林",
-                    color: "secondary",
-                    description: "学习加减法运算",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "addition-game",
-                            name: "加法冒险",
-                            description: "学习10以内的加法",
-                            icon: "➕",
-                            gameScreen: "addition-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "geometry-castle": {
-                    title: "几何城堡",
-                    color: "accent",
-                    description: "学习图形认知",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "shape-recognition",
-                            name: "图形认知",
-                            description: "认识各种几何图形",
-                            icon: "◻️",
-                            gameScreen: "shape-recognition-game",
-                            difficulty: 1
-                        }
-                    ]
-                },
-                "time-tower": {
-                    title: "时间之塔",
-                    color: "ocean",
-                    description: "学习认识时间",
-                    grade: "一年级",
-                    games: [
-                        {
-                            id: "time-recognition",
-                            name: "时间认识",
-                            description: "认识钟表上的时间",
-                            icon: "🕐",
-                            gameScreen: "time-recognition-game",
-                            difficulty: 1
-                        }
-                    ]
-                }
-            },
-            // 游戏数据配置
-            numberMatching: {
-                level1: { numbers: [1, 2, 3, 4, 5, 6], timeLimit: 30 },
-                level2: { numbers: [7, 8, 9, 10, 11, 12], timeLimit: 40 }
-            },
-            addition: {
-                level1: { minNum: 1, maxNum: 5, questions: 5, timeLimit: 30 },
-                level2: { minNum: 1, maxNum: 10, questions: 5, timeLimit: 40 }
-            },
-            shapeRecognition: {
-                level1: { shapes: ["正方形", "圆形", "三角形", "长方形"], timeLimit: 30 },
-                level2: { shapes: ["正方形", "圆形", "三角形", "长方形", "平行四边形", "梯形"], timeLimit: 40 }
-            },
-            timeRecognition: {
-                level1: { 
-                    times: [
-                        { hour: 1, minute: 0 }, { hour: 3, minute: 0 }, 
-                        { hour: 6, minute: 0 }, { hour: 9, minute: 0 }, { hour: 12, minute: 0 }
-                    ], 
-                    timeLimit: 30 
-                }
-            }
-        };
-
-        // 当前游戏状态
-        let currentState = {
-            screen: "welcome-screen",
-            currentArea: null,
-            currentGame: null,
-            currentLevel: 1,
-            gameTimer: null,
-            remainingTime: 0,
-            selectedCards: [],
-            matchedPairs: 0
-        };
-
-        // DOM 元素引用
-        const screens = {
-            welcome: document.getElementById('welcome-screen'),
-            map: document.getElementById('map-screen'),
-            gameArea: document.getElementById('game-area-screen'),
-            numberMatching: document.getElementById('number-matching-game'),
-            addition: document.getElementById('addition-game'),
-            shapeRecognition: document.getElementById('shape-recognition-game'),
-            timeRecognition: document.getElementById('time-recognition-game'),
-            myCastle: document.getElementById('my-castle-screen')
-        };
-
-        // 初始化游戏
-        function initGame() {
-            console.log('🎮 诺诺的数学城堡 - 开始初始化...');
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+            const columns = Math.floor(window.innerWidth / 20);
             
-            // 加载保存的游戏数据
-            loadGameData();
-            
-            // 绑定事件监听器
-            bindEventListeners();
-            
-            // 更新UI显示
-            updateUI();
-            
-            console.log('✅ 游戏初始化完成！');
-        }
-
-        // 加载保存的游戏数据
-        function loadGameData() {
-            const savedData = localStorage.getItem('mathCastleData');
-            if (savedData) {
-                try {
-                    const parsedData = JSON.parse(savedData);
-                    gameData.player = parsedData.player || gameData.player;
-                    gameData.gameProgress = parsedData.gameProgress || gameData.gameProgress;
-                    console.log('📥 已加载保存的游戏数据');
-                } catch (error) {
-                    console.error('❌ 加载游戏数据失败:', error);
-                }
-            }
-        }
-
-        // 保存游戏数据
-        function saveGameData() {
-            try {
-                const dataToSave = { player: gameData.player, gameProgress: gameData.gameProgress };
-                localStorage.setItem('mathCastleData', JSON.stringify(dataToSave));
-                console.log('💾 游戏数据已保存');
-            } catch (error) {
-                console.error('❌ 保存游戏数据失败:', error);
-            }
-        }
-
-        // 更新UI
-        function updateUI() {
-            // 更新玩家信息
-            document.getElementById('user-score').textContent = gameData.player.score;
-            document.getElementById('user-pieces').textContent = gameData.player.pieces;
-            
-            // 更新进度显示
-            updateProgressDisplay();
-            
-            // 更新城堡页面
-            updateCastlePage();
-            
-            // 更新底部导航
-            updateNavigation(currentState.screen);
-        }
-
-        // 更新进度显示
-        function updateProgressDisplay() {
-            const totalGames = 4; // 四个主要游戏
-            const completedGames = gameData.player.completedGames;
-            const progress = Math.min(Math.round((completedGames / totalGames) * 100), 100);
-            
-            document.getElementById('grade1-progress').textContent = `${progress}%`;
-            document.getElementById('grade1-bar').style.width = `${progress}%`;
-        }
-
-        // 绑定事件监听器
-        function bindEventListeners() {
-            console.log('🔗 开始绑定事件监听器...');
-            
-            // 欢迎页面按钮
-            document.getElementById('start-adventure-btn').addEventListener('click', () => showScreen('map'));
-            document.getElementById('my-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            
-            // 地图页面按钮
-            document.getElementById('back-to-welcome-btn').addEventListener('click', () => showScreen('welcome'));
-            
-            // 区域点击事件
-            document.querySelectorAll('.castle-area').forEach(area => {
-                area.addEventListener('click', () => {
-                    const areaId = area.dataset.area;
-                    console.log('🗺️ 点击区域:', areaId);
-                    showGameArea(areaId);
-                });
-            });
-            
-            // 返回地图按钮
-            document.getElementById('back-to-map-btn').addEventListener('click', () => showScreen('map'));
-            
-            // 返回区域按钮
-            document.querySelectorAll('.back-to-area-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    stopGameTimer();
-                    showScreen('gameArea');
-                });
-            });
-            
-            // 我的城堡页面按钮
-            document.getElementById('back-to-welcome-from-castle-btn').addEventListener('click', () => showScreen('welcome'));
-            document.getElementById('build-castle-btn').addEventListener('click', buildCastle);
-            
-            // 底部导航按钮
-            document.getElementById('nav-home-btn').addEventListener('click', () => showScreen('welcome'));
-            document.getElementById('nav-map-btn').addEventListener('click', () => showScreen('map'));
-            document.getElementById('nav-castle-btn').addEventListener('click', () => showScreen('myCastle'));
-            
-            // 游戏相关按钮
-            bindGameEventListeners();
-            
-            console.log('✅ 事件监听器绑定完成！');
-        }
-
-        // 绑定游戏相关事件监听器
-        function bindGameEventListeners() {
-            // 数字配对游戏按钮
-            document.getElementById('check-matching-btn')?.addEventListener('click', checkNumberMatching);
-            document.getElementById('play-again-btn')?.addEventListener('click', playNumberMatchingAgain);
-            document.getElementById('next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 加法游戏按钮
-            document.getElementById('check-addition-btn')?.addEventListener('click', checkAddition);
-            document.getElementById('addition-play-again-btn')?.addEventListener('click', playAdditionAgain);
-            document.getElementById('addition-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 图形认知游戏按钮
-            document.getElementById('check-shape-btn')?.addEventListener('click', checkShapeRecognition);
-            document.getElementById('shape-play-again-btn')?.addEventListener('click', playShapeRecognitionAgain);
-            document.getElementById('shape-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-            
-            // 时间认识游戏按钮
-            document.getElementById('check-time-btn')?.addEventListener('click', checkTimeRecognition);
-            document.getElementById('time-play-again-btn')?.addEventListener('click', playTimeRecognitionAgain);
-            document.getElementById('time-next-level-btn')?.addEventListener('click', () => showScreen('gameArea'));
-        }
-
-        // 显示指定屏幕
-        function showScreen(screenName) {
-            console.log('📺 切换到屏幕:', screenName);
-            
-            // 隐藏所有屏幕
-            Object.values(screens).forEach(screen => {
-                if (screen) screen.classList.add('hidden');
-            });
-            
-            // 显示指定屏幕
-            if (screens[screenName]) {
-                screens[screenName].classList.remove('hidden');
-                currentState.screen = screenName;
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'absolute top-0 text-[10px] text-terminal-green/30 data-stream';
+                column.style.left = `${i * 20}px`;
+                column.style.animationDuration = `${Math.random() * 10 + 5}s`;
+                column.style.animationDelay = `${Math.random() * 5}s`;
                 
-                // 更新底部导航栏
-                updateNavigation(screenName);
-            } else {
-                console.error('❌ 屏幕不存在:', screenName);
+                let text = '';
+                const length = Math.floor(Math.random() * 50) + 20;
+                for (let j = 0; j < length; j++) {
+                    text += characters[Math.floor(Math.random() * characters.length)] + '<br>';
+                }
+                column.innerHTML = text;
+                
+                matrixRain.appendChild(column);
             }
         }
-
-        // 更新底部导航栏
-        function updateNavigation(screenName) {
-            const navButtons = {
-                home: document.getElementById('nav-home-btn'),
-                map: document.getElementById('nav-map-btn'),
-                castle: document.getElementById('nav-castle-btn')
+        
+        // Update system time
+        function updateSystemTime() {
+            const now = new Date();
+            const timeString = now.toTimeString().split(' ')[0];
+            document.getElementById('systemTime').textContent = timeString;
+            
+            // Update uptime (simulated)
+            const uptimeElement = document.getElementById('uptime');
+            if (uptimeElement) {
+                const [hours, minutes, seconds] = uptimeElement.textContent.split(':').map(Number);
+                let newSeconds = seconds + 1;
+                let newMinutes = minutes;
+                let newHours = hours;
+                
+                if (newSeconds >= 60) {
+                    newSeconds = 0;
+                    newMinutes++;
+                }
+                
+                if (newMinutes >= 60) {
+                    newMinutes = 0;
+                    newHours++;
+                }
+                
+                uptimeElement.textContent = `${String(newHours).padStart(2, '0')}:${String(newMinutes).padStart(2, '0')}:${String(newSeconds).padStart(2, '0')}`;
+            }
+        }
+        
+        // Simulate system metrics
+        function updateSystemMetrics() {
+            // CPU Usage
+            const cpuUsage = Math.floor(Math.random() * 30) + 10;
+            document.getElementById('cpuUsage').textContent = `${cpuUsage}%`;
+            document.getElementById('cpuBar').style.width = `${cpuUsage}%`;
+            
+            // Memory Usage
+            const memUsage = Math.floor(Math.random() * 40) + 30;
+            document.getElementById('memUsage').textContent = `${memUsage}%`;
+            document.getElementById('memBar').style.width = `${memUsage}%`;
+            
+            // Network Activity
+            const netUsage = Math.floor(Math.random() * 60) + 5;
+            document.getElementById('netUsage').textContent = `${netUsage}%`;
+            document.getElementById('netBar').style.width = `${netUsage}%`;
+            
+            // System Temp (simulated fluctuation)
+            const baseTemp = 32;
+            const tempVariation = Math.floor(Math.random() * 6) - 2; // -2 to +3
+            document.getElementById('sysTemp').textContent = `${baseTemp + tempVariation}°C`;
+            
+            // Processes (slight variation)
+            const baseProcesses = 142;
+            const processVariation = Math.floor(Math.random() * 10) - 4; // -4 to +5
+            document.getElementById('processes').textContent = `${baseProcesses + processVariation}`;
+            
+            // Connections (more variation)
+            const baseConnections = 12;
+            const connVariation = Math.floor(Math.random() * 10) - 3; // -3 to +6
+            const newConnections = Math.max(1, baseConnections + connVariation);
+            document.getElementById('connections').textContent = `${newConnections}`;
+            
+            // Update taskbar metrics
+            document.querySelector('header .flex-1 + div span:nth-child(2)').textContent = `CPU: ${cpuUsage}%`;
+            document.querySelector('header .flex-1 + div span:nth-child(3)').textContent = `MEM: ${memUsage}%`;
+        }
+        
+        // Terminal input handling
+        function setupTerminal() {
+            const terminalInput = document.getElementById('terminalInput');
+            const terminalWindow = document.querySelector('#terminalWindow .window-content');
+            let currentInput = '';
+            let isCommandExecuting = false;
+            
+            // Command responses
+            const commandResponses = {
+                'help': `
+                    <div class="mb-2"><span class="text-neon-blue">Available commands:</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">help</span> - Display this help message</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">scan</span> - Scan for vulnerable systems</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">crack [target]</span> - Attempt password cracking</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">status</span> - Show system status</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">clear</span> - Clear terminal</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">exit</span> - Exit terminal</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">hack [system]</span> - Initiate system hack</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">trace [ip]</span> - Trace IP address</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">firewall</span> - Manage firewall settings</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">encrypt [message]</span> - Encrypt message</div>
+                `,
+                'scan': `
+                    <div class="mb-2"><span class="text-neon-blue">Initiating network scan...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Scanning subnet 192.168.1.0/24...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Found 24 active hosts</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.1</span> - <span class="text-yellow-500">Router</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.5</span> - <span class="text-warning-red">Vulnerable Server</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.12</span> - <span class="text-terminal-green">Workstation</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">192.168.1.27</span> - <span class="text-warning-red">Unsecured Database</span></div>
+                    <div class="mb-2"><span class="text-neon-blue">Scan complete. 2 vulnerabilities detected.</span></div>
+                `,
+                'status': `
+                    <div class="mb-2"><span class="text-neon-blue">System Status:</span></div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">CPU Usage:</span> ${Math.floor(Math.random() * 30) + 10}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Memory Usage:</span> ${Math.floor(Math.random() * 40) + 30}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Network Activity:</span> ${Math.floor(Math.random() * 60) + 5}%</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">System Temperature:</span> ${Math.floor(Math.random() * 6) + 30}°C</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Processes Running:</span> ${Math.floor(Math.random() * 20) + 130}</div>
+                    <div class="mb-1 pl-4"><span class="text-terminal-green">Network Connections:</span> ${Math.floor(Math.random() * 15) + 5}</div>
+                    <div class="mb-2"><span class="text-terminal-green">System uptime:</span> ${document.getElementById('uptime').textContent}</div>
+                `,
+                'clear': function() {
+                    // Clear terminal content except for the prompt
+                    const terminalLines = terminalWindow.querySelectorAll('.terminal-line');
+                    const lastLine = terminalLines[terminalLines.length - 1];
+                    
+                    while (terminalWindow.firstChild) {
+                        terminalWindow.removeChild(terminalWindow.firstChild);
+                    }
+                    
+                    terminalWindow.appendChild(lastLine);
+                    return '';
+                },
+                'exit': `
+                    <div class="mb-2"><span class="text-neon-blue">Closing terminal session...</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Session closed. Goodbye, NEOPHYTE.</span></div>
+                `,
+                'default': `
+                    <div class="mb-2"><span class="text-warning-red">Command not recognized: ${currentInput}</span></div>
+                    <div class="mb-2"><span class="text-terminal-green">Type 'help' for available commands</span></div>
+                `
             };
             
-            // 重置所有按钮样式
-            Object.values(navButtons).forEach(btn => {
-                btn.classList.remove('text-primary');
-                btn.classList.add('text-gray-400');
+            // Handle keydown events
+            document.addEventListener('keydown', function(e) {
+                if (isCommandExecuting) return;
+                
+                // Only process if terminal window is focused or we're typing
+                const isTerminalFocused = document.activeElement === document.body && 
+                                          !document.querySelector('input, textarea:focus');
+                
+                if (!isTerminalFocused && currentInput === '') return;
+                
+                if (e.key === 'Enter') {
+                    // Execute command
+                    if (currentInput.trim() !== '') {
+                        isCommandExecuting = true;
+                        
+                        // Create new line for response
+                        const responseLine = document.createElement('div');
+                        responseLine.className = 'mb-2';
+                        terminalWindow.appendChild(responseLine);
+                        
+                        // Get command (ignoring parameters for simplicity)
+                        const command = currentInput.split(' ')[0].toLowerCase();
+                        
+                        // Process command
+                        setTimeout(() => {
+                            let response = '';
+                            
+                            if (commandResponses[command]) {
+                                if (typeof commandResponses[command] === 'function') {
+                                    response = commandResponses[command]();
+                                } else {
+                                    response = commandResponses[command];
+                                }
+                            } else {
+                                response = commandResponses['default'].replace('${currentInput}', currentInput);
+                            }
+                            
+                            responseLine.innerHTML = response;
+                            
+                            // Create new prompt line
+                            const newPromptLine = document.createElement('div');
+                            newPromptLine.className = 'terminal-line mb-1';
+                            newPromptLine.innerHTML = `
+                                <span class="text-neon-blue">neohack@system:~$</span>
+                                <span id="terminalInput" class="terminal-cursor ml-2"></span>
+                            `;
+                            
+                            terminalWindow.appendChild(newPromptLine);
+                            terminalInput = document.getElementById('terminalInput');
+                            currentInput = '';
+                            isCommandExecuting = false;
+                            
+                            // Scroll to bottom
+                            terminalWindow.scrollTop = terminalWindow.scrollHeight;
+                        }, 500);
+                    }
+                    
+                    // Clear input
+                    currentInput = '';
+                    terminalInput.textContent = '';
+                } else if (e.key === 'Backspace') {
+                    // Handle backspace
+                    if (currentInput.length > 0) {
+                        currentInput = currentInput.slice(0, -1);
+                        terminalInput.textContent = currentInput;
+                    }
+                } else if (e.key.length === 1) {
+                    // Handle regular key input
+                    currentInput += e.key;
+                    terminalInput.textContent = currentInput;
+                }
+                
+                // Scroll to bottom
+                terminalWindow.scrollTop = terminalWindow.scrollHeight;
+            });
+        }
+        
+        // Window management
+        function setupWindowManagement() {
+            const windows = document.querySelectorAll('#terminalWindow, #toolsWindow, #statusWindow');
+            
+            windows.forEach(window => {
+                const dragHandle = window.querySelector('.window-drag');
+                let isDragging = false;
+                let offsetX, offsetY;
+                
+                // Make windows draggable
+                dragHandle.addEventListener('mousedown', (e) => {
+                    if (e.target.tagName === 'BUTTON' || e.target.parentElement.tagName === 'BUTTON') return;
+                    
+                    isDragging = true;
+                    offsetX = e.clientX - window.getBoundingClientRect().left;
+                    offsetY = e.clientY - window.getBoundingClientRect().top;
+                    
+                    // Bring window to front
+                    windows.forEach(w => w.style.zIndex = '10');
+                    window.style.zIndex = '20';
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    
+                    // Constrain to viewport
+                    const maxX = window.innerWidth - window.offsetWidth;
+                    const maxY = window.innerHeight - window.offsetHeight;
+                    
+                    window.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+                    window.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+                
+                // Window actions (minimize, maximize, close)
+                const actionButtons = window.querySelectorAll('.window-action');
+                actionButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const action = button.getAttribute('data-action');
+                        
+                        if (action === 'close') {
+                            window.classList.add('hidden');
+                        } else if (action === 'minimize') {
+                            // Simple minimize effect
+                            window.style.transform = 'translateY(100vh)';
+                            setTimeout(() => {
+                                window.classList.add('hidden');
+                                window.style.transform = '';
+                            }, 300);
+                        } else if (action === 'maximize') {
+                            // Toggle maximize
+                            if (window.style.width === '100%' && window.style.height === 'calc(100vh - 44px)') {
+                                // Restore original size and position
+                                window.style.width = '';
+                                window.style.height = '';
+                                window.style.left = '';
+                                window.style.top = '';
+                            } else {
+                                // Maximize
+                                window.style.width = '100%';
+                                window.style.height = 'calc(100vh - 44px)';
+                                window.style.left = '0';
+                                window.style.top = '22px';
+                            }
+                        }
+                    });
+                });
+            });
+        }
+        
+        // Hacking tools functionality
+        function setupHackingTools() {
+            const hackModal = document.getElementById('hackModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const closeModal = document.getElementById('closeModal');
+            const cancelHack = document.getElementById('cancelHack');
+            const executeHack = document.getElementById('executeHack');
+            const warningModal = document.getElementById('warningModal');
+            const warningMessage = document.getElementById('warningMessage');
+            const closeWarning = document.getElementById('closeWarning');
+            const continueAction = document.getElementById('continueAction');
+            const abortAction = document.getElementById('abortAction');
+            
+            let currentHackType = '';
+            
+            // Tool button click handlers
+            document.getElementById('ipScanBtn').addEventListener('click', () => showWarning('IP Scanner', 'This will scan for active IP addresses on the network. This may trigger IDS systems.'));
+            document.getElementById('passCrackBtn').addEventListener('click', () => showWarning('Password Cracker', 'This will attempt to brute force passwords. This is illegal in most jurisdictions.'));
+            document.getElementById('portScanBtn').addEventListener('click', () => showWarning('Port Scanner', 'This will scan for open ports. Some systems may block your IP for suspicious activity.'));
+            document.getElementById('vulnScanBtn').addEventListener('click', () => showWarning('Vulnerability Scan', 'This will scan for system vulnerabilities. Results may be inaccurate.'));
+            document.getElementById('ddosBtn').addEventListener('click', () => showWarning('DDoS Attack', 'This will simulate a distributed denial of service attack. This is for educational purposes only.'));
+            document.getElementById('dataExtractBtn').addEventListener('click', () => showWarning('Data Extraction', 'This will attempt to extract data from the target system. This may corrupt files.'));
+            
+            // Show warning before hacking
+            function showWarning(hackType, message) {
+                currentHackType = hackType;
+                warningMessage.textContent = message;
+                warningModal.classList.remove('hidden');
+            }
+            
+            // Continue with hack after warning
+            continueAction.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+                showHackModal(currentHackType);
             });
             
-            // 设置当前页面按钮样式
-            switch (screenName) {
-                case 'welcome':
-                    navButtons.home.classList.remove('text-gray-400');
-                    navButtons.home.classList.add('text-primary');
-                    break;
-                case 'map':
-                case 'gameArea':
-                case 'numberMatching':
-                case 'addition':
-                case 'shapeRecognition':
-                case 'timeRecognition':
-                    navButtons.map.classList.remove('text-gray-400');
-                    navButtons.map.classList.add('text-primary');
-                    break;
-                case 'myCastle':
-                    navButtons.castle.classList.remove('text-gray-400');
-                    navButtons.castle.classList.add('text-primary');
-                    break;
-            }
-        }
-
-        // 显示游戏区域
-        function showGameArea(areaId) {
-            console.log('🎮 显示游戏区域:', areaId);
+            // Abort hack
+            abortAction.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+            });
             
-            const area = gameContent.areas[areaId];
-            if (!area) {
-                console.error('❌ 区域数据不存在:', areaId);
-                showMessage('区域加载失败', 'error');
-                return;
-            }
+            // Close warning
+            closeWarning.addEventListener('click', () => {
+                warningModal.classList.add('hidden');
+            });
             
-            currentState.currentArea = areaId;
-            document.getElementById('game-area-title').textContent = area.title;
-            
-            // 生成游戏列表
-            const gameList = document.getElementById('game-list');
-            if (!gameList) {
-                console.error('❌ 游戏列表元素不存在');
-                return;
-            }
-            
-            gameList.innerHTML = '';
-            
-            area.games.forEach((game, index) => {
-                console.log('🎲 生成游戏:', game.name, '索引:', index);
+            // Show hack modal
+            function showHackModal(hackType) {
+                modalTitle.textContent = hackType.toUpperCase();
+                hackModal.classList.remove('hidden');
                 
-                const gameCard = document.createElement('div');
-                gameCard.className = 'game-card';
+                // Generate appropriate content based on hack type
+                let content = '';
                 
-                const colorClass = area.color || 'primary';
+                switch(hackType) {
+                    case 'IP Scanner':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target Range: <span class="text-neon-blue">192.168.1.0/24</span></div>
+                                <div class="text-sm mb-2">Scan Type: <span class="text-neon-blue">Comprehensive</span></div>
+                                <div class="text-sm mb-2">Timeout: <span class="text-neon-blue">5000ms</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="scanResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Password Cracker':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">admin@target.com</span></div>
+                                <div class="text-sm mb-2">Method: <span class="text-neon-blue">Dictionary + Brute Force</span></div>
+                                <div class="text-sm mb-2">Speed: <span class="text-neon-blue">10,000 attempts/sec</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Cracking...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="crackResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Port Scanner':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target IP: <span class="text-neon-blue">192.168.1.5</span></div>
+                                <div class="text-sm mb-2">Port Range: <span class="text-neon-blue">1-65535</span></div>
+                                <div class="text-sm mb-2">Scan Speed: <span class="text-neon-blue">Fast</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning ports...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="portResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Vulnerability Scan':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">server.target.com</span></div>
+                                <div class="text-sm mb-2">Scan Depth: <span class="text-neon-blue">Deep</span></div>
+                                <div class="text-sm mb-2">Database: <span class="text-neon-blue">Latest</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Scanning for vulnerabilities...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="vulnResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'DDoS Attack':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">target-server.com</span></div>
+                                <div class="text-sm mb-2">Method: <span class="text-neon-blue">SYN Flood</span></div>
+                                <div class="text-sm mb-2">Intensity: <span class="text-neon-blue">High</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Launching attack...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-warning-red progress-bar"></div>
+                                </div>
+                                <div id="ddosResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                    case 'Data Extraction':
+                        content = `
+                            <div class="mb-4">
+                                <div class="text-sm mb-2">Target: <span class="text-neon-blue">database.target.com</span></div>
+                                <div class="text-sm mb-2">Data Type: <span class="text-neon-blue">User Records</span></div>
+                                <div class="text-sm mb-2">Encryption: <span class="text-neon-blue">AES-256</span></div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-xs mb-1">Extracting data...</div>
+                                <div class="h-1.5 bg-darker-bg rounded-full overflow-hidden mb-2">
+                                    <div class="h-full bg-terminal-green progress-bar"></div>
+                                </div>
+                                <div id="extractResults" class="text-xs mt-4 space-y-1 hidden"></div>
+                            </div>
+                        `;
+                        break;
+                }
                 
-                gameCard.innerHTML = `
-                    <div class="w-24 h-24 mx-auto bg-${colorClass} bg-opacity-20 rounded-full flex items-center justify-center mb-4">
-                        <span class="text-4xl font-bold text-${colorClass}">${game.icon || '?'}</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-${colorClass} mb-2">${game.name || '未知游戏'}</h3>
-                    <p class="text-gray-600 text-sm mb-4">${game.description || '暂无描述'}</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xs text-gray-500">难度: ${'★'.repeat(game.difficulty || 1)}</span>
-                        <button class="play-game-btn btn-${colorClass} w-full" data-game="${game.id}">
-                            开始游戏
-                        </button>
+                modalContent.innerHTML = content;
+            }
+            
+            // Execute hack
+            executeHack.addEventListener('click', () => {
+                const hackType = modalTitle.textContent;
+                let resultsContainer = null;
+                
+                // Disable execute button during hack
+                executeHack.disabled = true;
+                executeHack.classList.add('opacity-50');
+                
+                // Find results container based on hack type
+                switch(hackType) {
+                    case 'IP SCANNER':
+                        resultsContainer = document.getElementById('scanResults');
+                        simulateIpScan(resultsContainer);
+                        break;
+                    case 'PASSWORD CRACKER':
+                        resultsContainer = document.getElementById('crackResults');
+                        simulatePasswordCrack(resultsContainer);
+                        break;
+                    case 'PORT SCANNER':
+                        resultsContainer = document.getElementById('portResults');
+                        simulatePortScan(resultsContainer);
+                        break;
+                    case 'VULNERABILITY SCAN':
+                        resultsContainer = document.getElementById('vulnResults');
+                        simulateVulnerabilityScan(resultsContainer);
+                        break;
+                    case 'DDOS ATTACK':
+                        resultsContainer = document.getElementById('ddosResults');
+                        simulateDDoSAttack(resultsContainer);
+                        break;
+                    case 'DATA EXTRACTION':
+                        resultsContainer = document.getElementById('extractResults');
+                        simulateDataExtraction(resultsContainer);
+                        break;
+                }
+            });
+            
+            // Cancel hack
+            cancelHack.addEventListener('click', () => {
+                hackModal.classList.add('hidden');
+                resetHackModal();
+            });
+            
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                hackModal.classList.add('hidden');
+                resetHackModal();
+            });
+            
+            // Reset modal state
+            function resetHackModal() {
+                executeHack.disabled = false;
+                executeHack.classList.remove('opacity-50');
+            }
+            
+            // Simulate IP scan
+            function simulateIpScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scan in progress...</div>';
+                
+                const ipAddresses = [
+                    { ip: '192.168.1.1', type: 'Router', status: 'Online' },
+                    { ip: '192.168.1.5', type: 'Server', status: 'Vulnerable' },
+                    { ip: '192.168.1.12', type: 'Workstation', status: 'Online' },
+                    { ip: '192.168.1.27', type: 'Database', status: 'Unsecured' },
+                    { ip: '192.168.1.42', type: 'Printer', status: 'Online' },
+                    { ip: '192.168.1.69', type: 'NAS', status: 'Online' },
+                    { ip: '192.168.1.133', type: 'IoT Device', status: 'Vulnerable' },
+                    { ip: '192.168.1.254', type: 'Gateway', status: 'Online' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < ipAddresses.length) {
+                        const ip = ipAddresses[index];
+                        let statusColor = 'text-terminal-green';
+                        if (ip.status === 'Vulnerable') statusColor = 'text-warning-red';
+                        if (ip.status === 'Unsecured') statusColor = 'text-yellow-500';
+                        
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span>${ip.ip} <span class="text-neon-blue">(${ip.type})</span></span>
+                                <span class="${statusColor}">${ip.status}</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${ipAddresses.length} hosts.</div>
+                            <div class="mt-1 text-warning-red">2 vulnerabilities detected!</div>
+                        `;
+                    }
+                }, 500);
+            }
+            
+            // Simulate password cracking
+            function simulatePasswordCrack(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Cracking in progress...</div>';
+                
+                const attempts = [
+                    'Trying: password123...',
+                    'Trying: admin123...',
+                    'Trying: qwerty...',
+                    'Trying: letmein...',
+                    'Trying: 12345678...',
+                    'Trying: 123456789...',
+                    'Trying: 1234567890...',
+                    'Trying: password...',
+                    'Trying: admin...',
+                    'Trying: welcome...'
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < attempts.length - 1) {
+                        container.innerHTML = `<div class="text-warning-red">${attempts[index]}</div>`;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML = `
+                            <div class="text-warning-red">${attempts[index]}</div>
+                            <div class="mt-2 text-warning-red">Password found!</div>
+                            <div class="mt-1">Username: <span class="text-neon-blue">admin</span></div>
+                            <div class="mt-1">Password: <span class="text-neon-blue">admin@2023</span></div>
+                        `;
+                    }
+                }, 300);
+            }
+            
+            // Simulate port scan
+            function simulatePortScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scanning ports...</div>';
+                
+                const ports = [
+                    { port: 21, service: 'FTP', status: 'Open' },
+                    { port: 22, service: 'SSH', status: 'Open' },
+                    { port: 23, service: 'Telnet', status: 'Open' },
+                    { port: 80, service: 'HTTP', status: 'Open' },
+                    { port: 443, service: 'HTTPS', status: 'Open' },
+                    { port: 3306, service: 'MySQL', status: 'Open' },
+                    { port: 5432, service: 'PostgreSQL', status: 'Filtered' },
+                    { port: 8080, service: 'HTTP-Proxy', status: 'Open' },
+                    { port: 8443, service: 'HTTPS-Alt', status: 'Open' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < ports.length) {
+                        const port = ports[index];
+                        let statusColor = 'text-terminal-green';
+                        if (port.status === 'Filtered') statusColor = 'text-yellow-500';
+                        if (port.status === 'Closed') statusColor = 'text-gray-400';
+                        
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span>${port.port}/tcp <span class="text-neon-blue">(${port.service})</span></span>
+                                <span class="${statusColor}">${port.status}</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${ports.filter(p => p.status === 'Open').length} open ports.</div>
+                            <div class="mt-1 text-warning-red">3 potential vulnerabilities detected!</div>
+                        `;
+                    }
+                }, 200);
+            }
+            
+            // Simulate vulnerability scan
+            function simulateVulnerabilityScan(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Scanning for vulnerabilities...</div>';
+                
+                const vulnerabilities = [
+                    { id: 'CVE-2023-1234', severity: 'High', description: 'SQL Injection in login form' },
+                    { id: 'CVE-2023-5678', severity: 'Critical', description: 'Remote code execution vulnerability' },
+                    { id: 'CVE-2022-9876', severity: 'Medium', description: 'Outdated OpenSSL version' },
+                    { id: 'CVE-2023-4321', severity: 'Low', description: 'Information disclosure vulnerability' }
+                ];
+                
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < vulnerabilities.length) {
+                        const vuln = vulnerabilities[index];
+                        let severityColor = 'text-terminal-green';
+                        if (vuln.severity === 'Medium') severityColor = 'text-yellow-500';
+                        if (vuln.severity === 'High') severityColor = 'text-orange-500';
+                        if (vuln.severity === 'Critical') severityColor = 'text-warning-red';
+                        
+                        container.innerHTML += `
+                            <div class="mb-2">
+                                <div class="flex justify-between">
+                                    <span class="text-neon-blue">${vuln.id}</span>
+                                    <span class="${severityColor}">${vuln.severity}</span>
+                                </div>
+                                <div class="text-gray-400">${vuln.description}</div>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-terminal-green">Scan complete. Found ${vulnerabilities.length} vulnerabilities.</div>
+                            <div class="mt-1 text-warning-red">1 critical vulnerability requires immediate attention!</div>
+                        `;
+                    }
+                }, 800);
+            }
+            
+            // Simulate DDoS attack
+            function simulateDDoSAttack(container) {
+                container.classList.remove('hidden');
+                
+                let packets = 0;
+                let bandwidth = 0;
+                let connections = 0;
+                
+                container.innerHTML = `
+                    <div class="text-warning-red">Attack in progress...</div>
+                    <div class="mt-2">
+                        <div class="flex justify-between">
+                            <span>Packets sent:</span>
+                            <span id="packetsSent">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Bandwidth used:</span>
+                            <span id="bandwidthUsed">0 GB</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Connections:</span>
+                            <span id="connectionCount">0</span>
+                        </div>
                     </div>
                 `;
                 
-                gameList.appendChild(gameCard);
+                const packetsElement = document.getElementById('packetsSent');
+                const bandwidthElement = document.getElementById('bandwidthUsed');
+                const connectionsElement = document.getElementById('connectionCount');
                 
-                // 绑定游戏按钮点击事件
-                const playBtn = gameCard.querySelector('.play-game-btn');
-                if (playBtn) {
-                    playBtn.addEventListener('click', () => {
-                        console.log('🚀 开始游戏:', game.id, '目标屏幕:', game.gameScreen);
-                        startGame(game.id, game.gameScreen);
-                    });
-                }
-            });
-            
-            showScreen('gameArea');
-        }
-
-        // 开始游戏
-        function startGame(gameId, gameScreen) {
-            console.log('🎯 启动游戏:', gameId);
-            
-            currentState.currentGame = gameId;
-            
-            try {
-                switch (gameId) {
-                    case 'number-matching':
-                        initNumberMatchingGame();
-                        break;
-                    case 'addition-game':
-                        initAdditionGame();
-                        break;
-                    case 'shape-recognition':
-                        initShapeRecognitionGame();
-                        break;
-                    case 'time-recognition':
-                        initTimeRecognitionGame();
-                        break;
-                    default:
-                        console.error('❌ 未知游戏ID:', gameId);
-                        showMessage('游戏加载失败', 'error');
-                        return;
-                }
-                
-                showScreen(gameScreen);
-            } catch (error) {
-                console.error('❌ 游戏启动失败:', error);
-                showMessage('游戏启动失败', 'error');
+                const interval = setInterval(() => {
+                    packets += Math.floor(Math.random() * 10000) + 5000;
+                    bandwidth += Math.random() * 5 + 1;
+                    connections += Math.floor(Math.random() * 50) + 10;
+                    
+                    packetsElement.textContent = packets.toLocaleString();
+                    bandwidthElement.textContent = bandwidth.toFixed(2) + ' GB';
+                    connectionsElement.textContent = connections.toLocaleString();
+                    
+                    if (packets > 100000) {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-4 text-warning-red">Target server response time degraded by 95%</div>
+                            <div class="mt-1 text-warning-red">Service disruption detected!</div>
+                            <div class="mt-1 text-terminal-green">Attack successful.</div>
+                        `;
+                    }
+                }, 500);
             }
-        }
-
-        // ==================== 数字配对游戏 ====================
-        function initNumberMatchingGame() {
-            console.log('🔢 初始化数字配对游戏');
             
-            const gameLevel = gameContent.numberMatching.level1;
-            
-            // 设置时间限制
-            document.getElementById('game-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成游戏卡片
-            const container = document.getElementById('matching-game-container');
-            container.innerHTML = '';
-            
-            const cards = [];
-            
-            // 添加数字卡片
-            gameLevel.numbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'bg-primary bg-opacity-20 rounded-xl p-4 text-center cursor-pointer matching-card';
-                card.dataset.type = 'number';
-                card.dataset.value = num;
-                card.innerHTML = `<span class="text-3xl font-bold text-primary">${num}</span>`;
-                cards.push(card);
-            });
-            
-            // 添加数量卡片
-            gameLevel.numbers.forEach(num => {
-                const card = document.createElement('div');
-                card.className = 'bg-secondary bg-opacity-20 rounded-xl p-4 text-center cursor-pointer matching-card';
-                card.dataset.type = 'count';
-                card.dataset.value = num;
+            // Simulate data extraction
+            function simulateDataExtraction(container) {
+                container.classList.remove('hidden');
+                container.innerHTML = '<div class="text-warning-red">Extracting data...</div>';
                 
-                let icons = '';
-                for (let i = 0; i < num; i++) {
-                    icons += '<i class="fa fa-star text-accent mx-1"></i>';
-                }
+                const dataTypes = [
+                    { type: 'User Records', count: 1420, size: '2.4 MB' },
+                    { type: 'Password Hashes', count: 1420, size: '0.1 MB' },
+                    { type: 'Credit Card Info', count: 843, size: '0.3 MB' },
+                    { type: 'Personal Details', count: 1420, size: '1.8 MB' },
+                    { type: 'Transaction Logs', count: 12500, size: '15.2 MB' }
+                ];
                 
-                card.innerHTML = icons;
-                cards.push(card);
-            });
-            
-            // 随机排序卡片
-            shuffleArray(cards);
-            
-            // 添加卡片到容器
-            cards.forEach(card => {
-                card.addEventListener('click', () => selectMatchingCard(card));
-                container.appendChild(card);
-            });
-            
-            // 隐藏结果区域
-            document.getElementById('matching-result').classList.add('hidden');
-            
-            // 重置游戏状态
-            currentState.selectedCards = [];
-            currentState.matchedPairs = 0;
-            
-            //
-            
-            // 开始计时器
-            startGameTimer('game-timer', () => {
-                checkNumberMatching();
-            });
-        }
-
-        function selectMatchingCard(card) {
-            // 如果卡片已经匹配，不做任何操作
-            if (card.classList.contains('matched')) return;
-            
-            // 切换选中状态
-            card.classList.toggle('ring-4');
-            card.classList.toggle('ring-primary');
-            
-            // 检查是否有两张卡片被选中
-            const selectedCards = document.querySelectorAll('.matching-card.ring-4');
-            if (selectedCards.length === 2) {
-                const card1 = selectedCards[0];
-                const card2 = selectedCards[1];
-                
-                // 防止快速点击
-                document.querySelectorAll('.matching-card').forEach(c => {
-                    c.style.pointerEvents = 'none';
-                });
-                
-                // 检查是否匹配
-                if (card1.dataset.value === card2.dataset.value && card1.dataset.type !== card2.dataset.type) {
-                    // 匹配成功
-                    setTimeout(() => {
-                        card1.classList.remove('ring-4', 'ring-primary');
-                        card2.classList.remove('ring-4', 'ring-primary');
-                        card1.classList.add('matched', 'bg-green-100');
-                        card2.classList.add('matched', 'bg-green-100');
+                let index = 0;
+                const interval = setInterval(() => {
+                    if (index < dataTypes.length) {
+                        const data = dataTypes[index];
                         
-                        currentState.matchedPairs++;
-                        
-                        // 恢复点击事件
-                        document.querySelectorAll('.matching-card').forEach(c => {
-                            c.style.pointerEvents = 'auto';
-                        });
-                        
-                        // 检查是否所有卡片都匹配
-                        const totalPairs = gameContent.numberMatching.level1.numbers.length;
-                        if (currentState.matchedPairs === totalPairs) {
-                            setTimeout(() => {
-                                checkNumberMatching(true);
-                            }, 500);
-                        }
-                    }, 500);
-                } else {
-                    // 匹配失败
-                    setTimeout(() => {
-                        card1.classList.remove('ring-4', 'ring-primary');
-                        card2.classList.remove('ring-4', 'ring-primary');
-                        
-                        // 恢复点击事件
-                        document.querySelectorAll('.matching-card').forEach(c => {
-                            c.style.pointerEvents = 'auto';
-                        });
-                    }, 500);
+                        container.innerHTML += `
+                            <div class="flex justify-between">
+                                <span class="text-neon-blue">${data.type}</span>
+                                <span>${data.count} records (${data.size})</span>
+                            </div>
+                        `;
+                        index++;
+                    } else {
+                        clearInterval(interval);
+                        container.innerHTML += `
+                            <div class="mt-2 text-warning-red">Data extraction complete.</div>
+                            <div class="mt-1 text-neon-blue">Total extracted: 19.8 MB</div>
+                            <div class="mt-1 text-terminal-green">Data saved to encrypted archive.</div>
+                        `;
+                    }
+                }, 700);
+            }
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            createMatrixRain();
+            updateSystemTime();
+            updateSystemMetrics();
+            setupTerminal();
+            setupWindowManagement();
+            setupHackingTools();
+            
+            // Update system time every second
+            setInterval(updateSystemTime, 1000);
+            
+            // Update system metrics every 3 seconds
+            setInterval(updateSystemMetrics, 3000);
+            
+            // Randomly show security alerts
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance every 10 seconds
+                    const warningModal = document.getElementById('warningModal');
+                    const warningMessage = document.getElementById('warningMessage');
+                    
+                    const alerts = [
+                        'Unauthorized access attempt detected from IP 203.0.113.42',
+                        'Suspicious activity detected in system logs',
+                        'Potential malware signature found in temporary files',
+                        'Unusual network traffic pattern detected',
+                        'Firewall breach attempt detected',
+                        'Password brute force attack in progress'
+                    ];
+                    
+                    warningMessage.textContent = alerts[Math.floor(Math.random() * alerts.length)];
+                    warningModal.classList.remove('hidden');
                 }
-            }
-        }
-
-        function checkNumberMatching(allMatching(allMatched = false) {
-            stopGameTimer();
-            
-            const matchedCards = document.querySelectorAll('.matching-card.matched');
-            const totalCards = document.querySelectorAll('.matching-card').length;
-            const totalPairs = totalCards / 2;
-            
-            const resultArea = document.getElementById('matching-result');
-            const resultIcon = document.getElementById('result-icon');
-            const resultTitle = document.getElementById('result-title');
-            const resultMessage = document.getElementById('result-message');
-            
-            if (matchedCards.length === totalCards || allMatched) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = '你成功完成了数字配对游戏！';
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.numberKingdom.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = '再试一次，你一定可以的！';
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playNumberMatchingAgain() {
-            initNumberMatchingGame();
-        }
-
-        // ==================== 加法游戏 ====================
-        function initAdditionGame() {
-            console.log('➕ 初始化加法游戏');
-            
-            const gameLevel = gameContent.addition.level1;
-            
-            // 设置时间限制
-            document.getElementById('addition-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成加法题目
-            generateAdditionQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('addition-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('addition-timer', () => {
-                checkAddition();
-            });
-        }
-
-        function generateAdditionQuestion(gameLevel) {
-            const num1 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
-            const num2 = Math.floor(Math.random() * (gameLevel.maxNum - gameLevel.minNum + 1)) + gameLevel.minNum;
-            
-            document.getElementById('addition-num1').textContent = num1;
-            document.getElementById('addition-num2').textContent = num2;
-            document.getElementById('addition-answer').value = '';
-            document.getElementById('addition-answer').focus();
-            
-            // 存储正确答案
-            document.getElementById('addition-question').dataset.answer = num1 + num2;
-        }
-
-        function checkAddition() {
-            stopGameTimer();
-            
-            const userAnswer = parseInt(document.getElementById('addition-answer').value);
-            const correctAnswer = parseInt(document.getElementById('addition-question').dataset.answer);
-            
-            const resultArea = document.getElementById('addition-result');
-            const resultIcon = document.getElementById('addition-result-icon');
-            const resultTitle = document.getElementById('addition-result-title');
-            const resultMessage = document.getElementById('addition-result-message');
-            
-            if (userAnswer === correctAnswer) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确答案是 ${correctAnswer}！你答对了！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.calculationForest.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = `正确答案是 ${correctAnswer}，再试一次吧！`;
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playAdditionAgain() {
-            initAdditionGame();
-        }
-
-        // ==================== 图形认知游戏 ====================
-        function initShapeRecognitionGame() {
-            console.log('🔶 初始化图形认知游戏');
-            
-            const gameLevel = gameContent.shapeRecognition.level1;
-            
-            // 设置时间限制
-            document.getElementById('shape-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成图形题目
-            generateShapeQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('shape-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('shape-timer', () => {
-                checkShapeRecognition();
-            });
-        }
-
-        function generateShapeQuestion(gameLevel) {
-            // 随机选择一个图形
-            const shapes = gameLevel.shapes;
-            const randomShape = shapes[Math.floor(Math.random() * shapes.length)];
-            
-            document.getElementById('shape-question').textContent = randomShape;
-            
-            // 生成选项
-            const options = document.getElementById('shape-options');
-            options.innerHTML = '';
-            
-            // 添加正确答案
-            const correctOption = createShapeOption(randomShape, true);
-            options.appendChild(correctOption);
-            
-            // 添加干扰选项
-            const usedShapes = [randomShape];
-            while (usedShapes.length < 4) {
-                const shape = shapes[Math.floor(Math.random() * shapes.length)];
-                if (!usedShapes.includes(shape)) {
-                    usedShapes.push(shape);
-                    const option = createShapeOption(shape, false);
-                    options.appendChild(option);
-                }
-            }
-            
-            // 随机排序选项
-            shuffleChildren(options);
-        }
-
-        function createShapeOption(shapeName, isCorrect) {
-            const option = document.createElement('div');
-            option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-accent transition-colors';
-            option.dataset.shape = shapeName;
-            option.dataset.correct = isCorrect;
-            
-            let shapeIcon = '';
-            switch (shapeName) {
-                case '正方形':
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-accent bg-opacity-20"></div>';
-                    break;
-                case '圆形':
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-accent bg-opacity-20 rounded-full"></div>';
-                    break;
-                case '三角形':
-                    shapeIcon = '<div class="w-0 h-0 border-l-[40px] border-l-transparent border-b-[80px] border-b-accent border-r-[40px] border-r-transparent mx-auto"></div>';
-                    break;
-                case '长方形':
-                    shapeIcon = '<div class="w-20 h-12 mx-auto bg-accent bg-opacity-20"></div>';
-                    break;
-                default:
-                    shapeIcon = '<div class="w-16 h-16 mx-auto bg-gray-200 rounded-lg"></div>';
-            }
-            
-            option.innerHTML = shapeIcon;
-            
-            option.addEventListener('click', () => {
-                // 移除其他选项的选中状态
-                document.querySelectorAll('#shape-options > div').forEach(opt => {
-                    opt.classList.remove('border-4', 'border-accent');
-                });
-                
-                // 添加选中状态
-                option.classList.add('border-4', 'border-accent');
-            });
-            
-            return option;
-        }
-
-        function checkShapeRecognition() {
-            stopGameTimer();
-            
-            const selectedOption = document.querySelector('#shape-options > div.border-4');
-            const resultArea = document.getElementById('shape-result');
-            const resultIcon = document.getElementById('shape-result-icon');
-            const resultTitle = document.getElementById('shape-result-title');
-            const resultMessage = document.getElementById('shape-result-message');
-            
-            if (!selectedOption) {
-                showMessage('请选择一个图形', 'warning');
-                return;
-            }
-            
-            const isCorrect = selectedOption.dataset.correct === 'true';
-            const selectedShape = selectedOption.dataset.shape;
-            const correctShape = document.getElementById('shape-question').textContent;
-            
-            if (isCorrect) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确！这是 ${correctShape}！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.geometryCastle.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML = '<i class="fa fa-times text-4xl text-red-500"></i>';
-                resultTitle.textContent = '不要灰心！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-red-500';
-                resultMessage.textContent = `这是 ${selectedShape}，不是 ${correctShape}。再试一次吧！`;
-            }
-            
-            resultArea.classList.remove('hidden');
-            saveGameData();
-            updateUI();
-        }
-
-        function playShapeRecognitionAgain() {
-            initShapeRecognitionGame();
-        }
-
-        // ==================== 时间认识游戏 ====================
-        function initTimeRecognitionGame() {
-            console.log('🕐 初始化时间认识游戏');
-            
-            const gameLevel = gameContent.timeRecognition.level1;
-            
-            // 设置时间限制
-            document.getElementById('time-timer').textContent = `00:${gameLevel.timeLimit.toString().padStart(2, '0')}`;
-            currentState.remainingTime = gameLevel.timeLimit;
-            
-            // 生成时间题目
-            generateTimeQuestion(gameLevel);
-            
-            // 隐藏结果区域
-            document.getElementById('time-result').classList.add('hidden');
-            
-            // 开始计时器
-            startGameTimer('time-timer', () => {
-                checkTimeRecognition();
-            });
-        }
-
-        function generateTimeQuestion(gameLevel) {
-            // 随机选择一个时间
-            const times = gameLevel.times;
-            const randomTime = times[Math.floor(Math.random() * times.length)];
-            
-            // 设置时钟显示
-            setClockTime(randomTime.hour, randomTime.minute);
-            
-            // 生成选项
-            const options = document.getElementById('time-options');
-            options.innerHTML = '';
-            
-            // 添加正确答案
-            const correctOption = createTimeOption(randomTime.hour, randomTime.minute, true);
-            options.appendChild(correctOption);
-            
-            // 添加干扰选项
-            const usedTimes = [`${randomTime.hour}:${randomTime.minute.toString().padStart(2, '0')}`];
-            while (usedTimes.length < 4) {
-                const time = times[Math.floor(Math.random() * times.length)];
-                const timeStr = `${time.hour}:${time.minute.toString().padStart(2, '0')}`;
-                if (!usedTimes.includes(timeStr)) {
-                    usedTimes.push(timeStr);
-                    const option = createTimeOption(time.hour, time.minute, false);
-                    options.appendChild(option);
-                }
-            }
-            
-            // 随机排序选项
-            shuffleChildren(options);
-        }
-
-        function setClockTime(hour, minute) {
-            const hourHand = document.getElementById('hour-hand');
-            const minuteHand = document.getElementById('minute-hand');
-            
-            const hourAngle = (hour % 12) * 30 + (minute / 60) * 30;
-            const minuteAngle = minute * 6;
-            
-            hourHand.style.transform = `translate(-50%, -100%) rotate(${hourAngle}deg)`;
-            minuteHand.style.transform = `translate(-50%, -100%) rotate(${minuteAngle}deg)`;
-        }
-
-        function createTimeOption(hour, minute, isCorrect) {
-            const option = document.createElement('div');
-            option.className = 'bg-white border-2 border-gray-200 rounded-xl p-4 text-center cursor-pointer hover:border-ocean transition-colors';
-            option.dataset.hour = hour;
-            option.dataset.minute = minute;
-            option.dataset.correct = isCorrect;
-            
-            const timeStr = `${hour}:${minute.toString().padStart(2, '0')}`;
-            
-            option.innerHTML = `
-                <div class="text-xl font-bold text-ocean">${timeStr}</div>
-                <div class="text-sm text-gray-500">${hour}点${minute}分</div>
-            `;
-            
-            option.addEventListener('click', () => {
-                // 移除其他选项的选中状态
-                document.querySelectorAll('#time-options > div').forEach(opt => {
-                    opt.classList.remove('border-4', 'border-ocean');
-                });
-                
-                // 添加选中状态
-                option.classList.add('border-4', 'border-ocean');
-            });
-            
-            return option;
-        }
-
-        function checkTimeRecognition() {
-            stopGameTimer();
-            
-            const selectedOption = document.querySelector('#time-options > div.border-4');
-            const resultArea = document.getElementById('time-result');
-            const resultIcon = document.getElementById('time-result-icon');
-            const resultTitle = document.getElementById('time-result-title');
-            const resultMessage = document.getElementById('time-result-message');
-            
-            if (!selectedOption) {
-                showMessage('请选择一个时间', 'warning');
-                return;
-            }
-            
-            const isCorrect = selectedOption.dataset.correct === 'true';
-            const selectedHour = selectedOption.dataset.hour;
-            const selectedMinute = selectedOption.dataset.minute;
-            
-            if (isCorrect) {
-                // 游戏成功
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-green-100';
-                resultIcon.innerHTML = '<i class="fa fa-check text-4xl text-green-500"></i>';
-                resultTitle.textContent = '太棒了！';
-                resultTitle.className = 'text-2xl font-bold mb-2 text-green-500';
-                resultMessage.textContent = `正确！时间是 ${selectedHour}点${selectedMinute}分！`;
-                
-                // 更新游戏进度
-                gameData.player.score += 10;
-                gameData.player.pieces += 1;
-                gameData.player.completedGames += 1;
-                gameData.gameProgress.timeTower.completed = 1;
-                
-                showMessage('🎉 恭喜获得城堡碎片！', 'success');
-                
-            } else {
-                // 游戏失败
-                resultIcon.className = 'w-24 h-24 mx-auto flex items-center justify-center rounded-full mb-4 bg-red-100';
-                resultIcon.innerHTML
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
