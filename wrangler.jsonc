@@ -7,7 +7,7 @@
   // 可选：指定部署环境（默认production）
   "env": {
     "production": {
-      "routes": ["https://lnn.ink/*"] // 绑定自定义域名（可选）
+      "routes": ["https://it.lnn.ink/*"] // 绑定自定义域名（可选）
     }
   }
 }
